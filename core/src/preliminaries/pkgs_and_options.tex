@@ -272,7 +272,8 @@
     %     for a discussion
     \usepackage[ngerman]{selnolig}
   \fi
-\else
+\fi
+\ifenglish
   % EN: Set English as language and allow to write hyphenated"=words
   %     `american`, `english` and `USenglish` are synonyms for babel package (according to https://tex.stackexchange.com/questions/12775/babel-english-american-usenglish).
   %      "english" has to go last to set it as default language
@@ -410,7 +411,8 @@
 \ifdeutsch
   \usepackage[mode=text,group-four-digits]{siunitx}
   \sisetup{locale=DE}
-\else
+\fi
+\ifenglish
   \usepackage[mode=text,group-four-digits,group-separator={,}]{siunitx}
   \sisetup{locale=US}
 \fi

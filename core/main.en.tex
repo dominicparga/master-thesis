@@ -1,44 +1,72 @@
 %------------------------------------------------------------------------------%
 % choose language
 
-\let\ifdeutsch\iftrue
-\let\ifenglish\iffalse
+\let\ifdeutsch\iffalse
+\let\ifenglish\iftrue
 
 %------------------------------------------------------------------------------%
 % setup documentclass
 
-\input{src/preliminaries/pre-documentclass.de}
+\input{src/preliminaries/pre-documentclass}
 
-\documentclass[
-    ngerman,
-    % fontsize=11pt is the standard
-    a4paper,  % Standard format - only KOMAScript uses paper=a4 - https://tex.stackexchange.com/a/61044/9075
-    twoside,  % we are optimizing for both screen and two-side printing. So the page numbers will jump, but the content is configured to stay in the middle (by using the geometry package)
-    bibliography=totoc,
-    %               idxtotoc,   %Index ins Inhaltsverzeichnis
-    %               liststotoc, %List of X ins Inhaltsverzeichnis, mit liststotocnumbered werden die Abbildungsverzeichnisse nummeriert
-    headsepline,
-    cleardoublepage=empty,
-    parskip=half,
-    %               draft    % um zu sehen, wo noch nachgebessert werden muss - wichtig, da Bindungskorrektur mit drin
-    draft=false
-]{scrbook}
+\ifenglish
+    \documentclass[
+        % fontsize=11pt is the standard
+        a4paper,  % Standard format - only KOMAScript uses paper=a4 - https://tex.stackexchange.com/a/61044/9075
+        twoside,  % we are optimizing for both screen and two-side printing. So the page numbers will jump, but the content is configured to stay in the middle (by using the geometry package)
+        bibliography=totoc,
+        %               idxtotoc,   %Index ins Inhaltsverzeichnis
+        %               liststotoc, %List of X ins Inhaltsverzeichnis, mit liststotocnumbered werden die Abbildungsverzeichnisse nummeriert
+        headsepline,
+        cleardoublepage=empty,
+        parskip=half,
+        %               draft    % um zu sehen, wo noch nachgebessert werden muss - wichtig, da Bindungskorrektur mit drin
+        draft=false
+    ]{scrbook}
+\fi
+\ifdeutsch
+    \documentclass[
+        ngerman,
+        % fontsize=11pt is the standard
+        a4paper,  % Standard format - only KOMAScript uses paper=a4 - https://tex.stackexchange.com/a/61044/9075
+        twoside,  % we are optimizing for both screen and two-side printing. So the page numbers will jump, but the content is configured to stay in the middle (by using the geometry package)
+        bibliography=totoc,
+        %               idxtotoc,   %Index ins Inhaltsverzeichnis
+        %               liststotoc, %List of X ins Inhaltsverzeichnis, mit liststotocnumbered werden die Abbildungsverzeichnisse nummeriert
+        headsepline,
+        cleardoublepage=empty,
+        parskip=half,
+        %               draft    % um zu sehen, wo noch nachgebessert werden muss - wichtig, da Bindungskorrektur mit drin
+        draft=false
+    ]{scrbook}
+\fi
 
 \input{src/preliminaries/pkgs_and_options}
 
 %------------------------------------------------------------------------------%
 % begin document
 
+\ifenglish
+    \PassOptionsToPackage{
+        title={Is Oil the future?},
+        startdate={July 5, 2018},
+        enddate={January 5, 2019}
+    }{scientific-thesis-cover}
+\fi
+\ifdeutsch
+    \PassOptionsToPackage{
+        title={Förderungswürdigkeit der F\"{o}rderung von Öl},
+        startdate={5.\ Juli, 2013}, % English: July 5, 2013;    ISO: 2013-07-05
+        enddate={5.\ Januar 2014}   % English: January 5, 2014; ISO: 2014-01-05
+    }{scientific-thesis-cover}
+\fi
 \usepackage[
-    title={Förderungswürdigkeit der F\"{o}rderung von Öl},
     author={Lars K.},
     type=bachelor,
     institute=iaas, % or other institute names - or just a plain string using {Demo\\Demo...}
     course={Medieninformatik},
     examiner={Prof.\ Dr.\ Uwe Fessor},
     supervisor={Dipl.-Inf.\ Roman Tiker,\\Dipl.-Inf.\ Laura Stern,\\Otto Normalverbraucher,\ M.Sc.},
-    startdate={5.\ Juli, 2013}, % English: July 5, 2013;    ISO: 2013-07-05
-    enddate={5.\ Januar 2014}   % English: January 5, 2014; ISO: 2014-01-05
 ]{scientific-thesis-cover}
 
 \input{src/content/acronyms}
@@ -82,7 +110,7 @@
 %------------------------------------------------------------------------------%
 % abstract
 
-\input{src/content/abstract.de}
+\input{src/content/abstract}
 \cleardoublepage
 
 %------------------------------------------------------------------------------%
@@ -120,11 +148,21 @@
 % Wird nur bei Verwendung von der lstlisting-Umgebung mit dem "caption"-Parameter benoetigt
 %\lstlistoflistings
 % ansonsten:
-\listof{Listing}{Verzeichnis der Listings}
+\ifenglish
+    \listof{Listing}{List of Listings}
+\fi
+\ifdeutsch
+    \listof{Listing}{Verzeichnis der Listings}
+\fi
 
 % mittels \newfloat wurde die Algorithmus-Gleitumgebung definiert.
 % Mit folgendem Befehl werden alle floats dieses Typs ausgegeben
-\listof{Algorithmus}{Verzeichnis der Algorithmen}
+\ifenglish
+    \listof{Algorithmus}{List of Algorithms}
+\fi
+\ifdeutsch
+    \listof{Algorithmus}{Verzeichnis der Algorithmen}
+\fi
 %\listofalgorithms % Ist nur für Algorithmen, die mittels \begin{algorithm} umschlossen werden, nötig
 
 % Abkürzungsverzeichnis
@@ -152,23 +190,31 @@
 %------------------------------------------------------------------------------%
 % content
 
-\input{src/content/introduction.de}
-\input{src/content/chap_two.de}
+\input{src/content/introduction}
+\input{src/content/chap_two}
 
 %noch etwas Fülltext
 \blinddocument
 
-\input{src/content/conclusion_and_outlook.de}
+\input{src/content/conclusion_and_outlook}
 
 %------------------------------------------------------------------------------%
 % bibliography
 
 \printbibliography
 
-Alle URLs wurden zuletzt am 17.\,03.\,2018 geprüft.
+\ifenglish
+    All links were last followed on March 17, 2018.
 
-\appendix
-\input{src/latexhints.de}
+    \appendix
+    \input{src/latexhints.en}
+\fi
+\ifdeutsch
+    Alle URLs wurden zuletzt am 17.\,03.\,2018 geprüft.
+
+    \appendix
+    \input{src/latexhints.de}
+\fi
 
 \pagestyle{empty}
 \renewcommand*{\chapterpagestyle}{empty}

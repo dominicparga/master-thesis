@@ -1,7 +1,7 @@
-%%%%
+%------------------------------------------------------------------------------%
 % general
-%
-% pretty BibTeX
+
+% pretty letters: BibTeX
 \def\BibTeX{{%
     \rm B%
     \kern-.05em{\sc i\kern-.025em b}%
@@ -11,43 +11,44 @@
     \hbox{E}%
     \kern-.125emX%
 }}%
-%
+
+%------------------------------------------------------------------------------%
 % todos
+
 %\newcommand{\todo}[1]{}
 %\renewcommand{\todo}[1]{{\color{red} TODO: {#1}}}
-%
-% EN: from hmks makros.tex - \indexify
+
+% from hmks makros.tex - \indexify
 \newcommand{\toindex}[1]{\index{#1}#1}
-%
+
 % DE: wird fuer Tabellen benötigt (z.B. >{centering\RBS}p{2.5cm} erzeugt einen zentrierten 2,5cm breiten Absatz in einer Tabelle
 \newcommand{\RBS}{\let\\=\tabularnewline}
-%
+
 % DE: Seitengrößen
 \newcommand{\largepage}{\enlargethispage{\baselineskip}}
 \newcommand{\shortpage}{\enlargethispage{-\baselineskip}}
-%%%
 
-%%%%
+%------------------------------------------------------------------------------%
 % highlight text
+
 \newcommand{\define}[1]{\textit{#1}}
 \newcommand{\emphasize}[1]{\textbf{#1}}
-%
-%%%
 
-%%%%
+%------------------------------------------------------------------------------%
 % typographic
+
 %\newcommand{\eg}[0]{e.g.}
 %\newcommand{\Eg}[0]{E.g.}
 %\newcommand{\ie}[0]{i.e.}
 %\newcommand{\Ie}[0]{I.e.}
-%
-% DE: typoraphisch richtige Abkürzungen
+
+% typoraphisch richtige Abkürzungen
 % (xspace is not needed in every case, e.g., in this a case)
 %\newcommand{\zB}{z.\,B.\xspace}
 %\newcommand{\bzw}{bzw.\xspace}
 %\newcommand{\usw}{usw.\xspace}
 %\renewcommand{\dh}{d.\,h.\xspace}
-%
+
 % initialism (For Example -> FE or F.E.)
 \newcommand{\initialism}[1]{%
 \ifdeutsch%
@@ -60,40 +61,37 @@
 \newcommand{\BPEL}{\initialism{BPEL}}
 \newcommand{\BPMN}{\initialism{BPMN}}
 \newcommand{\UML}{\initialism{UML}}
-%%%
 
-%%%%
+%------------------------------------------------------------------------------%
 % maths
-%
+
 % Replace $|x|$ with $\abs{x}$ since lines' size is scaling automatically with size of x
 \newcommand{\abs}[1]{\left\lvert#1\right\rvert}
-%
-% EN: To avoid issues with Springer's \mathplus
-%     See also http://tex.stackexchange.com/q/212644/9075
-\providecommand\mathplus{+}
-%
-% DE: Tipp aus "The Comprehensive LaTeX Symbol List"
-\newcommand{\dotcup}{\ensuremath{\,\mathaccent\cdot\cup\,}}
-%%%
 
-%%%%
+% To avoid issues with Springer's \mathplus
+% See also http://tex.stackexchange.com/q/212644/9075
+\providecommand\mathplus{+}
+
+% Tipp aus "The Comprehensive LaTeX Symbol List"
+\newcommand{\dotcup}{\ensuremath{\,\mathaccent\cdot\cup\,}}
+
+%------------------------------------------------------------------------------%
 % algorithms
-%
+
 % EN: For the algorithmic package
 \newcommand{\commentchar}{\ensuremath{/\mkern-4mu/}}
 \algrenewcommand{\algorithmiccomment}[1]{\hfill $\commentchar$ #1}
-%%%
 
-%%%%
+%------------------------------------------------------------------------------%
 % quotation
-%
+
 % DE
 \newcommand{\citeS}[2]{\cite[S.~#1]{#2}}
 \newcommand{\citeSf}[2]{\cite[S.~#1\,f.]{#2}}
 \newcommand{\citeSff}[2]{\cite[S.~#1\,ff.]{#2}}
 \newcommand{\vgl}{vgl.\ }
 \newcommand{\Vgl}{Vgl.\ }
-%
+
 % EN: natbib compatibility
 %\newcommand{\citep}[1]{\cite{#1}}
 %\newcommand{\citet}[1]{\citeauthor{#1} \cite{#1}}
@@ -102,4 +100,3 @@
 %\newcommand{\Citet}[1]{\Citeauthor{#1} \cite{#1}}
 \newcommand{\citeafter}[2]{\cite[according to p.~#1]{#2}}
 \newcommand{\quotes}[1]{``#1''}
-%%%

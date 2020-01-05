@@ -1,22 +1,15 @@
-# LaTeX Template for Scientific Theses ![Build Status](https://github.com/latextemplates/scientific-thesis-template/workflows/Build%20with%20lualatex/badge.svg)
+# Learning metrics for balancing load in street-networks
 
-> This template is a general template for scientific theses.
+This master-thesis belongs to the [osmgraphing-repo][github/dominicparga/osmgraphing].
 
-Currently, it is the unofficial LaTeX template for Master, Bachelor, Diploma, and Student Theses.
+This underlying LaTeX-template [github.com/dominicparga][github/dominicparga/scientific-thesis-template] is a reduced, restructured copy of [the unofficial template of the University of Stuttgart][github/latextemplates/scientific-thesis-template].
 
-See [docs/](docs/) for a documentation of the template.
+## Usage
 
-## License
+You can build by simply executing `latexmk`.
+The file `.latexmkrc` sets it up using `lualatex`.
+The generated pdf-files can be found in `core/build`.
 
-The license of this work is [CC0](https://creativecommons.org/publicdomain/zero/1.0/), which corresponds to "public domain".
-
-### Exceptions
-
-The images in `res/logos` are subject to other copyright from other parties:
-
-- `UPB_LOGO_GB_RGB_15.pdf` and `UPB_Logo_RGB_D_2012.pdf` are copyright Paderborn University.
-  Refer to <https://www.uni-paderborn.de/universitaet/marketing/design-vorgaben-templates/> for proper use.
-- `UBP-background-picture.*` are demonstration files generated using an educational edition of Microsoft Office.
-  They can be used in a scientific context only.
-  For commercial use, please change them.
-- `UBP-background-picture.pdf` is generated out of `UBP-background-picture.pptx` and is free for personal use only.
+[github/dominicparga/osmgraphing]: https://github.com/dominicparga/osmgraphing
+[github/dominicparga/scientific-thesis-template]: https://github.com/dominicparga/scientific-thesis-template
+[github/latextemplates/scientific-thesis-template]: https://github.com/latextemplates/scientific-thesis-template

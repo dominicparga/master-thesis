@@ -7,14 +7,13 @@
 # cd into core
 $do_cd = 1;
 @default_files = (
-    'core/main-english.tex',
-    # 'core/main-paderborn-english.tex',
-    # 'core/main-german.tex',
-    # 'core/main-minted-german.tex',
-    # 'core/main-paderborn-german.tex',
+    'core/main.en.tex',
+    'core/main.de.tex',
 );
 # relative to main.tex
 $out_dir = 'build';
+
+ensure_path('TEXINPUTS', './styles//');
 
 #------------------------------------------------------------------------------#
 # use lualatex

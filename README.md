@@ -1,22 +1,18 @@
-# LaTeX Template for Scientific Theses ![Build Status](https://github.com/latextemplates/scientific-thesis-template/workflows/Build%20with%20lualatex/badge.svg)
+# Scientific-Thesis-Template
 
-> This template is a general template for scientific theses.
+This LaTeX-template is a reduced, restructured copy of [the unofficial template of the University of Stuttgart][github/latextemplates/scientific-thesis-template].
 
-Currently, it is the unofficial LaTeX template for Master, Bachelor, Diploma, and Student Theses.
+It can be used as template, so no fork is needed.
 
-See [docs/](docs/) for a documentation of the template.
+## Usage
+
+You can build by simply executing `latexmk`.
+The file `.latexmkrc` sets it up using `lualatex`.
+The generated pdf-files can be found in `core/build`.
 
 ## License
 
-The license of this work is [CC0](https://creativecommons.org/publicdomain/zero/1.0/), which corresponds to "public domain".
+This template-repository is licensed under the WTFPL, so feel free to do whatever you want to do with it.
+Please honor and thank to the original template as well.
 
-### Exceptions
-
-The images in `res/logos` are subject to other copyright from other parties:
-
-- `UPB_LOGO_GB_RGB_15.pdf` and `UPB_Logo_RGB_D_2012.pdf` are copyright Paderborn University.
-  Refer to <https://www.uni-paderborn.de/universitaet/marketing/design-vorgaben-templates/> for proper use.
-- `UBP-background-picture.*` are demonstration files generated using an educational edition of Microsoft Office.
-  They can be used in a scientific context only.
-  For commercial use, please change them.
-- `UBP-background-picture.pdf` is generated out of `UBP-background-picture.pptx` and is free for personal use only.
+[github/latextemplates/scientific-thesis-template]: https://github.com/latextemplates/scientific-thesis-template

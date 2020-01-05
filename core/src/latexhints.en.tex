@@ -1,8 +1,3 @@
-% !TeX root = main-english.tex
-% !TeX spellcheck = en-US
-% !TeX encoding = utf8
-% -*- coding:utf-8 mod:LaTeX -*-
-
 %This smart spell only works if no changes have been made to the chapter 
 %using the options proposed in preambel/chapterheads.tex.
 \setchapterpreamble[u]{%
@@ -397,7 +392,7 @@ The tikz is a package for creating graphics programmatically. With this package 
 In case \lualatex{} is used and PlantUML is installed, UML diagrams can be defined using PlantUML.
 
 % Only works if "--shell-escape" is activated. Please activate only if you are sure, your compilation settings are correct
-%\IfFileExists{plantuml.sty}{\input{latexhints-english-plantuml}}{}
+%\IfFileExists{plantuml.sty}{\input{src/latexhints-plantuml.en}}{}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -643,11 +638,6 @@ Footnotes are provided by the command \verb+\footnote{...}+\footnote{\label{fuss
 \section{Various Things}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{sec:diff}
-\ifdeutsch
-  Numbers (123\,654\,789) are nicely set.
-  Either in a line or as non-lining figure.
-  The latter is reached by parameter \texttt{osf} at package \texttt{libertine} or.\ \texttt{mathpazo} in \text{fonts.tex}.
-\fi
 
 \begin{filecontents*}{\democodefile}
 \begin{compactenum}[I.]

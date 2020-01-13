@@ -6,10 +6,10 @@ These notes contain todos and plans up to submission at `June 19th, 2020`.
 
 Some things have to be done in a specific order or time, while some other things are just nice-to-haves or it is unclear, whether they are needed at all.
 
-- __TODO 00__: implement algorithm for finding best alpha-routes -> 3 components (see [cyclops][github/Lesstat/cyclops] and [`CRTP`][fluentcpp/crtp])
+- __TODO 00__: implement algorithm for finding best alpha-routes given a CH-graph from [multi-ch-constructor][github/lesstat/multi-ch-constructor] -> 3 components (see [cyclops][github/lesstat/cyclops] and [`CRTP`][fluentcpp/crtp])
   - CH-Dijkstra
   - LGS (there should exist a crate for this)
-  - working with convex hull -> [nd-triangulation][github/Lesstat/nd-triangulation]
+  - working with convex hull -> [nd-triangulation][github/lesstat/nd-triangulation]
 - __TODO 01__: evaluating and iterating/learning new metrics
 - __TODO 02__: visualization
   - Use [geojson][github/dominicparga/howto/issues/36]?
@@ -25,6 +25,7 @@ Some things have to be done in a specific order or time, while some other things
 - When writing paper, always write and extend it in breadth, not in depth.
 
 [fluentcpp/crtp]: https://www.fluentcpp.com/2017/05/12/curiously-recurring-template-pattern/
-[github/Lesstat/cyclops]: https://github.com/Lesstat/cyclops
-[github/Lesstat/nd-triangulation]: https://github.com/Lesstat/nd-triangulation
 [github/dominicparga/howto/issues/36]: https://github.com/dominicparga/howto/issues/36
+[github/lesstat/cyclops]: https://github.com/lesstat/cyclops
+[github/lesstat/multi-ch-constructor]: https://github.com/lesstat/multi-ch-constructor
+[github/lesstat/nd-triangulation]: https://github.com/lesstat/nd-triangulation

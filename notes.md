@@ -7,7 +7,8 @@ These notes contain todos and plans up to submission at `June 19th, 2020`.
 Some things have to be done in a specific order or time, while some other things are just nice-to-haves or it is unclear, whether they are needed at all.
 
 - __TODO 00__: implement algorithm for finding best alpha-routes given a CH-graph from [multi-ch-constructor][github/lesstat/multi-ch-constructor] -> 3 components (see [cyclops][github/lesstat/cyclops] and [`CRTP`][fluentcpp/crtp])
-  - CH-Dijkstra using sweep-algorithm
+  - CH-Dijkstra, first without using sweep-algorithm due to uncontracted nodes and hence special treatment
+    - bidirectional Dijkstra going upwards in node-level (>=, not >, for correctness when using one level for all nodes)
   - LGS (there should exist a crate for this)
   - working with convex hull -> [nd-triangulation][github/lesstat/nd-triangulation]
 - __TODO 01__: evaluating and iterating/learning new metrics

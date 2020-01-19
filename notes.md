@@ -20,6 +20,7 @@ Some things have to be done in a specific order or time, while some other things
   - save in intermediate format?
   - forall s-t-pairs : choose an alternative route
 - Graph -> `JSON`, possibly with reduction using `GzEncoder` from crate `flate2` if too expensive in performance
+- improve query-time (up to 10x) using `stall-on-demand`, see [here][uni-stuttgart/fmi/ch].
 
 ## Tips
 
@@ -30,3 +31,4 @@ Some things have to be done in a specific order or time, while some other things
 [github/lesstat/cyclops]: https://github.com/lesstat/cyclops
 [github/lesstat/multi-ch-constructor]: https://github.com/lesstat/multi-ch-constructor
 [github/lesstat/nd-triangulation]: https://github.com/lesstat/nd-triangulation
+[uni-stuttgart/fmi/ch]: https://fmi.uni-stuttgart.de/files/alg/teaching/s15/alg/CH.pdf

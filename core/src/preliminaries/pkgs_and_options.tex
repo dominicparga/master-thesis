@@ -259,6 +259,19 @@
 % EN: Support for language-specific hyphenation
 % DE: Neue deutsche Rechtschreibung und Literatur statt "Literature"
 %     Die folgende Einstellung ist der Nachfolger von ngerman.sty
+\ifenglish
+  % EN: Set English as language and allow to write hyphenated"=words
+  %     `american`, `english` and `USenglish` are synonyms for babel package (according to https://tex.stackexchange.com/questions/12775/babel-english-american-usenglish).
+  %      "english" has to go last to set it as default language
+  \usepackage[ngerman,main=english]{babel}
+  % EN: Hint by http://tex.stackexchange.com/a/321066/9075 -> enable "= as dashes
+  \addto\extrasenglish{\languageshorthands{ngerman}\useshorthands{"}}
+  \ifluatex
+    % EN: conditionally disable ligatures. See https://github.com/latextemplates/scientific-thesis-template/issues/54
+    %     for a discussion
+    \usepackage[english]{selnolig}
+  \fi
+\fi
 \ifdeutsch
   % DE: letzte Sprache ist default, Einbindung von "american" ermöglicht \begin{otherlanguage}{amercian}...\end{otherlanguage} oder \foreignlanguage{american}{Text in American}
   %     Siehe auch http://tex.stackexchange.com/a/50638/9075
@@ -271,19 +284,6 @@
     % EN: conditionally disable ligatures. See https://github.com/latextemplates/scientific-thesis-template/issues/54
     %     for a discussion
     \usepackage[ngerman]{selnolig}
-  \fi
-\fi
-\ifenglish
-  % EN: Set English as language and allow to write hyphenated"=words
-  %     `american`, `english` and `USenglish` are synonyms for babel package (according to https://tex.stackexchange.com/questions/12775/babel-english-american-usenglish).
-  %      "english" has to go last to set it as default language
-  \usepackage[ngerman,main=english]{babel}
-  % EN: Hint by http://tex.stackexchange.com/a/321066/9075 -> enable "= as dashes
-  \addto\extrasenglish{\languageshorthands{ngerman}\useshorthands{"}}
-  \ifluatex
-    % EN: conditionally disable ligatures. See https://github.com/latextemplates/scientific-thesis-template/issues/54
-    %     for a discussion
-    \usepackage[english]{selnolig}
   \fi
 \fi
 %
@@ -408,13 +408,13 @@
 
 
 % EN: Enable typesetting values with SI units.
-\ifdeutsch
-  \usepackage[mode=text,group-four-digits]{siunitx}
-  \sisetup{locale=DE}
-\fi
 \ifenglish
   \usepackage[mode=text,group-four-digits,group-separator={,}]{siunitx}
   \sisetup{locale=US}
+\fi
+\ifdeutsch
+  \usepackage[mode=text,group-four-digits]{siunitx}
+  \sisetup{locale=DE}
 \fi
 
 
@@ -423,10 +423,11 @@
 \usepackage{array} %increases tex's buffer size and enables ``>'' in tablespecs
 \usepackage{longtable}
 \usepackage{dcolumn} %Aligning numbers by decimal points in table columns
+\ifenglish
+  \newcolumntype{d}[1]{D{.}{.}{#1}}
+\fi
 \ifdeutsch
   \newcolumntype{d}[1]{D{.}{,}{#1}}
-\else
-  \newcolumntype{d}[1]{D{.}{.}{#1}}
 \fi
 \setlength{\extrarowheight}{1pt}
 
@@ -619,10 +620,11 @@
   %tex4ht does not work well with vref, therefore we emulate vref behavior
   \newcommand{\vref}[1]{\ref{#1}}
 \else
+  \ifenglish
+    \usepackage{varioref}
+  \fi
   \ifdeutsch
     \usepackage[ngerman]{varioref}
-  \else
-    \usepackage{varioref}
   \fi
 \fi
 
@@ -785,13 +787,14 @@
 %
 % DE: siehe http://www.dickimaw-books.com/cgi-bin/faq.cgi?action=view&categorylabel=glossaries#glsnewwriteexceeded
 \usepackage[acronym,indexonlyfirst,nomain]{glossaries}
+\ifenglish
+  \renewcommand*{\acronymname}{List of Abbreviations}
+\fi
 \ifdeutsch
   \addto\captionsngerman % DE: siehe https://tex.stackexchange.com/a/154566
   {%
     \renewcommand*{\acronymname}{Abkürzungsverzeichnis}
   }
-\else
-  \renewcommand*{\acronymname}{List of Abbreviations}
 \fi
 \renewcommand*{\glsgroupskip}{}
 %
@@ -804,6 +807,10 @@
 % EN: Extensions for references inside the document (\cref{fig:sample}, ...)
 % DE: cleveref für cref statt autoref, da cleveref auch bei Definitionen funktioniert
 \usepackage[capitalise,nameinlink,noabbrev]{cleveref}
+\ifenglish
+  \crefname{listing}{\lstlistingname}{\lstlistingname}
+  \Crefname{listing}{Listing}{Listings}
+\fi
 \ifdeutsch
   \crefname{table}{Tabelle}{Tabellen}
   \Crefname{table}{Tabelle}{Tabellen}
@@ -821,9 +828,6 @@
   \Crefname{paragraph}{Abschnitt}{Abschnitte}
   \crefname{subparagraph}{Abschnitt}{Abschnitte}
   \Crefname{subparagraph}{Abschnitt}{Abschnitte}
-\else
-  \crefname{listing}{\lstlistingname}{\lstlistingname}
-  \Crefname{listing}{Listing}{Listings}
 \fi
 
 
@@ -841,10 +845,11 @@
 
 % DE: Deckblattstyle
 %
+\ifenglish
+  \PassOptionsToPackage{language=english}{scientific-thesis-cover}
+\fi
 \ifdeutsch
   \PassOptionsToPackage{language=german}{scientific-thesis-cover}
-\else
-  \PassOptionsToPackage{language=english}{scientific-thesis-cover}
 \fi
 
 
@@ -874,11 +879,12 @@
 \crefname{Listing}{Listing}{Listings}
 
 \newfloat{Algorithmus}{tbp}{alg}[chapter]
-\ifdeutsch
-  \crefname{Algorithmus}{Algorithmus}{Algorithmus}
-\else
+\ifenglish
   \crefname{Algorithmus}{Algorithm}{Algorithms}
   \floatname{Algorithmus}{Algorithm}
+\fi
+\ifdeutsch
+  \crefname{Algorithmus}{Algorithmus}{Algorithmus}
 \fi
 
 
@@ -1090,10 +1096,11 @@
 
 % EN: Provides todo notes
 % DE: schoene TODOs
+\ifenglish
+  \usepackage[colorinlistoftodos]{todonotes}
+\fi
 \ifdeutsch
   \usepackage[colorinlistoftodos,ngerman]{todonotes}
-\else
-  \usepackage[colorinlistoftodos]{todonotes}
 \fi
 \setlength{\marginparwidth}{2,5cm}
 

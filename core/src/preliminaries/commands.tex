@@ -51,10 +51,11 @@
 
 % initialism (For Example -> FE or F.E.)
 \newcommand{\initialism}[1]{%
+\ifenglish%
+    \textlcc{#1}\xspace%
+\fi%
 \ifdeutsch%
     \textsc{#1}\xspace%
-\else%
-    \textlcc{#1}\xspace%
 \fi%
 }
 \newcommand{\OMG}{\initialism{OMG}}

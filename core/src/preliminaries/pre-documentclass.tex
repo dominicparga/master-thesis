@@ -10,6 +10,9 @@
 %------------------------------------------------------------------------------%
 % setup scrbook
 
+\ifenglish
+    \PassOptionsToClass{numbers=noenddot}{scrbook}
+\fi
 \ifdeutsch
     % (Aus scrguide.pdf - der Dokumentation von KOMA-Script)
     % Nach DUDEN steht in Gliederungen, in denen ausschließlich arabische Ziffern für die Nummerierung
@@ -18,9 +21,6 @@
     % oder Groß- oder Kleinbuchstaben gearbeitet, so steht am Ende aller Gliederungsnummern ein
     % abschließender Punkt (siehe [DUD96, R4])
     \PassOptionsToClass{numbers=autoendperiod}{scrbook}
-\fi
-\ifenglish
-    \PassOptionsToClass{numbers=noenddot}{scrbook}
 \fi
 
 %------------------------------------------------------------------------------%

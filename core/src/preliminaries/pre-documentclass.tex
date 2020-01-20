@@ -10,35 +10,10 @@
 %------------------------------------------------------------------------------%
 % setup scrbook
 
-\ifdeutsch
-    % (Aus scrguide.pdf - der Dokumentation von KOMA-Script)
-    % Nach DUDEN steht in Gliederungen, in denen ausschließlich arabische Ziffern für die Nummerierung
-    % verwendet werden, am Ende der Gliederungsnummern kein abschließender Punkt
-    % (siehe [DUD96, R3]). Wird hingegen innerhalb der Gliederung auch mit römischen Zahlen
-    % oder Groß- oder Kleinbuchstaben gearbeitet, so steht am Ende aller Gliederungsnummern ein
-    % abschließender Punkt (siehe [DUD96, R4])
-    \PassOptionsToClass{numbers=autoendperiod}{scrbook}
-\fi
-\ifenglish
-    \PassOptionsToClass{numbers=noenddot}{scrbook}
-\fi
+\PassOptionsToClass{numbers=noenddot}{scrbook}
 
 %------------------------------------------------------------------------------%
 % Warns about outdated packages and missing caption declarations
 % See https://www.ctan.org/pkg/nag
 
 \RequirePackage[l2tabu, orthodox]{nag}
-
-%------------------------------------------------------------------------------%
-% Neue deutsche Trennmuster
-% Siehe http://www.ctan.org/pkg/dehyph-exptl und http://projekte.dante.de/Trennmuster/WebHome
-% Nur für pdflatex, nicht für lualatex
-
-\ifdeutsch
-    \RequirePackage{ifluatex}
-    \ifluatex
-        % do not load anything
-    \else
-        \RequirePackage[ngerman=ngerman-x-latest]{hyphsubst}
-    \fi
-\fi

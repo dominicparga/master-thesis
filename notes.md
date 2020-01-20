@@ -14,13 +14,14 @@ Some things have to be done in a specific order or time, while some other things
 - __TODO 01__: evaluating and iterating/learning new metrics
 - __TODO 02__: visualization
   - Use [geojson][github/dominicparga/howto/issues/36]?
+- CH-explanation: [fmi-pdf][uni-stuttgart/fmi/ch]
+  - improve query-time (up to 10x) using `stall-on-demand`, see [here][uni-stuttgart/fmi/ch].
 - Route generation
   - ~ 1k s-t-pairs, each with alternative routes
   - det. f. graph + constraints -> datastructure: set
   - save in intermediate format?
   - forall s-t-pairs : choose an alternative route
 - Graph -> `JSON`, possibly with reduction using `GzEncoder` from crate `flate2` if too expensive in performance
-- improve query-time (up to 10x) using `stall-on-demand`, see [here][uni-stuttgart/fmi/ch].
 
 ## Tips
 

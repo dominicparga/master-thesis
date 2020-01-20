@@ -50,13 +50,7 @@
 %\renewcommand{\dh}{d.\,h.\xspace}
 
 % initialism (For Example -> FE or F.E.)
-\newcommand{\initialism}[1]{%
-\ifdeutsch%
-    \textsc{#1}\xspace%
-\else%
-    \textlcc{#1}\xspace%
-\fi%
-}
+\newcommand{\initialism}[1]{\textlcc{#1}\xspace}
 \newcommand{\OMG}{\initialism{OMG}}
 \newcommand{\BPEL}{\initialism{BPEL}}
 \newcommand{\BPMN}{\initialism{BPMN}}

@@ -7,8 +7,7 @@
 # cd into core
 $do_cd = 1;
 @default_files = (
-    'core/main.en.tex',
-    'core/main.de.tex',
+    'core/main.tex'
 );
 # relative to main.tex
 $out_dir = 'build';

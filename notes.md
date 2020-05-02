@@ -26,8 +26,8 @@ Some things have to be done in a specific order or time, while some other things
 ## Paper-content
 
 - Good points:
-  - More direct system-dependent routing than with dynamic routing.
-  - Dynamic routing is not that good if network-units (like drivers) can be watched directly.
+  - Routing is more system-dependent than with dynamic routing, which allows improving the system more immediate, not the routing.
+  - Dynamic routing is not that good if network-units (like drivers) can't be watched directly.
     In other networks, packages can only be watched indirectly, at nodes, which could cost performance, if every node is just looking for its local best solution, where a global solution would be better.
     If routing-algorithms would lead to better global results, this performance-issue could be improved.
 

@@ -8,16 +8,15 @@ This LaTeX-template is a reduced, restructured copy of [the unofficial template 
 
 It can be used as template, so no fork is needed.
 
+
 ## Usage
 
 You can build by simply executing `latexmk`.
 The file `.latexmkrc` sets it up using `lualatex`.
-The generated pdf-files can be found in `core/build`.
+The generated pdf-files (and other files) can be found in `core/build`.
+For a fresh and clean build, simply remove this directory.
 
-## License
-
-This template-repository is licensed under the WTFPL, so feel free to do whatever you want to do with it.
-Please honor and thank to the original template as well.
+This setup is tested and used with `visual-studio-code` on `archlinux`.
 
 [github/last-commit]: https://github.com/dominicparga/scientific-thesis-template/commits
 [github/last-commit/badge]: https://img.shields.io/github/last-commit/dominicparga/scientific-thesis-template?style=for-the-badge

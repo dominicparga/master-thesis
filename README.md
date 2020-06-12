@@ -22,6 +22,6 @@ This setup is tested and used with `visual-studio-code` on `archlinux`.
 [github/last-commit/badge]: https://img.shields.io/github/last-commit/dominicparga/scientific-thesis-template?style=for-the-badge
 [github/latextemplates/scientific-thesis-template]: https://github.com/latextemplates/scientific-thesis-template
 [github/license]: https://github.com/dominicparga/scientific-thesis-template/blob/master/LICENSE
-[github/license/badge]: https://img.shields.io/badge/license-WTFPL-green?style=for-the-badge
+[github/license/badge]: https://img.shields.io/badge/license-CC0--1.0-green?style=for-the-badge
 [github/tags]: https://github.com/dominicparga/scientific-thesis-template/tags
 [github/tags/badge]: https://img.shields.io/github/v/tag/dominicparga/scientific-thesis-template?sort=semver&style=for-the-badge

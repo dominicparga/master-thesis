@@ -33,5 +33,5 @@ jobs:
     - name: Upload pdf as artifact
       uses: actions/upload-artifact@v1
       with:
-        name: build
+        name: paper
         path: artifacts/

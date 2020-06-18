@@ -16,10 +16,9 @@ For a fresh and clean build, simply remove this directory.
 This setup is tested and used with `visual-studio-code` on `archlinux`.
 
 [github/dominicparga/osmgraphing]: https://github.com/dominicparga/osmgraphing
-[github/last-commit]: https://github.com/dominicparga/scientific-thesis-template/commits
-[github/last-commit/badge]: https://img.shields.io/github/last-commit/dominicparga/scientific-thesis-template?style=for-the-badge
-[github/latextemplates/scientific-thesis-template]: https://github.com/latextemplates/scientific-thesis-template
-[github/license]: https://github.com/dominicparga/scientific-thesis-template/blob/master/LICENSE
-[github/license/badge]: https://img.shields.io/badge/license-CC0--1.0-green?style=for-the-badge
-[github/tags]: https://github.com/dominicparga/scientific-thesis-template/tags
-[github/tags/badge]: https://img.shields.io/github/v/tag/dominicparga/scientific-thesis-template?sort=semver&style=for-the-badge
+[github/last-commit]: https://github.com/dominicparga/master-thesis/commits
+[github/last-commit/badge]: https://img.shields.io/github/last-commit/dominicparga/master-thesis?style=for-the-badge
+[github/license]: https://github.com/dominicparga/master-thesis/blob/master/LICENSE
+[github/license/badge]: https://img.shields.io/badge/license-Apache--2.0-green?style=for-the-badge
+[github/tags]: https://github.com/dominicparga/master-thesis/tags
+[github/tags/badge]: https://img.shields.io/github/v/tag/dominicparga/master-thesis?sort=semver&style=for-the-badge

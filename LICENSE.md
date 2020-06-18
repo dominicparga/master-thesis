@@ -1,9 +1,15 @@
 # Copyright and License
 
-This LaTeX-template is a reduced, restructured copy of [the unofficial template of the University of Stuttgart][github/latextemplates/scientific-thesis-template].
-Like the original repository (June 12th, 2020), this one is licensed under the [`Creative Commons Zero v1.0 Universal`][cc.org/publicdomain/zero/1.0].
-This basically means that you can almost do whatever you want to. `:)`
-Look at [creativecommons.org (German)][cc.org/publicdomain/zero/1.0/summary/de] or [creativecommons.org (English)][cc.org/publicdomain/zero/1.0/summary/en] for more details.
+## Apache-2.0
+
+This paper is written by Dominic Parga Cacheiro and licensed under the `Apache License, Version 2.0`.
+You may not use content of this paper or its files except in compliance with the `Apache License, Version 2.0`.
+You may obtain a copy of the License at
+
+`http://www.apache.org/licenses/LICENSE-2.0`
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and limitations under the License.
 
 
 [cc.org/publicdomain/zero/1.0]: https://creativecommons.org/publicdomain/zero/1.0/legalcode

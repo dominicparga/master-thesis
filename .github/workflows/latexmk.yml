@@ -24,7 +24,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Build pdf
-      run: latexmk
+      run: pwd && latexmk
     - name: Prepare upload
       run: |
         artifacts="artifacts/$(git rev-parse --verify HEAD)"

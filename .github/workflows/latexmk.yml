@@ -1,4 +1,5 @@
-name: latexmk
+# --- INFOS ---
+#
 # github-action-docs
 # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idcontainer
 #
@@ -7,6 +8,8 @@ name: latexmk
 #
 # a github-action using docker-images in steps
 # https://github.com/xu-cheng/texlive-action/blob/master/full/action.yml
+
+name: latexmk
 on:
   push:
   pull_request:

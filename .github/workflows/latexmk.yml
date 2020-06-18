@@ -1,0 +1,37 @@
+# --- INFOS ---
+#
+# github-action-docs
+# https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idcontainer
+#
+# use docker in github-action
+# https://stackoverflow.com/a/58521709
+#
+# a github-action using docker-images in steps
+# https://github.com/xu-cheng/texlive-action/blob/master/full/action.yml
+
+name: latexmk
+on:
+  push:
+  pull_request:
+  schedule:
+  # every Monday at 6:00
+  - cron: '0 6 * * 1'
+jobs:
+  build_and_upload_pdf:
+    runs-on: ubuntu-latest
+    container: docker://mirisbowring/texlive_ctan_full:2019
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Build pdf
+      run: ls core/styles && latexmk
+    - name: Prepare upload
+      run: |
+        artifacts="artifacts/$(git rev-parse --verify HEAD)"
+        mkdir -p "${artifacts}"
+        mv core/build/ "${artifacts}/"
+    - name: Upload pdf as artifact
+      uses: actions/upload-artifact@v1
+      with:
+        name: paper
+        path: artifacts/

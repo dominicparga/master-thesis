@@ -1,6 +1,6 @@
 # Notes
 
-These notes contain todos and plans up to submission at `June 19th, 2020`.
+These notes contain todos and plans up to submission at `August 14th, 2020` (before Corona: `June 19th, 2020`).
 
 ## Planning
 

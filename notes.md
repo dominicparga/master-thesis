@@ -2,6 +2,8 @@
 
 These notes contain todos and plans up to submission at `August 14th, 2020` (before Corona: `June 19th, 2020`).
 
+nice: zotero
+
 ## Planning
 
 Some things have to be done in a specific order or time, while some other things are just nice-to-haves or it is unclear, whether they are needed at all.
@@ -23,17 +25,11 @@ Some things have to be done in a specific order or time, while some other things
   - forall s-t-pairs : choose an alternative route
 - Graph -> `JSON`, possibly with reduction using `GzEncoder` from crate `flate2` if too expensive in performance
 
-## Paper-content
-
-- Good points:
-  - Routing is more system-dependent than with dynamic routing, which allows improving the system more immediate, not the routing.
-  - Dynamic routing is not that good if network-units (like drivers) can't be watched directly.
-    In other networks, packages can only be watched indirectly, at nodes, which could cost performance, if every node is just looking for its local best solution, where a global solution would be better.
-    If routing-algorithms would lead to better global results, this performance-issue could be improved.
 
 ## Tips
 
 - When writing paper, always write and extend it in breadth, not in depth.
+
 
 [fluentcpp/crtp]: https://www.fluentcpp.com/2017/05/12/curiously-recurring-template-pattern/
 [github/dominicparga/howto/issues/36]: https://github.com/dominicparga/howto/issues/36

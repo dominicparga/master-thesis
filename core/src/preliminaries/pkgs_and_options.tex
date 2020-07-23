@@ -610,7 +610,9 @@
 %\usepackage{setspace}
 
 
-% DE: biblatex statt bibtex
+% Find styles here:
+% https://www.overleaf.com/learn/latex/Biblatex_bibliography_styles
+%
 \usepackage[
   backend       = biber, %biber does not work with 64x versions alternative: bibtex8
   %minalphanames only works with biber backend
@@ -635,8 +637,8 @@
 \setcounter{biburllcpenalty}{7000}
 \setcounter{biburlucpenalty}{8000}
 
-\bibliography{bibliography}
-%\addbibresource[datatype=bibtex]{bibliography.bib}
+% \bibliography{bibliography}
+\addbibresource[datatype=bibtex]{bibliography.bib}
 
 %Do not put "vd" in the label, but put it at "\citeauthor"
 %Source: http://tex.stackexchange.com/a/30277/9075

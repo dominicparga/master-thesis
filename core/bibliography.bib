@@ -1,11 +1,70 @@
 % Encoding: UTF-8
-
-%%%
 %
+% Find infos here:
+% https://www.overleaf.com/learn/latex/Bibliography_management_in_LaTeX
+
+% sources work-in-progress
+
+@misc{todo:cite,
+  author       = {Citation Todo},
+  title        = {A replacement for TODO-references},
+  year         = {2020},
+}
+
+% technique for boosting contraction-hierarchies-queries: stall-on-demand
+@misc{geisberger:contraction_hierarchies,
+    author = {Robert Geisberger},
+    title = {Contraction Hierarchies: Faster and Simpler Hierarchical Routing in Road Networks},
+    howpublished = {Website},
+    year = {2008},
+    note = {http://algo2.iti.kit.edu/documents/routeplanning/geisberger_dipl.pdf}
+}
+
+@misc{schultes:route-planning,
+    author = {Dominik Schultes},
+    title = {Route Planning in Road Networks},
+    howpublished = {Website},
+    year = {2008},
+    note = {https://algo2.iti.kit.edu/schultes/hwy/schultes_diss.pdf}
+}
+
+% adjacency-array (= offset-graph)
+@book{mehlhorn:algorithms,
+  title={Algorithms and data structures: The basic toolbox},
+  author={Kurt Mehlhorn and Peter Sanders},
+  year={2008},
+  publisher={Springer Science \& Business Media}
+}
+
+% finished sources
+
+@misc{barth:google-traffic,
+  author       = {Dave Barth},
+  title        = {The bright side of sitting in traffic: Crowdsourcing road congestion data},
+  howpublished = {Website},
+  year         = {2009},
+  note         = {https://googleblog.blogspot.com/2009/08/bright-side-of-sitting-in-traffic.html},
+}
+
+@misc{inrix:traffic-cost,
+  author       = {INRIX},
+  title        = {INRIX 2019 Global Traffic Scoreboard},
+  howpublished = {Website},
+  year         = {2019},
+  note         = {https://inrix.com/scorecard/},
+}
+
+@misc{kantar:android-vs-ios,
+    author = {Kantar Worldpanel},
+    title = {Android vs. iOS - Smartphone OS sales market share evolution},
+    howpublished = {Website},
+    year = {2020},
+    note = {https://www.kantarworldpanel.com/global/smartphone-os-market-share/},
+}
+
+% TODO remove
+
 % Beim Erstellen der Bibtex-Datei wird empfohlen darauf zu achten, dass die DOI aufgeführt wird.
-%
-%%%
-
 @Book{WSPA,
   author    = {Sanjiva Weerawarana and Francisco Curbera and Frank Leymann and Tony Storey and Donald F. Ferguson},
   title     = {Web Services Platform Architecture : SOAP, WSDL, WS-Policy, WS-Addressing, WS-BPEL, WS-Reliable Messaging, and More},
@@ -15,9 +74,7 @@
   doi       = {10.1.1/jpb001},
 }
 
-
 % !! DO NOT USE `label =   {ASF}` in other Misc entries !!
-
 @Misc{ApacheODE,
   author = {{The Apache Software Foundation}},
   title =  {Apache ODE\texttrademark{} -- The Orchestration Director Engine},
@@ -48,5 +105,3 @@
   publisher = {Dudenverlag},
   isbn      = {3-411-04012-2},
 }
-
-@Comment{jabref-meta: databaseType:biblatex;}

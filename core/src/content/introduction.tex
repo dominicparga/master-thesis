@@ -1,6 +1,36 @@
 \chapter{Introduction}
+\label{chap:introduction}
 
-This thesis tarts with \cref{chap:preparations}.
+Let assume drivers driving to somewhere a little further away, like work.
+A navigation-system, asked for the fastest route, usually returns a route over larger streets, like highways.
+These larger streets probably have multiple lanes and allow a higher speed-limit than smaller streets, resulting in a high driver-capacity and hence a high throughput.
+When many drivers receive the same answer from their independent navigation-systems, the traffic tends to overload these larger streets.
+In addition, due to rush-hours, the traffic is not balanced over the day.
+All these aspects leads to traffic-jams, resulting in former fast routes becoming inefficient.
+Besides environmental impact and circumstances to handle the daily amount of rush-hour-traffic, traffic-jams in large (capital) cities cost days of the people's time and hence much money per year.~\cite{inrix:traffic-cost}
 
-We can also typeset \verb|<text>verbatim text</text>|.
-Backticks are also rendered correctly: \verb|`words in backticks`|.
+    \section{Related Work}
+
+    To solve this issue, dynamic routing can be used.
+    For example, Google has gathered~\cite{barth:google-traffic} anonymous data from Android-users to predict traffic-jams in the street-network.
+    Since most smartphones use Android~\cite{kantar:android-vs-ios}, there is enough data being collectable for sufficient accuracy.
+    Although, this approach requires a global observer, including infrastructure, and data-packages, in street-networks represented by drivers, able to or willing to share their location in the network.
+    For example, in wireless-networks, data-packages are transmitted (kind of) and traffic-jams occur in nodes, not in their connections; or the network (e.g. Internet) could be too large to be observable.
+    In such cases, heuristics have to be taken into account to determine the traffic of neighbouring nodes.
+    This cost throughput and/or capacity (hence money).
+
+    \todo{%
+        Wüsstest du im Vorfeld schon, dass dein Algorithmus eine bestimmte Garantie auf die Routen hat, dann könntest du einfach losschicken.
+
+        Abhängigkeit vom statischen System statt von dynamischer Last.
+
+        Florians paper über alternative routes.
+    }%
+
+    \section{Main Contribution}
+
+    \todo{TODO Is there an improvement after removing some streets?}
+
+    \section{Outline}
+
+    \todo{TODO overview of chapters}

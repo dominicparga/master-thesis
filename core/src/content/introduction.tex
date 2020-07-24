@@ -12,41 +12,41 @@ At the latest, this will be interesting with many self-driving cars, where many 
 It would be crucial to send all vehicles over the same streets.
 So distributing this amount of traffic over the network is and will be important to save both, time and money.
 
-    \section{Related Work}
+\section{Related Work}
 
     Totally different approaches do solve these issues, having their pros and cons.
 
     \subsection{Dynamic routing}
 
-    To solve this issue, dynamic routing can be used.
-    For example, Google has gathered~\cite{barth:google-traffic} anonymous data from Android-users to predict current traffic-jams in the street-network.
-    Since most smartphones use Android~\cite{kantar:android-vs-ios}, there is enough data being collectable for sufficient accuracy.
-    Although, this approach requires a global observer, including infrastructure.
-    It also needs data-packages, in street-networks represented by drivers, able to or willing to share their location in the network and being processed in reasonable time or even real-time.
-    For example, in wireless-networks, data-packages are transmitted much faster than drivers in street-networks and traffic-jams occur in nodes, not in the nodes' connections.
-    In such cases, heuristics can be used to approximate the current workload of other network-parts, but this cost throughput and/or capacity (hence money).
-    While users would wait for a few seconds until a good route is found, users are not that tolerant when it comes to network-traffic (e.g.\ search-queries via Internet).
-    However, in this thesis, only street-networks are covered.
+        To solve this issue, dynamic routing can be used.
+        For example, Google has gathered~\cite{barth:google-traffic} anonymous data from Android-users to predict current traffic-jams in the street-network.
+        Since most smartphones use Android~\cite{kantar:android-vs-ios}, there is enough data being collectable for sufficient accuracy.
+        Although, this approach requires a global observer, including infrastructure.
+        It also needs data-packages, in street-networks represented by drivers, able to or willing to share their location in the network and being processed in reasonable time or even real-time.
+        For example, in wireless-networks, data-packages are transmitted much faster than drivers in street-networks and traffic-jams occur in nodes, not in the nodes' connections.
+        In such cases, heuristics can be used to approximate the current workload of other network-parts, but this cost throughput and/or capacity (hence money).
+        While users would wait for a few seconds until a good route is found, users are not that tolerant when it comes to network-traffic (e.g.\ search-queries via Internet).
+        However, in this thesis, only street-networks are covered.
 
     \subsection{Alternative routing}
 
-    Another approach, solving this issue statically, is looking for alternative routes, that should distribute the suggested routes in a broader manner.
-    In opposite to the dynamic approaches, a static approach is less dependent on dynamic traffic and more dependent on the (street-) network itself.
+        Another approach, solving this issue statically, is looking for alternative routes, that should distribute the suggested routes in a broader manner.
+        In opposite to the dynamic approaches, a static approach is less dependent on dynamic traffic and more dependent on the (street-) network itself.
 
-    There are several computation-methods described in the related-work-section of~\cite{barth:alternative_routes}.
-    According to~\citeS{1}{barth:alternative_routes}, these methods lack in quality or practicability, which is depicted shortly in the following.
-    On one side, you may compute multiple shortest paths for the same source and destination.
-    Multiple shortest paths, computed with respect to the same criterion, are too similar.
-    If they are not too similar, their computation gets more complex or more unhandy while avoiding the similarity.
-    Hence, artificially \todo{TODO wording} penalizing popular routes is more practically, but also needs more parameter-tuning.
-    In both cases, less similarity while getting more alternative paths leads to raising computation-time.
-    \todo{TODO Is this preprocessing-time? If no, my contribution is nicer, because it has high computation-time only during preprocessing}
+        There are several computation-methods described in the related-work-section of~\cite{barth:alternative_routes}.
+        According to~\citeS{1}{barth:alternative_routes}, these methods lack in quality or practicability, which is depicted shortly in the following.
+        On one side, you may compute multiple shortest paths for the same source and destination.
+        Multiple shortest paths, computed with respect to the same criterion, are too similar.
+        If they are not too similar, their computation gets more complex or more unhandy while avoiding the similarity.
+        Hence, artificially \todo{TODO wording} penalizing popular routes is more practically, but also needs more parameter-tuning.
+        In both cases, less similarity while getting more alternative paths leads to raising computation-time.
+        \todo{TODO Is this preprocessing-time? If no, my contribution is nicer, because it has high computation-time only during preprocessing}
 
-    To avoid these issues, \cite{barth:alternative_routes} develops an algorithm called \textit{cyclops} based on \textit{personalized routing}, extended by a geometric interpretation of shortest paths in their underlying cost-space.
-    This algorithm is used in its optimized version from~\cite{barth:alternative_multicriteria_routes}, where \textit{cyclops} is combined with \textit{contraction-hierarchies}~\cite{geisberger:contraction_hierarchies}.
-    \todo{TODO Is this the original paper? Because it is not the first one describing contraction, see~\cite{schultes:route-planning}.}
+        To avoid these issues, \cite{barth:alternative_routes} develops an algorithm called \textit{cyclops} based on \textit{personalized routing}, extended by a geometric interpretation of shortest paths in their underlying cost-space.
+        This algorithm is used in its optimized version from~\cite{barth:alternative_multicriteria_routes}, where \textit{cyclops} is combined with \textit{contraction-hierarchies}~\cite{geisberger:contraction_hierarchies}.
+        \todo{TODO Is this the original paper? Because it is not the first one describing contraction, see~\cite{schultes:route-planning}.}
 
-    \section{Main Contribution}
+\section{Main Contribution}
 
     The contribution of this paper is adding a preprocessing-phase to the approch of~\cite{barth:alternative_multicriteria_routes}.
     This preprocessing analyzes the street-network with help of the optimized \textit{cyclops}-exploration, leading to a new metric.
@@ -54,6 +54,6 @@ So distributing this amount of traffic over the network is and will be important
     Penalizing in a preprocessing in combination with the \textit{cyclops}-routing leads to a more distributed set of alternative-routes, while the routing-query can be processed as quick as before (using \textit{cyclops} or \textit{Dijkstra} with \textit{personalized routing}).
     Further, \textit{cyclops} can be adjusted with a tolerance for every used metric, that allows to guarantee a bad path being not worse than the best path's cost plus tolerance.
 
-    \section{Outline}
+\section{Outline}
 
     \todo{TODO overview of chapters}

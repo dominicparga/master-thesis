@@ -2,59 +2,63 @@
 \label{chap:preliminaries}
 
 \todo{TODO Writing in a style like each subsection is independent of the whole thesis? Like a dictionary, if someone doesn't know some technique?}
-
-% - Dijkstra, no A* because multiple metrics vs heuristic
-% - pesonalized routing
-% - Contraction-Hierarchies
-% - Multi-CH-Construction
-%   - LP/ILP from Florian's alternative routes
-% - cyclops
-%   - trying to improve, but failed
-%   - other context for cyclops
-%   - build convex-hull explicit because new facets could destroy old facets
-
 \todo{TODO add some text here}
 
-    \section{Street-network as offset-graph (TODO: wrong name)}
+\section{Graphs and paths}
 
-    \todo{TODO add some text here}
+    \todo{TODO write}
 
-    \section{Routing-algorithms with bidirectional A* and Contraction-Hierarchies}
+\section{Routing-algorithms}
 
-    \todo{TODO add some text here}
+    \todo{TODO: with bidirectional A* and Contraction-Hierarchies}
 
-        \subsection{Bidirectional Dijkstra}
+    \subsection{Dijkstra's algorithm (bidirectional)}
 
-        \todo{TODO add some text here}
+        \todo{TODO write}
 
-        \subsection{Correctness-proof of bidirectional Dijkstra}
+        \subsubsection{Correctness-proof of bidirectional Dijkstra}
 
-        The termination of the bidirectional Astar is based on the first node v, that is marked by both, the forward- and the backward-subroutine.
-        However, this common node v is part of the shortest path s->t wrt to this particular hop-distance H, but doesn't have to be part of the shortest path s->t wrt to edge-weights.
+            \todo{
+                The termination of the bidirectional Astar is based on the first node v, that is marked by both, the forward- and the backward-subroutine.
+                However, this common node v is part of the shortest path s->t wrt to this particular hop-distance H, but doesn't have to be part of the shortest path s->t wrt to edge-weights.
 
-        Every node, that is not settled in any of the both subroutines, has a longer distance to both s and t than the already found common node v and hence can not be part of the shortest path (wrt to edge-weights).
-        Otherwise, it would have been settled before v since the priority-queues sort by weights.
-        In other words, only already settled nodes and their neighbors (which are already enqueued) can be part of the shortest path.
+                Every node, that is not settled in any of the both subroutines, has a longer distance to both s and t than the already found common node v and hence can not be part of the shortest path (wrt to edge-weights).
+                Otherwise, it would have been settled before v since the priority-queues sort by weights.
+                In other words, only already settled nodes and their neighbors (which are already enqueued) can be part of the shortest path.
 
-        In conclusion, emptying the remaining nodes in the queues and picking the shortest path of the resulting common nodes leads to the shortest path wrt to edge-weights from s to t.
+                In conclusion, emptying the remaining nodes in the queues and picking the shortest path of the resulting common nodes leads to the shortest path wrt to edge-weights from s to t.
+            }
 
-        \todo{%
-            TODO extend proof onto A* with contraction-hierarchies: Here, the proof for bidirectional Dijkstra doesn't hold, because each sub-graph doesn't visit every node of the total graph, due to the level-filter when pushing edges to the queue.
-            Hence, the forward- and the backward-query are not balanced wrt weights.
-            Thus, after finding the first meeting-node, the hop-distance of the shortest-path could be arbitrary.
-            This leads to wrong paths with normal bidirectional Dijkstra.
-            To correct this issue, stop the query after polling a node of a sub-distance, which is higher than the currently best meeting-node's total distance.
-        }
-        \subsection{Contraction-Hierarchies}
+            \todo{%
+                TODO extend proof onto A* with contraction-hierarchies: Here, the proof for bidirectional Dijkstra doesn't hold, because each sub-graph doesn't visit every node of the total graph, due to the level-filter when pushing edges to the queue.
+                Hence, the forward- and the backward-query are not balanced wrt weights.
+                Thus, after finding the first meeting-node, the hop-distance of the shortest-path could be arbitrary.
+                This leads to wrong paths with normal bidirectional Dijkstra.
+                To correct this issue, stop the query after polling a node of a sub-distance, which is higher than the currently best meeting-node's total distance.
+            }
 
-    \section{Finding alternative routes via modified personalized routing (TODO: Titel okay?)}
+    \subsection{A* and why it is not used (TODO how to write A*)}
 
-    \todo{TODO add some text here}
+        \todo{TODO write}
 
-        \subsection{Correctness-proof of algorithm}
+    \subsection{Personalized Routing}
 
-        \todo{TODO add some text here}
+        \todo{TODO write}
 
-        \subsection{Completeness-proof of algorithm}
+    \subsection{Contraction-Hierarchies}
 
-        \todo{TODO add some text here}
+        \todo{TODO write}
+
+        \subsubsection{Overview}
+
+        \subsubsection{Computing shortcuts of multiple metrics with LP/ILP (TODO title)}
+
+    \subsection{Cyclops}
+
+        \todo{TODO write}
+
+        \subsubsection{Idea}
+
+            \todo{TODO write; Here could be talked about the approach of removing the nd-triangulation and how cyclops takes this idea/context and makes it correct by building convex-hull explicitly (because new facets could destroy old facets).}
+
+        \subsubsection{TODO Proof of correctness + completeness}

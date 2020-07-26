@@ -1,6 +1,8 @@
 \chapter{Introduction}
 \label{chap:introduction}
 
+\todo{TODO Template okay like this? E.g. line-spacing etc}
+
 Let assume drivers driving to somewhere a little further away, like work.
 A navigation-system, asked for the fastest route, usually returns a route over larger streets, like highways.
 When many drivers receive the same answer from their independent navigation-systems, the traffic tends to overload these larger streets.
@@ -48,11 +50,14 @@ So distributing this amount of traffic over the network is and will be important
 
 \section{Main Contribution}
 
-    The contribution of this paper is adding a preprocessing-phase to the approch of~\cite{barth:alternative_multicriteria_routes}.
-    This preprocessing analyzes the street-network with help of the optimized \textit{cyclops}-exploration, leading to a new metric.
-    This metric penalizes edges of high quality/popularity (measured by counting suggested routes by \textit{Dijkstra}).
-    Penalizing in a preprocessing in combination with the \textit{cyclops}-routing leads to a more distributed set of alternative-routes, while the routing-query can be processed as quick as before (using \textit{cyclops} or \textit{Dijkstra} with \textit{personalized routing}).
+    In general, the static penalization tends to shift the problem (of choosing the same routes) from one metric to another.
+    The contribution of this paper is the combination of penalization and alternative-routing.
+    A preprocessing-phase is added to the approach of~\cite{barth:alternative_multicriteria_routes} analyzing the street-network with help of the optimized \textit{cyclops}-exploration.
+    This leads to a new metric, penalizing edges of high quality/popularity (measured by counting suggested routes by \textit{Dijkstra}).
+    Here, the approvement over other penalization-strategies is the combination of penalization with the ability of \textit{cyclops} to find many different routes.
     Further, \textit{cyclops} can be adjusted with a tolerance for every used metric, that allows to guarantee a bad path being not worse than the best path's cost plus tolerance.
+
+    Penalizing in a preprocessing in combination with the \textit{cyclops}-routing leads to a more distributed set of good, alternative routes, while the routing-query can be processed as quickly as before (using \textit{cyclops} or \textit{Dijkstra} with \textit{personalized routing}).
 
 \section{Outline}
 

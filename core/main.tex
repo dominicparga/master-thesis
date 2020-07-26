@@ -3,7 +3,7 @@
 
 \input{src/preliminaries/pre-documentclass}
 
-\documentclass[
+\documentclass[%
     % fontsize=11pt is the standard
     a4paper,  % Standard format - only KOMAScript uses paper=a4 - https://tex.stackexchange.com/a/61044/9075
     twoside,  % we are optimizing for both screen and two-side printing. So the page numbers will jump, but the content is configured to stay in the middle (by using the geometry package)
@@ -37,7 +37,7 @@
     enddate={August 14, 2020},
 ]{scientific-thesis-cover}
 
-\input{src/acronyms}
+\input{src/glossary}
 
 \makeindex
 
@@ -123,14 +123,16 @@
 \listof{Algorithmus}{List of Algorithms}
 %\listofalgorithms % Ist nur für Algorithmen, die mittels \begin{algorithm} umschlossen werden, nötig
 
-% Abkürzungsverzeichnis
-\printnoidxglossaries
-
 \iftex4ht
 \else
     % Optischen Randausgleich und Grauwertkorrektur wieder aktivieren
     \microtypesetup{protrusion=true}
 \fi
+
+%------------------------------------------------------------------------------%
+% acronym
+
+\printglossary[type=\acronymtype]
 
 %------------------------------------------------------------------------------%
 % Headline and footline
@@ -153,6 +155,11 @@
 \input{src/content/balancing}
 \input{src/content/experiments}
 \input{src/content/conclusion_and_outlook}
+
+%------------------------------------------------------------------------------%
+% glossary
+
+\printglossary[type=main]
 
 %------------------------------------------------------------------------------%
 % bibliography

@@ -314,10 +314,6 @@
 \makeatother
 
 
-\newcommand{\eg}{e.\,g.,\ }
-\newcommand{\ie}{i.\,e.,\ }
-
-
 % EN: introduce \powerset - hint by http://matheplanet.com/matheplanet/nuke/html/viewtopic.php?topic=136492&post_id=997377
 \DeclareFontFamily{U}{MnSymbolC}{}
 \DeclareSymbolFont{MnSyC}{U}{MnSymbolC}{m}{n}
@@ -486,8 +482,7 @@
 \fi
 
 
-% EN: Alternative to listings could be fancyvrb. Can be used together.
-% DE: Alternative zu Listings ist fancyvrb. Kann auch beides gleichzeitig benutzt werden.
+% Alternative to listings could be fancyvrb. Can be used together.
 \usepackage{fancyvrb}
 %
 % EN: Font size for the normal text
@@ -613,25 +608,26 @@
 % Find styles here:
 % https://www.overleaf.com/learn/latex/Biblatex_bibliography_styles
 %
-\usepackage[
-  backend       = biber, %biber does not work with 64x versions alternative: bibtex8
-  %minalphanames only works with biber backend
-  sortcites     = true,
-  bibstyle      = alphabetic,
-  citestyle     = alphabetic,
-  giveninits    = true,
-  useprefix     = false, %"von, van, etc." will be printed, too. See below.
-  minnames      = 1,
-  minalphanames = 3,
-  maxalphanames = 4,
-  maxbibnames   = 99,
-  maxcitenames  = 2,
-  natbib        = true,
-  eprint        = true,
-  url           = true,
-  doi           = true,
-  isbn          = true,
-  backref       = true]{biblatex}
+\usepackage[%
+    backend       = biber, %biber does not work with 64x versions alternative: bibtex8
+    %minalphanames only works with biber backend
+    sortcites     = true,
+    bibstyle      = alphabetic,
+    citestyle     = alphabetic,
+    giveninits    = true,
+    useprefix     = false, %"von, van, etc." will be printed, too. See below.
+    minnames      = 1,
+    minalphanames = 3,
+    maxalphanames = 4,
+    maxbibnames   = 99,
+    maxcitenames  = 2,
+    natbib        = true,
+    eprint        = true,
+    url           = true,
+    doi           = true,
+    isbn          = true,
+    backref       = true
+]{biblatex}
 
 % enable more breaks at URLs. See https://tex.stackexchange.com/a/134281.
 \setcounter{biburllcpenalty}{7000}
@@ -729,34 +725,37 @@
 
 
 % EN: Define color of links and more
-\hypersetup{
-  bookmarksnumbered=true,
-  bookmarksopen=true,
-  bookmarksopenlevel=1,
-  breaklinks=true,
-  colorlinks=true,
-  pdfstartview=Fit,
-  pdfpagelayout=SinglePage, % DE: Alterntaive: TwoPageRight -- zweiseitige Darstellung: ungerade Seiten rechts im PDF-Viewer - siehe auch http://tex.stackexchange.com/a/21109/9075
-  %pdfencoding=utf8, % EN: This is probably the same as passing the option "unicode" at \usepackage{hyperref}
-  filecolor=darkblue,
-  urlcolor=darkblue,
-  linkcolor=black,
-  citecolor=black
+\hypersetup{%
+    bookmarksnumbered=true,
+    bookmarksopen=true,
+    bookmarksopenlevel=1,
+    breaklinks=true,
+    colorlinks=true,
+    pdfstartview=Fit,
+    pdfpagelayout=SinglePage, % DE: Alterntaive: TwoPageRight -- zweiseitige Darstellung: ungerade Seiten rechts im PDF-Viewer - siehe auch http://tex.stackexchange.com/a/21109/9075
+    %pdfencoding=utf8, % EN: This is probably the same as passing the option "unicode" at \usepackage{hyperref}
+    filecolor=darkblue,
+    urlcolor=darkblue,
+    linkcolor=black,
+    citecolor=black
 }
 
 
-% EN: Abbreviations - has to be loaded after hyperref
-% DE: Abkürzungsverzeichnis - muss nach hyperref geladen werden
+% Abbreviations - has to be loaded after hyperref
 %
 % DE: siehe http://www.dickimaw-books.com/cgi-bin/faq.cgi?action=view&categorylabel=glossaries#glsnewwriteexceeded
-\usepackage[acronym,indexonlyfirst,nomain]{glossaries}
-\renewcommand*{\acronymname}{List of Abbreviations}
-\renewcommand*{\glsgroupskip}{}
+% \usepackage[acronym,indexonlyfirst,nomain]{glossaries}
+% \renewcommand*{\acronymname}{List of Abbreviations}
+% \renewcommand*{\glsgroupskip}{}
 %
 % EN: Removed Glossarie as a table as a quick fix to get the template working again
 %     See http://tex.stackexchange.com/questions/145579/how-to-print-acronyms-of-glossaries-into-a-table
 %
-\makenoidxglossaries
+% \makenoidxglossaries
+
+\usepackage[acronym]{glossaries}
+\makeglossaries
+
 
 
 % EN: Extensions for references inside the document (\cref{fig:sample}, ...)

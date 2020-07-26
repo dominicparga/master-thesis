@@ -1,0 +1,15 @@
+% https://tex.stackexchange.com/questions/8946/how-to-combine-acronym-and-glossary
+
+\newglossaryentry{gls:stpair}{%
+    name = {s-t-pair},
+    description = {TODO source-target-pair}
+}
+\newglossaryentry{stpair}{%
+    type = \acronymtype,
+    name = {s-t-pair},
+    description = {source-target-pair},
+    first = {source-target-pair (s-t-pair)\glsadd{gls:stpair}},
+    plural = {source-target-pairs},
+    shortplural = {s-t-pairs},
+    see = [Glossary:]{gls:stpair}
+}

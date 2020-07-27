@@ -41,7 +41,7 @@
     % Place nodes
 
     \coordinate (orig) at (0, 0);
-    \node [action, below = of orig] (reading-in) {Read-in graph};
+    \node [action, below = of orig] (reading-in) {Read-in graph and add placeholder for new metric};
     \node [data, below = of reading-in] (graph) {$G=(V,E)$};
     \node [action, below = of graph] (contracting) {Contract graph $G$ with \textit{contraction-hierarchies}};
 

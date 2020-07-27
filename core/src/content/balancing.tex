@@ -15,18 +15,21 @@ This \textit{balancing} is depicted in figure~\ref{fig:balancing}.
     \input{res/graphics/balancing}
     \caption[Overview of balancing a graph]{%
         This flow shows the balancer, that analyzes a given graph $G$.
-        Actions are rectangular, data is elliptical.
+        Shapes for actions are rectangular and blue, shapes for data are elliptical and red.
         A metric is created and updated, that distributes upcoming workload (like during rush-hour) more evenly over the graph.
+        Updating the metric could vary and/or depend on the number of iterations.
         \label{fig:balancing}
     }
 \end{figure}
 
 \todo{TODO Routes within a certain tolerance of the best possible cost (per metric, e.g. duration must be not worse than $25~\%$ \todo{tolerance should match the resulting plots}) are randomly chosen from \textit{cyclops}.}
 
+TODOs
+\begin{enumerate}
+    \item \todo{both approaches: multiple runs (explicit euler because workload is toggling) vs multiple metrics}
+    \item \todo{highlights, what was difficult/much work? -> repo-link}
+    \item \todo{implementation -> sub-chapter of chapter 3}
+    \item \todo{normalization of all metrics -> comparability between different graphs}
+\end{enumerate}
+
 \input{src/content/balancing/implementation}
-% Mainly describing
-% - choose alternative routes -> better total workload in street-network
-% - both approaches: multiple runs (explicit euler) vs multiple metrics
-% - highlights, what was difficult/much work? -> repo-link
-% - implementation -> sub-chapter of chapter 3
-% - normalization of all metrics -> comparability between different graphs

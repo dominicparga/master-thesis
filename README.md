@@ -6,7 +6,8 @@
 
 This master-thesis belongs to the [osmgraphing-repo][github/dominicparga/osmgraphing].
 
-## Usage
+
+## Usage <a name="usage"><\a>
 
 You can build by simply executing `latexmk`.
 The file `.latexmkrc` sets it up using `lualatex`.
@@ -15,9 +16,13 @@ For a fresh and clean build, simply remove this directory.
 
 This setup is tested and used with `visual-studio-code` on `archlinux`.
 
-## Feedback
 
-[Compare branch `nightly` with state from last feedback][github/self/cmp/feedback]
+## Feedback <a name="feedback"><\a>
+
+Compare [here][github/self/cmp/feedback] the branch `nightly` with the state from last feedback.
+
+Besides that, every push starts a GitHub-workflow-run, that creates the respective pdf.
+This pdf can be downloaded as artifact of the respective workflow in the register `Actions` of this repo.
 
 
 [github/dominicparga/osmgraphing]: https://github.com/dominicparga/osmgraphing

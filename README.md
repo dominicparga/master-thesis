@@ -17,7 +17,7 @@ This setup is tested and used with `visual-studio-code` on `archlinux`.
 
 ## Feedback
 
-`https://github.com/dominicparga/master-thesis/compare/tmp/feedback...nightly`
+[Compare branch `nightly` with state from last feedback][github/self/cmp/feedback]
 
 
 [github/dominicparga/osmgraphing]: https://github.com/dominicparga/osmgraphing
@@ -27,3 +27,4 @@ This setup is tested and used with `visual-studio-code` on `archlinux`.
 [github/license/badge]: https://img.shields.io/badge/license-Apache--2.0-green?style=for-the-badge
 [github/tags]: https://github.com/dominicparga/master-thesis/tags
 [github/tags/badge]: https://img.shields.io/github/v/tag/dominicparga/master-thesis?sort=semver&style=for-the-badge
+[github/self/cmp/feedback]: https://github.com/dominicparga/master-thesis/compare/tmp/feedback...nightly

@@ -15,6 +15,11 @@ For a fresh and clean build, simply remove this directory.
 
 This setup is tested and used with `visual-studio-code` on `archlinux`.
 
+## Feedback
+
+`https://github.com/dominicparga/master-thesis/compare/tmp/feedback...nightly`
+
+
 [github/dominicparga/osmgraphing]: https://github.com/dominicparga/osmgraphing
 [github/last-commit]: https://github.com/dominicparga/master-thesis/commits
 [github/last-commit/badge]: https://img.shields.io/github/last-commit/dominicparga/master-thesis?style=for-the-badge

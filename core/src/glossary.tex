@@ -1,15 +1,19 @@
+% Get acronyms and glossaries linked
 % https://tex.stackexchange.com/questions/8946/how-to-combine-acronym-and-glossary
+%
+% fabulize
+% https://www.overleaf.com/learn/latex/glossaries
 
-\newglossaryentry{gls:stpair}{%
-    name = {s-t-pair},
-    description = {TODO source-target-pair}
+\newglossaryentry{gls:sdpair}{%
+    name = {s-d-pair},
+    description = {TODO source-destination-pair}
 }
-\newglossaryentry{stpair}{%
+\newglossaryentry{acr:sdpair}{%
     type = \acronymtype,
-    name = {s-t-pair},
-    description = {source-target-pair},
-    first = {source-target-pair (s-t-pair)\glsadd{gls:stpair}},
-    plural = {source-target-pairs},
-    shortplural = {s-t-pairs},
-    see = [Glossary:]{gls:stpair}
+    name = {s-d-pair},
+    description = {source-destination-pair},
+    first = {source-destination-pair (s-d-pair)\glsadd{gls:sdpair}},
+    plural = {source-destination-pairs},
+    shortplural = {s-d-pairs},
+    see = [Glossary:]{gls:sdpair}
 }

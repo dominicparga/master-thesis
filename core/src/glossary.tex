@@ -3,17 +3,49 @@
 %
 % fabulize
 % https://www.overleaf.com/learn/latex/glossaries
+%
+% many good explanations and settings (like sort=naiive for na\"{\i}ve)
+% https://en.wikibooks.org/wiki/LaTeX/Glossary#Using_glossaries
+%
+% NOTES
+% - Don't use \gls{...} in headings, because the pdf mixes this up.
 
-\newglossaryentry{gls:sdpair}{%
-    name = {s-d-pair},
-    description = {TODO source-destination-pair}
-}
-\newglossaryentry{acr:sdpair}{%
+\newglossaryentry{sdpair}{%
     type = \acronymtype,
-    name = {s-d-pair},
-    description = {source-destination-pair},
-    first = {source-destination-pair (s-d-pair)\glsadd{gls:sdpair}},
-    plural = {source-destination-pairs},
-    shortplural = {s-d-pairs},
-    see = [Glossary:]{gls:sdpair}
+    name = {\textit{s-d-pair}},
+    description = {TODO},
+    first = {\textit{source-destination-pair} (\textit{s-d-pair})\glsadd{gls:sdpair}},
+    longplural = {\textit{source-destination-pairs}},
+    shortplural = {\textit{s-d-pairs}},
+    see = [Glossary:]{gls:sdpair},
+    sort = {source-destination-pair}
+}
+\newglossaryentry{gls:sdpair}{%
+    name = {\textit{s-d-pair}},
+    description = {TODO},
+    sort = {source-destination-pair}
+}
+
+\newglossaryentry{cyclops}{%
+    name = {\textit{Cyclops}},
+    description = {TODO},
+    sort = {Cyclops}
+}
+
+\newglossaryentry{personalized_routing}{%
+    name = {\textit{personalized routing}},
+    description = {TODO},
+    sort = {personalized routing}
+}
+
+\newglossaryentry{dijkstra}{%
+    name = {\textit{Dijkstra}},
+    description = {TODO Dijkstra (also explain bidirectional here)},
+    sort = {Dijkstra}
+}
+
+\newglossaryentry{contraction-hierarchies}{%
+    name = {\textit{contraction-hierarchies}},
+    description = {TODO},
+    sort = {contraction-hierarchies}
 }

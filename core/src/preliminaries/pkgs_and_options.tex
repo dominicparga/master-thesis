@@ -753,7 +753,12 @@
 %
 % \makenoidxglossaries
 
-\usepackage[acronym]{glossaries}
+% toc
+% Glossary should show up in table-of-contents
+\usepackage[acronym,toc]{glossaries}
+% many good explanations and settings, e.g. overview of different styles
+% https://en.wikibooks.org/wiki/LaTeX/Glossary#Using_glossaries
+\setglossarystyle{altlist}
 \makeglossaries
 
 

@@ -45,20 +45,20 @@ So distributing this amount of traffic over the network is and will be important
         In both cases, less similarity while getting more alternative paths leads to raising computation-time.
         \todo{TODO Is this preprocessing-time? If no, my contribution is nicer, because it has high computation-time only during preprocessing}
 
-        To avoid these issues, \cite{barth:alternative_routes} develops an algorithm called \textit{cyclops} based on \textit{personalized routing}, extended by a geometric interpretation of shortest paths in their underlying cost-space.
-        This algorithm is used in its optimized version from~\cite{barth:alternative_multicriteria_routes}, where \textit{cyclops} is combined with \textit{contraction-hierarchies}~\cite{geisberger:contraction_hierarchies}.
+        To avoid these issues, \cite{barth:alternative_routes} develops an algorithm called \gls{cyclops} based on \gls{personalized_routing}, extended by a geometric interpretation of shortest paths in their underlying cost-space.
+        This algorithm is used in its optimized version from~\cite{barth:alternative_multicriteria_routes}, where \gls{cyclops} is combined with \gls{contraction-hierarchies}~\cite{geisberger:contraction_hierarchies}.
         \todo{TODO Is this the original paper? Because it is not the first one describing contraction, see~\cite{schultes:route-planning}.}
 
 \section{Main Contribution}
 
     In general, the static penalization tends to shift the problem (of choosing the same routes) from one metric to another.
     The contribution of this paper is the combination of penalization and alternative-routing.
-    A preprocessing-phase is added to the approach of~\cite{barth:alternative_multicriteria_routes} analyzing the street-network with help of the optimized \textit{cyclops}-exploration.
-    This leads to a new metric, penalizing edges of high quality/popularity (measured by counting suggested routes by \textit{Dijkstra}).
-    Here, the approvement over other penalization-strategies is the combination of penalization with the ability of \textit{cyclops} to find many different routes.
-    Further, \textit{cyclops} can be adjusted with a tolerance for every used metric, that allows to guarantee a bad path being not worse than the best path's cost plus tolerance.
+    A preprocessing-phase is added to the approach of~\cite{barth:alternative_multicriteria_routes} analyzing the street-network with help of the optimized \gls{cyclops}-exploration.
+    This leads to a new metric, penalizing edges of high quality/popularity (measured by counting suggested routes by \gls{dijkstra}).
+    Here, the approvement over other penalization-strategies is the combination of penalization with the ability of \gls{cyclops} to find many different routes.
+    Further, \gls{cyclops} can be adjusted with a tolerance for every used metric, that allows to guarantee a bad path being not worse than the best path's cost plus tolerance.
 
-    Penalizing in a preprocessing in combination with the \textit{cyclops}-routing leads to a more distributed set of good, alternative routes, while the routing-query can be processed as quickly as before (using \textit{cyclops} or \textit{Dijkstra} with \textit{personalized routing}).
+    Penalizing in a preprocessing in combination with the \gls{cyclops}-routing leads to a more distributed set of good, alternative routes, while the routing-query can be processed as quickly as before (using \gls{cyclops} or \gls{dijkstra} with \gls{personalized_routing}).
 
 \section{Outline}
 

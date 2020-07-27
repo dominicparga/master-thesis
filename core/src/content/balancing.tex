@@ -10,7 +10,9 @@ With this metric, routing-algorithms like \gls{dijkstra} \todo{TODO Check if \gl
 
 This \textit{balancing} is depicted in figure~\ref{fig:balancing}.
 At first, the graph, that should be balanced, has to be read in, resulting in $G = (V, E)$ of $d$ metrics.
-This graph $G$ is contracted via \gls{contraction-hierarchies} to improve the performance.
+This graph $G$ is contracted via \gls{contraction-hierarchies}.
+The step of contracting is not needed for correctness, but reduces the needed runtime (even if $G$ is not fully contracted).
+
 
 \begin{figure}
     \centering

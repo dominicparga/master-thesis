@@ -6,6 +6,7 @@ TODOs Cleanup after finishing
 \todo{TODO Are legends of figures good enough to understand figure without reading text?}
 \todo{TODO Remove pages from paper-cites}
 \todo{TODO Cleanup bibliography to be uniform, remove unnecessary links, add DOIs etc}
+\todo{TODO Remove glossary?}
 
 Let assume drivers driving to somewhere a little further away, like work.
 A navigation-system, asked for the fastest route, usually returns a route over larger streets, like highways.
@@ -59,31 +60,22 @@ Here, data-packages are transmitted much faster than drivers are driving through
         However, both approaches suffer from the sensitivity of tuning the parameters and graphs are considered to have one metric.
 
         When it comes to graphs of multidimensional metrics, pareto-optimal solutions occur implicitely.
-        Here, a first idea is computing all pareto-optimal paths.
+        A first idea is computing all pareto-optimal paths.
         As stated in~\cite{delling:pareto-paths}, computing all pareto-optimal paths is too expensive to be practical at all.
         That's why~\cite{barth:alternative_multicriteria_routes} develops an algorithm enumerating \glspl{personalized_route}, extended by a geometric interpretation of shortest paths in their underlying cost-space.
         To speed the queries up, a preprocessing-technique called \gls{contraction-hierarchies} is applied in their paper.
         In addition, while the original approach of contraction-hierarchies is developed in~\cite{geisberger:contraction_hierarchies}, an improved version~\cite{funke:personal-routes} using linear programming is used.
         Further, to reduce the search-space, the enumeration is restricted by a clever check in~\cite{barth:alternative_routes} without influencing its correctness or completeness.
 
-\section{Main Contribution}
+\section{Main contribution}
 
-    \todo{%
-        Florian doesn't understand it. -> Refactor!
-
-        In general, the static penalization tends to shift the problem (of choosing the same routes) from one metric to another.
-    }
-    The contribution of this paper is the combination of penalization and personalized-routing using \gls{cyclops}.
-    A preprocessing-phase is added to the approach of~\cite{barth:alternative_multicriteria_routes} analyzing the street-network with help of the optimized \gls{cyclops}-exploration.
-    This leads to a new metric, penalizing edges of high quality/popularity (measured by counting suggested routes by \gls{dijkstra}).
-    \todo{%
-        TODO: explain, what my contribution brings, not what my algorithms does.
-
-        Here, the improvement over other penalization-strategies is the combination of penalization with the ability of \gls{cyclops} to find many different routes.
-        Further, \gls{cyclops} can be adjusted with a tolerance for every used metric, that allows to guarantee a bad path being not worse than the best path's cost plus tolerance.
-    }
-
-    Penalizing in a preprocessing in combination with the \gls{cyclops}-routing leads to a more distributed set of good, alternative routes, while the routing-query can be processed as quickly as before (using \gls{cyclops} or \gls{dijkstra} with \gls{personalized_routing}).
+    The contribution of this paper is the combination of penalization and \gls{personalized_routing}.
+    A preprocessing-phase is added, that analyzes the street-network with the help of the (restricted) enumeration from~\cite{barth:alternative_multicriteria_routes}.
+    This preprocessing leads to a new metric, penalizing edges of high quality/popularity.
+    Applying \gls{personalized_routing} with all interesting metrics, including the new one(s), leads to a more distributed set of routes.
+    Thus, the street-network is used in a broader manner.
+    At the same time, due to \gls{personalized_routing}, routing-queries can be processed as quickly as before.
+    To guarantee a certain tolerance towards the shortest path, a filter is added to the enumeration from~\cite{barth:alternative_multicriteria_routes}.
 
 \section{Outline}
 

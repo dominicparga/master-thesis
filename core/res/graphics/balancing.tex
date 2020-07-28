@@ -48,7 +48,7 @@
     \coordinate [left = of graph] (dst);
 
     \node [data, below = of contracting] (ch-graph) {$G_{CH}=(V,E_{CH})$};
-    \node [action, below = of ch-graph] (explorating) {Explore given \glspl{stpair} with \gls{cyclops} and choose one path u.a.r.};
+    \node [action, below = of ch-graph] (explorating) {Explore given \glspl{stpair} with \gls{personalized_routing} and choose one path u.a.r.};
     \node [data, below = of explorating] (paths) {Set of found paths};
 
     \node [action, right = of paths] (analyzing) {$\forall e \in E_{CH}:$ count paths using $e$};

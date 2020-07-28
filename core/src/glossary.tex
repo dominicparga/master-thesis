@@ -10,6 +10,80 @@
 % NOTES
 % - Don't use \gls{...} in headings, because the pdf mixes this up.
 
+\newglossaryentry{balancing}{%
+    name = {\textit{balancing}},
+    description = {TODO},
+    sort = {balancing}
+}
+
+\newglossaryentry{contraction-hierarchies}{%
+    name = {\textit{contraction-hierarchies}},
+    description = {TODO},
+    sort = {contraction-hierarchies}
+}
+
+\newglossaryentry{cost}{%
+    name = {\textit{cost}},
+    plural = {\textit{costs}},
+    description = {TODO},
+    sort = {cost}
+}
+
+\newglossaryentry{dijkstra}{%
+    name = {\textit{Dijkstra}},
+    description = {TODO Dijkstra (also explain bidirectional here)},
+    sort = {Dijkstra}
+}
+
+\newglossaryentry{epr}{%
+    type = \acronymtype,
+    name = {\textit{EPR}},
+    first = {\textit{Enumerating Personalized Routing} (\textit{EPR}) from~\cite{barth:alternative_multicriteria_routes}\glsadd{gls:epr}},
+    description = {TODO},
+    see = [Glossary:]{gls:epr},
+    sort = {enumerating personalized routing}
+}
+\newglossaryentry{gls:epr}{%
+    name = {\textit{EPR}},
+    description = {TODO},
+    see = [Glossary:]{gls:repr},
+    sort = {enumerating personalized routing}
+}
+
+\newglossaryentry{metric}{%
+    name = {\textit{metric}},
+    plural = {\textit{metrics}},
+    description = {TODO},
+    sort = {metric}
+}
+
+\newglossaryentry{personalized_routing}{%
+    name = {\textit{personalized routing}},
+    description = {TODO},
+    sort = {personalized routing}
+}
+
+\newglossaryentry{personalized_route}{%
+    name = {\textit{personalized route}},
+    plural = {\textit{personalized routes}},
+    description = {TODO},
+    sort = {personalized route}
+}
+
+\newglossaryentry{repr}{%
+    type = \acronymtype,
+    name = {\textit{REPR}},
+    first = {\textit{Restricted Enumerating Personalized Routing} (\textit{REPR}) from~\cite{barth:alternative_routes}\glsadd{gls:repr}},
+    description = {TODO},
+    see = [Glossary:]{gls:repr},
+    sort = {restricted enumerating personalized routing}
+}
+\newglossaryentry{gls:repr}{%
+    name = {\textit{REPR}},
+    description = {TODO blabla \textit{restricted} is a runtime-optimization},
+    sort = {restricted enumerating personalized routing}
+}
+
 \newglossaryentry{stpair}{%
     type = \acronymtype,
     name = {\textit{s-t-pair}},
@@ -26,27 +100,23 @@
     sort = {source-target-pair}
 }
 
-\newglossaryentry{personalized_routing}{%
-    name = {\textit{personalized routing}},
+\newglossaryentry{uar}{%
+    type = \acronymtype,
+    name = {\textit{u.\,a.\,r.}},
+    first = {\textit{uniformly at random} (\textit{u.\,a.\,r.})\glsadd{gls:stpair}},
     description = {TODO},
-    sort = {personalized routing}
+    see = [Glossary:]{gls:uar},
+    sort = {uniformly at random}
+}
+\newglossaryentry{gls:uar}{%
+    name = {\textit{u.\,a.\,r.}},
+    description = {TODO},
+    sort = {uniformly at random}
 }
 
-\newglossaryentry{personalized_route}{%
-    name = {\textit{personalized route}},
-    plural = {\textit{personalized routes}},
+\newglossaryentry{weight}{%
+    name = {\textit{weight}},
+    plural = {\textit{weights}},
     description = {TODO},
-    sort = {personalized route}
-}
-
-\newglossaryentry{dijkstra}{%
-    name = {\textit{Dijkstra}},
-    description = {TODO Dijkstra (also explain bidirectional here)},
-    sort = {Dijkstra}
-}
-
-\newglossaryentry{contraction-hierarchies}{%
-    name = {\textit{contraction-hierarchies}},
-    description = {TODO},
-    sort = {contraction-hierarchies}
+    sort = {weight}
 }

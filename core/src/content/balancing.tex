@@ -10,6 +10,9 @@ For a given \gls{stpair} and a graph $G = (V, E)$ with vertices $V$ and edges $E
 To achieve this, a preprocessing-phase called \textit{balancing} analyzes the graph $G$ and computes a new \gls{metric}.
 With this new \gls{metric}, routing-algorithms like \gls{dijkstra} \todo{TODO Check whether \gls{dijkstra} with \gls{personalized_routing} improves distribution with new metric or whether \gls{repr} is a must.} (with \gls{personalized_routing}) or like \gls{repr} can compute paths as usual.
 
+It should be noted, that \gls{dijkstra} (bidirectional) instead of \gls{astar} is used for every occuring routing-query, may it be in \gls{repr} or anywhere else.
+The reason is, that \gls{astar} works with heuristics, which are difficult to generalize over custom, artificial metrics.
+
 \section{Preprocessing to create a new metric}
 
     \todo{both approaches: multiple runs (explicit euler because workload is toggling) vs multiple \glspl{metric}}
@@ -45,11 +48,11 @@ With this new \gls{metric}, routing-algorithms like \gls{dijkstra} \todo{TODO Ch
     This graph $G$ is contracted via \gls{contraction-hierarchies} to $G_{CH}$.
     The step of contracting is not needed for correctness, but reduces the needed runtime (even if $G$ is not being fully contracted).
 
-\section{Preprocessing to create a new metric}
+\section{Executing queries on the balanced graph}
 
-    \todo{TODO Add somewhere why A* is not used}
+    \todo{TODO write}
 
-\section{Implementation}
+\section{Some implementation-details}
 \label{chap:balancing:implementation}
 
     \todo{highlights, what was difficult/much work? -> repo-link}

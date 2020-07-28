@@ -7,7 +7,7 @@
 This master-thesis belongs to the [osmgraphing-repo][github/dominicparga/osmgraphing].
 
 
-## Usage <a name="usage"><\a>
+## Usage <a name="usage"></a>
 
 You can build by simply executing `latexmk`.
 The file `.latexmkrc` sets it up using `lualatex`.
@@ -17,7 +17,7 @@ For a fresh and clean build, simply remove this directory.
 This setup is tested and used with `visual-studio-code` on `archlinux`.
 
 
-## Feedback <a name="feedback"><\a>
+## Feedback <a name="feedback"></a>
 
 Compare [here][github/self/cmp/feedback] the branch `nightly` with the state from last feedback.
 

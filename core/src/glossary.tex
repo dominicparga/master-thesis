@@ -10,20 +10,20 @@
 % NOTES
 % - Don't use \gls{...} in headings, because the pdf mixes this up.
 
-\newglossaryentry{sdpair}{%
+\newglossaryentry{stpair}{%
     type = \acronymtype,
-    name = {\textit{s-d-pair}},
+    name = {\textit{s-t-pair}},
+    plural = {\textit{s-t-pairs}},
+    first = {\textit{source-target-pair} (\textit{s-t-pair})\glsadd{gls:stpair}},
+    firstplural = {\textit{source-target-pairs} (\textit{s-t-pairs})\glsadd{gls:stpair}},
     description = {TODO},
-    first = {\textit{source-destination-pair} (\textit{s-d-pair})\glsadd{gls:sdpair}},
-    longplural = {\textit{source-destination-pairs}},
-    shortplural = {\textit{s-d-pairs}},
-    see = [Glossary:]{gls:sdpair},
-    sort = {source-destination-pair}
+    see = [Glossary:]{gls:stpair},
+    sort = {source-target-pair}
 }
-\newglossaryentry{gls:sdpair}{%
-    name = {\textit{s-d-pair}},
+\newglossaryentry{gls:stpair}{%
+    name = {\textit{s-t-pair}},
     description = {TODO},
-    sort = {source-destination-pair}
+    sort = {source-target-pair}
 }
 
 \newglossaryentry{cyclops}{%
@@ -36,6 +36,13 @@
     name = {\textit{personalized routing}},
     description = {TODO},
     sort = {personalized routing}
+}
+
+\newglossaryentry{personalized_route}{%
+    name = {\textit{personalized route}},
+    plural = {\textit{personalized routes}},
+    description = {TODO},
+    sort = {personalized route}
 }
 
 \newglossaryentry{dijkstra}{%

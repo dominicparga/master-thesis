@@ -1,10 +1,14 @@
 \chapter{Optimizing network-utilization by balancing workload}
 \label{chap:balancing}
 
+\todo{TODO Add somewhere why A* is not used}
+
 The last chapter brings an overview of different notations, algorithms and techniques.
 In this chapter, all these instruments are combined to a chain for distributing routes more evenly, that are preferred by routing-algorithms like \gls{dijkstra}.
+The goal is to augment a given graph, such that diverse alternative paths can be found and used to spread the load (of a typical workload) while limiting the detours of individual \glspl{stpair}.
+\todo{TODO wording, especially because of the following definitions}
 
-For a given \gls{sdpair} and a graph $G = (V, E)$ with vertices $V$ and edges $E$ of $d$-dimensional edge-weights, a path should be found through an algorithm, that implicitly tends to distribute found paths over the network while keeping the paths' costs sufficiently near every cost-dimension's optimum.
+For a given \gls{stpair} and a graph $G = (V, E)$ with vertices $V$ and edges $E$ of $d$-dimensional edge-weights, a path should be found through an algorithm, that implicitly tends to distribute found paths over the network while keeping the paths' costs sufficiently near every cost-dimension's optimum.
 To achieve this, a preprocessing-phase called \textit{balancing} analyzes the graph $G$ and computes a new metric for every edge.
 With this metric, routing-algorithms like \gls{dijkstra} \todo{TODO Check if \gls{dijkstra} really improves distribution or \gls{cyclops} has to be used.} (with \gls{personalized_routing}) and \gls{cyclops} can compute paths as usual.
 

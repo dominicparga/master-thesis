@@ -384,7 +384,13 @@
 }
 
 
-% EN: Enable typesetting values with SI units.
+% group-four-digits
+% 1234 -> 1,234
+% 12345 -> 12,345
+%
+% no group-four-digits means fallback to default, which is probably 5
+% 1234 -> 1234
+% 12345 -> 12,345
 \usepackage[mode=text,group-four-digits,group-separator={,}]{siunitx}
 \sisetup{locale=US}
 

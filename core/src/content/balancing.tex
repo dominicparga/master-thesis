@@ -3,54 +3,94 @@
 
 The last chapter brings an overview of different notations, algorithms and techniques.
 In this chapter, all these instruments are combined to a chain for distributing routes more evenly.
-The goal is to augment a given graph, such that diverse alternative paths can be found and used to spread the load (of a typical workload) while limiting the detours of individual \glspl{stpair}.
+The goal is to augment a given graph, such that diverse alternative paths can be found and used to spread too much load while limiting the detours of individual \glspl{stpair}.
 After the theory is explained, implementation-details are discussed.
+Besides that, the testing-machine's software- and hardware-specifications are disclosed there.
 
 For a given \gls{stpair} and a graph $G = (V, E)$ with vertices $V$ and edges $E$ of $d$-dimensional \glspl{weight}, a path should be found through an algorithm, that implicitly tends to distribute found paths over the network, while keeping the paths' \glspl{cost} sufficiently near every \gls{cost}-dimension's optimum.
 To achieve this, a preprocessing-phase called \textit{balancing} analyzes the graph $G$ and computes a new \gls{metric}.
-With this new \gls{metric}, routing-algorithms like \gls{dijkstra} \todo{TODO Check whether \gls{dijkstra} with \gls{personalized_routing} improves distribution with new metric or whether \gls{repr} is a must.} (with \gls{personalized_routing}) or like \gls{repr} can compute paths as usual.
+With this new \gls{metric}, routing-algorithms like \gls{repr} and \gls{dijkstra} (with \gls{personalized_routing}) can compute paths as usual.
 
 It should be noted, that \gls{dijkstra} (bidirectional) instead of \gls{astar} is used for every occuring routing-query, may it be in \gls{repr} or anywhere else.
-The reason is, that \gls{astar} works with heuristics, which are difficult to generalize over custom, artificial metrics.
+The reason is, that \gls{astar} works with heuristics, which are difficult to generalize over custom, artificial \glspl{metric}.
+The only benefit from using \gls{astar} is the reduction of the search-space, which can be reduced much more using \gls{contraction-hierarchies}.
 
 \section{Preprocessing to create a new metric}
 
     \todo{both approaches: multiple runs (explicit euler because workload is toggling) vs multiple \glspl{metric}}
     \todo{normalization of all \glspl{metric} -> comparability between different graphs}
 
-    This \textit{balancing} is depicted in figure~\ref{fig:balancing} and explained briefly in the caption or detailled in the following.
+    This preprocessing-phase called \textit{balancing} is depicted in figure~\ref{fig:balancing} and explained briefly in the caption or detailled in the following.
 
     \begin{figure}
         \centering
         \input{res/graphics/balancing}
         \caption[Overview of balancing a graph]{%
-            This flow shows the balancer, that analyzes a given graph $G$.
+            This flow shows the \gls{balancing}, that analyzes a given graph $G$.
             Shapes for actions are rectangular and blue, shapes for data are elliptical and red.
             A new, artificial \gls{metric} is created for $G$ and gets updated iteratively.
-            It allows a routing-algorithm to distribute upcoming workload (like during rush-hour) more evenly over the underlying street-network.
+            This new \gls{metric} allows a routing-algorithm, after this \gls{balancing} has finished, to distribute upcoming workload (like during rush-hour) more evenly over the underlying street-network in $G$.
             \label{fig:balancing}
         }
     \end{figure}
 
-    \todo{TODO @Florian: Opinion about performance-issues below?}
-    Let a graph $G = (V, E)$ of $d$ \glspl{metric} be given.
-    For simplicity, all \glspl{metric} in $G$ are used for balancing and the \gls{personalized_routing} prefers all \glspl{metric} the same.
-    Further, the set of \glspl{stpair}, which is used for balancing $G$, chooses $s$ and $t$ from $V$ \gls{uar}.
-    Therefore, a sufficiently large set of \glspl{stpair} is needed to overload $G$.
-    This clearly becomes a bottleneck for performance on larger graphs.
-    On the other side, real, daily, critical \glspl{stpair} are not distributed \gls{uar} over $V$.
-    The rush-hour in the morning, when everybody travels from their home to work, is a good counterexample here.
-    The set of chosen $t$ might be much smaller than the number of $s$, and less people live near industry or motorways.
-    Heuristics as described in~\cite{bakillah:population_from_osm} can return \glspl{stpair} based on approximating population-data from street-networks.
-    So considering more specific sets of \glspl{stpair} might be interesting and helpful here, but is not covered in this thesis.
+    \subsection{Selection of route-pairs}
 
-    At first, the graph $G$, that should be balanced, has to be read in, resulting in $G = (V, E)$ of $d$ \glspl{metric}.
-    This graph $G$ is contracted via \gls{contraction-hierarchies} to $G_{CH}$.
-    The step of contracting is not needed for correctness, but reduces the needed runtime (even if $G$ is not being fully contracted).
+        \todo{TODO @Florian: Opinion about performance-issues below?}
+        Let a street-network be given as a graph $G = (V, E)$ of $d$ \glspl{metric}.
+        For simplicity, the set of \glspl{stpair}, which is used for balancing $G$, chooses \gls{uar}\ $s$ and $t$ from $V$.
+        This has the disadvantage, that a sufficiently large set of \glspl{stpair} is needed to overload $G$.
+        This clearly becomes a bottleneck for performance on larger graphs (beginning with small German states like Saarland with almost $|V| \approx \num{580000}$ and $|E| \approx \num{1160000}$ after parsing).
+        On the other side, real, daily, critical \glspl{stpair} are not distributed \gls{uar}\ over $V$.
+        The rush-hour in the morning, when everybody travels from their home to work, is a good counterexample here.
+        The set of chosen $t$ might be much smaller than the number of $s$, and less people live near industry or motorways.
+        Heuristics as described in~\cite{bakillah:population_from_osm} can return \glspl{stpair} based on approximating population-data from street-networks.
+        So considering more specific sets of \glspl{stpair} might be interesting and helpful to boost the \gls{balancing} up, but is not covered in this thesis.
+        The reason to keep it anyways is the easy implementation, while results are sufficiently good enough, as long as $G$ shows overloaded streets.
+
+    \subsection{The balancing-process}
+
+        At first, the graph $G$, that should be balanced, has to be read in.
+        Before continuing, every \gls{metric} is divided by the respective \gls{metric}-mean resulting in $G = (V, E)$ of $d$ normalized \glspl{metric}.
+        This doesn't just allows to compare different graphs, but also improves the \gls{repr}, which is used later.
+        Non-normalized \glspl{metric} of different scales would cause \gls{alpha}-values of different scale, making some \glspl{metric} more important than others.
+        With \glspl{metric} of different importance, the chosen paths tend to the respective \glspl{metric} and distort the spread.
+
+        This graph $G$ is contracted via \gls{contraction-hierarchies} to $G_{CH}$.
+        The step of contracting is not needed for correctness, but reduces the needed runtime (even if $G$ is not being fully contracted).
+
+        Given the \glspl{stpair} and $G_{CH}$, a path in $G_{CH}$ is searched for every \gls{stpair}.
+        The search may use both, \gls{dijkstra} or \gls{repr}, and in chapter~\ref{chap:balancing:implementation}, both methods are compared.
+        Since \gls{repr} finds multiple paths, one of them is chosen \gls{uar}\ after filtering all found paths by a given tolerance.
+        While \gls{repr} calls \gls{dijkstra} multiple times, just \gls{dijkstra} is faster.
+        On the other hand, when using \gls{repr} with choosing a path \gls{uar}, the resulting paths are more spreaded over the network.
+        This results in a better coverage of $E$ when updating the metric, which allows the \gls{repr} to find more pareto-optimal \glspl{personalized_route} in the convex-hull.
+
+        After finding a set of paths for the given \glspl{stpair}, the number of found paths using an edge is counted for every edge.
+        This workload is used to update the graph's new \gls{metric}.
+
+        \todo{%
+            TODO fabulize: $old_{i+1} = \frac{i \cdot old_i + new_i}{i+1}$
+        }
+        \todo{nice: perfect after 2 iterations}
+
+        \todo{another approach has been tried (euler), but failed due to no convergency}
+
+        \todo{
+            // No capacity, because this metric should smoothen against speed-limit.
+            // A higher speed-limit kind of implies more popularity.
+            // With normalization by capacity, this popularity would be weaken,
+            // so the influence of the speed-limit would be increased indirectly.
+            // But that's the point, the new metric should balance.
+        }
 
 \section{Executing queries on the balanced graph}
 
-    \todo{TODO write}
+    \todo{%
+        TODO
+        After graph has been balanced, execute queries on it.
+        Queries can be done by \gls{dijkstra} or \gls{repr}.
+    }
 
 \section{Some implementation-details}
 \label{chap:balancing:implementation}

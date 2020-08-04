@@ -56,17 +56,15 @@
 \makeatother
 
 
-% EN: Mathematics
-% DE: Mathematik
+% Mathematics, see https://texdoc.net/pkg/amsmath
 %
-% DE: Viele Mathematik-Sachen. Siehe https://texdoc.net/pkg/amsmath
-%
-% EN: Options must be passed this way, otherwise it does not work with glossaries
-% DE: fleqn (=Gleichungen linksbündig platzieren) funktioniert nicht direkt. Es muss noch ein Patch gemacht werden:
-\PassOptionsToPackage{fleqn,leqno}{amsmath}
-%
-% DE: amsmath Muss nicht mehr geladen werden, da es von newtxmath automatisch geladen wird
-% \usepackage{amsmath}
+% Options must be passed this way, otherwise it does not work with glossaries.
+\PassOptionsToPackage{%
+    % fleqn, % align equations left
+    reqno % equation number on the right (leqno for left)
+}{amsmath}
+% amsmath is also loaded automatically by newtxmath (below)
+\usepackage{amsmath}
 
 
 %% EN: Fonts

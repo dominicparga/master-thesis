@@ -4,13 +4,13 @@
 \todo{TODO @Florian: Opinion about (1) Introduction (including related work)?}
 
 Let assume drivers driving to somewhere a little further away, like work.
-A navigation-system, asked for the fastest route, usually returns a route over larger streets, like highways.
+A navigation-system, asked for the fastest route, usually returns a route over larger streets, like motorways.
 When many drivers receive the same answer from their independent navigation-systems, the traffic tends to overload these larger streets.
 These larger streets probably have multiple lanes, but allows a higher speed-limit than smaller streets, resulting in a high driver-capacity and hence a high throughput.
 In addition, due to rush-hours, the traffic is not balanced over the day.
 If the network shouldn't be empty most of the time, it does not match perfectly for rush-hour-scenarios, hence all these aspects leads to traffic-jams and former fast routes become inefficient.
 Besides environmental impact and circumstances to handle the daily amount of rush-hour-traffic, traffic-jams in large (capital) cities cost days of the people's time and hence much money per year.~\cite{inrix:traffic-cost}
-At the latest, this will be interesting with many self-driving cars, where many routes will be needed.
+At the latest, this will be interesting with many self-driving cars, where many routes will be needed and driven automatically.
 It would be inefficient to send all vehicles over the same streets.
 So distributing this amount of traffic over the network is and will be important to save both, time and money.
 
@@ -41,7 +41,7 @@ Here, data-packages are transmitted much faster than drivers are driving through
         Another approach to overcome the issue of providing distributed routes is solving this issue statically.
         Statically in this context means calculating the routes with help of non-volatile data.
         So, routing-computations are not dependent on a street-network's state, but on its attributes.
-        Paths are calculated before a vehicle drives it, and the vehicles' path doesn't change over time.
+        Paths are calculated before a vehicle drives it, and the vehicles' path (typically) doesn't change over time.
         That's why a static approach is less dependent on dynamic traffic and more dependent on the street-network itself, in opposite to the dynamic approaches.
 
         There are several static computation-methods to compute a selection of several routes with respect to one \gls{metric}, that are sufficiently distinct.
@@ -50,28 +50,38 @@ Here, data-packages are transmitted much faster than drivers are driving through
         Another quite intuitive idea is the penalization of popular routes to reduce their usage before computing the shortest path again.
         The focus in \cite{bader:alternative-route-graphs} lays on measuring the quality of alternative paths via node-degrees and using heuristics for computing multidimensional shortest paths.
         In \cite{chondrogiannis:k_shortest_paths}, the problem is addressed, that paths of a set of found $k$ shortest paths for a given \gls{stpair} should differ from eachother, not only from the shortest path itself.
-        Hence they build the set iteratively and discard unwished paths.
+        Hence they build the set iteratively and discard unwished paths with a user-provided threshold.
         To this end, a similarity between paths is defined.
-        However, both approaches suffer from the sensitivity of tuning the parameters and graphs are considered to have one \gls{metric}.
+        However, both approaches suffer from the sensitivity of tuning the parameters and graphs are considered to have only one \gls{metric}.
 
         When it comes to graphs of multidimensional \glspl{metric}, pareto-optimal solutions occur implicitly.
         A first idea is computing all pareto-optimal paths.
         As stated in~\cite{delling:pareto-paths}, computing all pareto-optimal paths is too expensive to be practical at all.
         That's why~\cite{barth:alternative_multicriteria_routes} develops an algorithm enumerating \glspl{personalized_route}, extended by a geometric interpretation of shortest paths in their underlying \gls{cost}-space.
         To speed the queries up, a preprocessing-technique called \gls{contraction-hierarchies} is applied in their paper.
-        In addition, while the original approach of contraction-hierarchies is developed in~\cite{geisberger:contraction_hierarchies}, an improved version~\cite{funke:personal-routes} using linear programming is used.
-        Further, to reduce the search-space, the enumeration is restricted by a clever check in~\cite{barth:alternative_routes} without influencing its correctness or completeness.
+        In addition, while the original approach of contraction-hierarchies is developed in~\cite{geisberger:contraction_hierarchies}, an improved version~\cite{funke:personal-routes} using linear programming is used for this thesis.
+        Further, to reduce the search-space, the enumeration is restricted by a clever check from~\cite{barth:alternative_routes} without influencing its correctness or completeness.
 
 \section{Main contribution}
 
     The contribution of this paper is the combination of penalization and \gls{personalized_routing}.
-    A preprocessing-phase is added, that analyzes the street-network with the help of the (restricted) enumeration from~\cite{barth:alternative_multicriteria_routes}.
-    This preprocessing leads to a new \gls{metric}, penalizing edges of high quality/popularity.
+    A computation-phase called \gls{balancing} is added, that analyzes the street-network with the help of the \gls{repr}.
+    This preprocessing leads to a new \gls{metric}, penalizing edges of high popularity.
     Applying \gls{personalized_routing} with all interesting \glspl{metric}, including the new one(s), leads to a more distributed set of routes.
     Thus, the street-network is used in a broader manner.
     At the same time, due to \gls{personalized_routing}, routing-queries can be processed as quickly as before.
-    To guarantee a certain tolerance towards the shortest path, a filter is added to the enumeration from~\cite{barth:alternative_multicriteria_routes}.
+    To guarantee a certain tolerance towards the shortest path, a filter is added to the \gls{repr}.
 
 \section{Outline}
 
-    \todo{TODO overview of chapters}
+    This thesis is structured as following.
+    \begin{description}
+        \item[Chapter~\ref{chap:preliminaries} -- \nameref{chap:preliminaries}:]
+            \todo{TODO}
+        \item[Chapter~\ref{chap:balancing} -- \nameref{chap:balancing}:]
+            \todo{TODO}
+        \item[Chapter~\ref{chap:experiments} -- \nameref{chap:experiments}:]
+            \todo{TODO}
+        \item[Chapter~\ref{chap:conclusion} -- \nameref{chap:conclusion}:]
+            \todo{TODO}
+    \end{description}

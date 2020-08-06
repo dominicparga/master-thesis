@@ -9,9 +9,24 @@
     A graph $G = (V, E)$ with vertices $V$ and edges $E$ has $d$ \glspl{weight} per edge.
     \Glspl{weight} are also called \glspl{cost} or \glspl{metric}, depending on the context.
 
-\section{Dijkstra's algorithm (bidirectional)}
+\section{Dijkstra's algorithm (bidirectional) with personalized routing}
 
-    \todo{TODO Explain only CH-Query}
+    \todo{TODO write}
+    \Gls{personalized_routing} reduces the multidimensional \glspl{metric} via dot-product with a preference-vector to one dimension.
+
+\section{Contraction-hierarchies}
+
+    \todo{TODO write}
+
+    \subsection{Overview}
+
+    \todo{TODO write}
+
+    \subsection{Computing shortcuts of multiple \glspl{metric} with LP/ILP (TODO title)}
+
+    \todo{TODO write}
+
+\section{Dijkstra's algorithm (bidirectional) in contracted graphs}
 
     \todo{TODO write}
 
@@ -38,26 +53,8 @@
             To correct this issue, stop the query after polling a node of a sub-distance, which is higher than the currently best meeting-node's total distance.
         }
 
-\section{Personalized routing}
-
-    \todo{TODO write}
-    \Gls{personalized_routing} reduces the multidimensional \glspl{metric} via dot-product with a preference-vector to one dimension.
-
-\section{Contraction-hierarchies}
-
-    \todo{TODO write}
-
-    \subsection{Overview}
-
-    \todo{TODO write}
-
-    \subsection{Computing shortcuts of multiple \glspl{metric} with LP/ILP (TODO title)}
-
-    \todo{TODO write}
-
 \section{(Restricted) Enumerating personalized routing}
 
-    \todo{TODO write}
     \todo{TODO acronym (R)EPR and link to Barth's paper(s)}
     \todo{TODO \gls{repr} is just a runtime-optimization of \gls{epr}}
     \todo{TODO Routes within a certain tolerance of the best possible \gls{cost} (per \gls{metric}, \eg\ duration must be not worse than $25~\%$ \todo{tolerance should match the resulting plots}) are randomly chosen from cyclops.}
@@ -65,7 +62,3 @@
     \subsection{Idea}
 
         \todo{TODO write; Here could be talked about the approach of removing the nd-triangulation and how cyclops takes this idea/context and makes it correct by building convex-hull explicitly (because new facets could destroy old facets).}
-
-    \subsection{TODO Proof of correctness + completeness}
-
-    \todo{TODO write}

@@ -67,8 +67,7 @@
 \usepackage{amsmath}
 
 
-%% EN: Fonts
-%% DE: Schriften
+%% Fonts
 %%
 %% !!! If you change the font, be sure that words such as "workflow" can
 %% !!! still be copied from the PDF. If this is not the case, you have
@@ -340,7 +339,7 @@
 % EN: The parameter "pdftex" is not required
 \usepackage{graphicx}
 \graphicspath{{\getgraphicspath}}
-\newcommand{\getgraphicspath}{res/graphics/}
+\newcommand{\getgraphicspath}{resources/graphics/}
 
 
 % EN: Enables inclusion of SVG graphics - 1:1 approach
@@ -381,6 +380,8 @@
   \input{\getgraphicspath#1.pdf_tex}%
 }
 
+%------------------------------------------------------------------------------%
+% si-units
 
 % group-four-digits
 % 1234 -> 1,234
@@ -392,39 +393,35 @@
 \usepackage[mode=text,group-four-digits,group-separator={,}]{siunitx}
 \sisetup{locale=US}
 
+\DeclareSIUnit{\byte}{B}
 
-% EN: Extensions for tables
-% DE: Tabellenerweiterungen
+%------------------------------------------------------------------------------%
+% extensions for tables
+% https://en.wikibooks.org/wiki/LaTeX/Tables
+
 \usepackage{array} %increases tex's buffer size and enables ``>'' in tablespecs
 \usepackage{longtable}
 \usepackage{dcolumn} %Aligning numbers by decimal points in table columns
 \newcolumntype{d}[1]{D{.}{.}{#1}}
+\newcolumntype{M}[1]{>{\centering\arraybackslash} m{#1}}
 \setlength{\extrarowheight}{1pt}
-
-
-% DE: Eine Zelle, die sich über mehrere Zeilen erstreckt.
-%     Siehe Beispieltabelle in Kapitel 2
 \usepackage{multirow}
 
-
-% DE: Fuer Tabellen mit Variablen Spaltenbreiten
+% Fuer Tabellen mit Variablen Spaltenbreiten
 %\usepackage{tabularx}
 %\usepackage{tabulary}
 
 
-% EN: Links behave as they should. Enables "\url{...}" for URL typesettings.
-%     Allow URL breaks also at a hyphen, even though it might be confusing: Is the "-" part of the address or just a hyphen?
-%     See https://tex.stackexchange.com/a/3034/9075.
-% DE: Links verhalten sich so, wie sie sollen
-%     Zeilenumbrüche bei URLs auch bei Bindestrichen erlauben, auch wenn es verwirrend sein könnte: Gehört der Bindestrich zur URL oder ist es ein Trennstrich?
-%     Siehe https://tex.stackexchange.com/a/3034/9075.
+% Links behave as they should. Enables "\url{...}" for URL typesettings.
+% Allow URL breaks also at a hyphen, even though it might be confusing: Is the "-" part of the address or just a hyphen?
+% See https://tex.stackexchange.com/a/3034/9075.
 \usepackage[hyphens]{url}
 %
-%  EN: When activated, use text font as url font, not the monospaced one.
+% When activated, use text font as url font, not the monospaced one.
 %      For all options see https://tex.stackexchange.com/a/261435/9075.
 % \urlstyle{same}
 %
-% EN: Hint by http://tex.stackexchange.com/a/10419/9075.
+% Hint by http://tex.stackexchange.com/a/10419/9075.
 \makeatletter
 \g@addto@macro{\UrlBreaks}{\UrlOrds}
 \makeatother

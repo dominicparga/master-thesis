@@ -47,13 +47,18 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
     \subsection{Selection of route-pairs}
 
         \todo{TODO @Florian: Opinion about how following Absatz is written?}
-        Let a street-network be given as a graph $G = (V, E)$ of multidimensional \glspl{metric}.
-        For simplicity, the set of \glspl{stpair}, which is used for balancing $G$, consists of $s$ and $t$ chosen \gls{uar}\ from $V$.
+        Let a street-network be given as a graph $G = (V, E)$ with a cost-function $c(e) \rightarrow \mathbb{R}_+^d$, that returns a cost-vector for each edge $e \in E$, also called multidimensional \glspl{metric} in the following.
+        Note, that $\mathbb{R}_+^d$ doesn't contain zero, which would, depending on the \gls{metric}, result in bad alternative routes otherwise.
+        Before such a graph can be balanced, a set of \glspl{stpair} has to be chosen.
+        Here, different strategies can be applied.
+        For simplicity, the set of \glspl{stpair}, which are used for balancing $G$, might consist of $s$ and $t$ chosen \gls{uar}\ from $V$.
         This has the disadvantage, that a sufficiently large set of \glspl{stpair} is needed to overload $G$.
         This clearly becomes a bottleneck for performance on larger graphs (beginning with small German states like Saarland with almost $|V| \approx \num{580000}$ and $|E| \approx \num{1160000}$ after parsing), especially when using \gls{repr}, that computes multiple \gls{dijkstra}-queries per run.
-        On the other side, real, daily, critical \glspl{stpair} are not distributed \gls{uar}\ over $V$.
+        To alleviate the computational burden of a large number of \glspl{stpair}, knowledge of the typical workloads in this graph could be used.
+        Instead of picking \gls{uar}\ from $|V|$, other distributions could be chosen by weighting $v \in |V|$ differently or by using some \glspl{stpair} multiple times (on purpose, not only by random).
+        Real, daily, critical \glspl{stpair} are not distributed \gls{uar}\ over $V$.
         The rush-hour in the morning, when everybody travels from their home to work, is a good counterexample here.
-        The set of chosen $t$ might be much smaller than the number of $s$, and less people live near industry or motorways.
+        The set of chosen $t$ might be much smaller than the set of chosen $s$, and less people live near industry or motorways.
         Heuristics as described in~\cite{bakillah:population_from_osm} can return \glspl{stpair} based on approximating population-data from street-networks.
         So considering more specific sets of \glspl{stpair} might be interesting and helpful to boost the \gls{balancing} up, but is not covered in this thesis.
         The reason for keeping the choice \gls{uar}\ is the easy implementation, while results are sufficiently good enough, as long as $G$ shows overloaded streets.
@@ -102,8 +107,8 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
         \begin{equation}
         \label{eq:workloads}
         \begin{aligned}
-            &\mathit{workloads}_i = \left\{ \left| \left\{ \mathit{path}_{s,t} : \mathit{path}_{s,t} \text{ uses } e \right\} \right| : \forall e \in E_{CH} \right\}\\
-            \Rightarrow\ &\mathit{new}_i = \frac{\mathit{workloads}_i}{\mathit{mean}(\mathit{workloads}_i)}
+            &\mathit{workloads}_{e,i} = \left| \left\{ (s, t) \in \text{\glspl{stpair}} : \text{found path from $s$ to $t$ uses } e \in E_{CH} \right\} \right|\\
+            \Rightarrow\ &\mathit{new}_{e,i} = \frac{\mathit{workloads}_{e,i}}{\mathit{mean}(\mathit{workloads}_i)}
         \end{aligned}
         \end{equation}
 
@@ -111,10 +116,6 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
 
         Updating the old workload-\gls{metric} is a very small step in the \gls{balancing} with a large impact on the ongoing \gls{balancing}'s performance and the quality of the balanced graph.
         Two approaches have been tested and are depicted in the following.
-        \todo{%
-            TODO @Florian next sentence with \quotes{first approach, second approach}. Your opinion about the language (\eg\ \quotes{as wished})?
-        }
-        The first approach (see \vref{eq:euler}) is kind of a failing first try, whereas the second one (see \vref{eq:averaging}) is working well, as wished.
 
         The workload-\gls{metric} can be associated with popularity, because it refers to high usage.
         A path of high popularity should be chosen less often than without the workload-\gls{metric}.
@@ -130,7 +131,7 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
         Let $\mathit{old}_i$ be the workload-\gls{metric} (already normalized after $G$ has been initialized) already stored in the graph and $\mathit{new}_i$ the new workload-\gls{metric} (normalized by new mean, see \vref{eq:workloads}).
         \begin{equation}
         \label{eq:euler}
-            \mathit{old}_{i+1} = \mathit{old}_i + (\mathit{new}_i - \mathit{old}_i) \cdot \mathit{correction}
+            \mathit{old}_{e,i+1} = \mathit{old}_{e,i} + (\mathit{new}_{e,i} - \mathit{old}_{e,i}) \cdot \mathit{correction}
         \end{equation}
         In each \gls{balancing}-iteration, after the workload-\gls{metric} is updated (as in \vref{eq:euler}), every value of the workload-\gls{metric} smaller than a predefined minimum value $\epsilon$ (\eg\ \num{0.1}) is set to $\epsilon$.
         This removes the \glspl{metric} of value \num{0.0}, which improves the set of computed shortcuts when applying \gls{contraction-hierarchies} and thus performance.
@@ -138,27 +139,28 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
         \begin{equation}
         \label{eq:metric_cleanup}
         \begin{aligned}
-            \mathit{old}_{i+1} &= \mathit{max} \left( \epsilon \text{,\ } \mathit{old}_{i+1} \right)\\
-            \mathit{old}_{i+1} &= \frac{\mathit{old}_{i+1}}{\mathit{mean}(\mathit{old}_{i+1})}
+            \mathit{old}_{e,i+1} &= \mathit{max} \left( \epsilon \text{,\ } \mathit{old}_{e,i+1} \right)\\
+            \mathit{old}_{e,i+1} &= \frac{\mathit{old}_{e,i+1}}{\mathit{mean}(\mathit{old}_{i+1})}
         \end{aligned}
         \end{equation}
 
         In fact, this approach works okay in smaller, overloaded networks like Isle~of~Man ($|V| \approx \num{50000}$ and $|E| \approx \num{100000}$ after parsing), but lacks in convergence.
         In the first update-iteration, popular paths are ignored as much as possible, before they are highly preferred in the second iteration, ignored in the third iteration and so on.
         This behaviour could be reduced by adding the $\mathit{correction}$, but larger networks (like the small German state Saarland, $|V| \approx \num{580000}$ and $|E| \approx \num{1160000}$ after parsing) worsen the convergence.
+        Further, adding $\mathit{correction}$ leads to the need of tuning it, for which reason only the second approach is shown in the experiments in \vref{chap:experiments}.
 
-        Therefore, another approach, replacing the \gls{explicit_euler} from \vref{eq:euler}, is presented in the following, that does spread the workload well and within only two iterations.
+        Therefore, another approach, replacing the \gls{explicit_euler} from \vref{eq:euler}, is presented in \vref{eq:averaging}, that does spread the workload well and within only two iterations.
         \begin{equation}
         \label{eq:averaging}
-            \mathit{old}_{i+1} = \frac{i \cdot \mathit{old}_i + \mathit{new}_i}{i+1}
+            \mathit{old}_{e,i+1} = \frac{i \cdot \mathit{old}_{e,i} + \mathit{new}_{e,i}}{i+1}
         \end{equation}
-        This result is treated as before, meaning \vref{eq:metric_cleanup} are also applied.
-        From \vref{eq:averaging}, both $\mathit{old}_1=\mathit{new}_0$ and $\mathit{old}_2=\frac{\mathit{old}_1 + \mathit{new}_1}{2}$ hold before normalization.
+        This result is treated as before, meaning Equations~\ref{eq:metric_cleanup} are also applied.
+        From \vref{eq:averaging}, both $\mathit{old}_{e,1}=\mathit{new}_{e,0}$ and $\mathit{old}_{e,2}=\frac{\mathit{old}_{e,1} + \mathit{new}_{e,1}}{2}$ hold before normalization.
         The interpretation of these is quite intuitive.
         The first iteration favors popular routes.
         After the first update, the workload-\gls{metric} is just the normalized workload from the original, unbalanced graph.
         Hence the following iteration has an aversion to popular routes and tends to avoid them.
-        This second iteration favors alternative routes and the outcoming workload completes the previously generated workload-\gls{metric} evenly weighted.
+        This second iteration favors alternative routes and the outcoming workload completes the previously generated workload-\gls{metric}.
         A third iteration has already a workload-\gls{metric} with a balance between popular and alternative routes, so further iterations appear disruptive.
 
 \section{Evaluating the balanced graph by executing queries}

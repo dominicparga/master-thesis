@@ -1,8 +1,8 @@
 \chapter{Experiments}
 \label{chap:experiments}
 
-All last chapters refer to the theory and name some theoretical implementation-details, all to verify the developed procedure.
-However, this chapter presents some results to validate, that the distribution of found paths really improves.
+All past chapters refer to the theory and name some theoretical implementation-details, all to verify the developed procedure.
+However, this chapter presents some results to validate, that the spread of found paths really improves.
 
 \section{The testing-machine and simulation-setup}
 
@@ -10,28 +10,17 @@ However, this chapter presents some results to validate, that the distribution o
     The operation-system is Arch Linux [x86\_64] with the kernel 5.7.9-arch1-1 installed.
     The used code for this thesis can be found in \cite{github:dominicparga/osmgraphing} and is implemented in Rust.
     Python is used for the visualization.
-    Internally, this repository uses \cite{github:lesstat/multi-ch-constructor} (written in C++) for the \gls{contraction-hierarchies} as git-submodule and \cite{github:lesstat/nd-triangulation} for memory-management of the convex-hull.
+    Internally, this repository uses \cite{github:lesstat/multi-ch-constructor} (written in C++) as git-submodule for the \gls{contraction-hierarchies} and \cite{github:lesstat/nd-triangulation} for memory-management of the convex-hull.
     The latter is basically a Rust-wrapper for CGAL (C++).
-    Please note, that the implementation is not tested for deterministic execution, but results are sufficiently similar.
-    Reasons for non-determinism could be multithreaded parsing and multithreaded graph-contraction, because edges don't come with an unique identifier and thus gets one after first parsing.
-
-    \todo{%
-        TODO @Florian
-
-        Passt der vorherige Satz mit der graph-contraction bzgl Determinismus so?
-        Die "graph-contraction" bezieht sich auf den multi-ch-constructor, das parsing auf meinen pbf-parser, der multithreaded einliest, was aber nicht mein Code ist.
-        Vielleicht werden hier edges durcheinander geschmissen, die anfangs natürlich keine ID von pbf-Files mitbringen.
-        Ich würde das mit dem Determinismus aber gerne sagen, denn exakte Reproduzierbarkeit der Ergebnisse ist ja dann nicht gegeben.
-    }
 
     Graphs for street-networks are downloaded from \cite{osm}.
     Experiments run on the graph for Isle~of~Man (from March~2020) and on the graph for the German state Saarland (from July~2020).
     Considered \glspl{metric} are travel-distance (all paths tolerated) and travel-time (\si{40 \percent} tolerance on Isle~of~Man, \si{25 \percent} on Saarland).
-    A tolerance of \si{25 \percent} refers to a worst-case-scenario of \si{15 \minute} more for originally \si{60 \minute}, which seems to be a good tradeoff.
+    A tolerance of \si{25 \percent} refers to a worst-case-scenario of \si{15 \minute} more travel-time for originally \si{60 \minute}, which seems to be a good tradeoff.
     However, a tolerance of \si{40 \percent} refers to a worst-case of additional \si{24 \minute} for originally \si{60 \minute}.
     According to a simple Google-maps-query, one of the paths from one end of the island to the other takes $\approx \si{45 \minute}$.
     Hence, typical queries won't suffer much.
-    For routing, two sets of \num{10000}~\glspl{stpair} are chosen \gls{uar}\ from each map. One set is for \gls{balancing} on the particular map, the other set is for evaluating the balanced graph afterwards. \todo{TODO visualization still shows evaluation from same map}
+    For routing, two sets of \num{10000}~\glspl{stpair} are chosen \gls{uar}\ from each map. One set is for \gls{balancing} on the particular map, the other set is for evaluating the balanced graph afterwards.
 
     Two routing-algorithms, namely \gls{repr} on one side and \gls{dijkstra} with \gls{personalized_routing} on the other side, are used for the simulations.
     Due to \gls{balancing} and evaluation each use one routing-algorithm independent from each other, four simulation-scenarios occur:
@@ -41,10 +30,10 @@ However, this chapter presents some results to validate, that the distribution o
             On the other hand, \gls{repr} is already constructed to find pareto-optimal paths for same \glspl{stpair}.
             Most important, this case doesn't guarantee a user-provided tolerance for found alternative paths.
             In general, \gls{dijkstra} finds the optimum path, but here, \gls{personalized_routing} is used.
-            Hence, paths, that are optimal for some $\alpha$, can be arbitrary bad for a certain \gls{metric} like travel-time.
+            Hence, paths, that are optimal for some $\alpha$, can be arbitrary bad for a certain \gls{metric}, compared to an $\alpha$ favoring only this \gls{metric}.
         \item \Gls{balancing} and evaluating use \gls{repr}.
             This combination is expected to deliver the best distributed paths, but suffers from the highest runtime compared to simply running a \gls{dijkstra}-query.
-            Besides that, it guarantees the user-provided tolerance for found paths due to its construction (see \vref{eq:new_init_alphas} for further details).
+            Besides that, it guarantees the user-provided tolerance for found paths due to its construction (see \vref{eq:new_init_alphas}).
         \item Two mixes of the previous cases, \gls{balancing} with one routing-algorithm and evaluation with the other, are remaining.
             Especially the case is interesting, where \gls{dijkstra} is used for \gls{balancing} and \gls{repr} for evaluation.
             The evaluation can be seen as representing a user-perspective.
@@ -56,16 +45,16 @@ However, this chapter presents some results to validate, that the distribution o
 \section{Validating the simulation-results with Isle~of~Man}
 
     Isle~of~Man is a small island next to Great~Britain.
-    The graph is parsed with around \num{50000}~nodes and \num{100000}~edges.
-    The \gls{repr} is using a tolerance of \si{40 \percent} for travel-time.
+    The graph consists of around \num{50000}~nodes and \num{100000}~edges after parsing.
+    The \gls{repr} is using a tolerance of \si{40 \percent} for travel-time and $\si{\num{99.8} \percent}$ of the graph's nodes are contracted.
 
-    \subsection{Meta-data from simulation-results}
+    \subsection{Meta-data from balancing}
 
-        The simulation is not benchmarked in detail, but the coarse results in \vref{table:isle_of_man:performance} might help for getting an impression.
+        The simulation is not benchmarked in detail, but the coarse results in \vref{table:isle_of_man:balancing:performance} might help for getting an impression.
         Four threads are used.
-        Please note, that the git-submodule is rebuild in the first iteration without the new workload-\gls{metric} and build again in the following iteration with the new workload-\gls{metric}.
+        Please note, that the git-submodule for contracting graphs is rebuild in the first iteration without the new workload-\gls{metric} and build again in the following iteration with the new workload-\gls{metric}.
         For Isle~of~Man, these build-times take much longer than the actual contraction, for which reason below numbers discard the build-time.
-        \begin{table}[h]
+        \begin{table}[htbp]
             \centering
             \begin{tabular}{ M{0.22\textwidth} || M{0.095\textwidth} M{0.095\textwidth} M{0.095\textwidth} || M{0.095\textwidth} M{0.095\textwidth} M{0.095\textwidth} }
                 & \multicolumn{3}{c ||}{Balanced with \gls{dijkstra}} & \multicolumn{3}{c}{Balanced with \gls{repr}} \\
@@ -74,7 +63,7 @@ However, this chapter presents some results to validate, that the distribution o
                 \hline
                 Average query-time before contraction & $\approx \si{7 \milli\second}$ & $\approx \si{7 \milli\second}$ & $\approx \si{7 \milli\second}$ & $\approx \si{7 \milli\second}$ & $\approx \si{7 \milli\second}$ & $\approx \si{7 \milli\second}$ \\
                 \hline
-                Time for contracting ($\si{99.8 \percent}$ of $|V|$) & $\approx \si{5 \second}$ & $\approx \si{5 \second}$ & $\approx \si{5 \second}$ & $\approx \si{5 \second}$ & $\approx \si{5 \second}$ & $\approx \si{5 \second}$ \\
+                Time for contracting ($\si{\num{99.8} \percent}$ of $|V|$) & $\approx \si{5 \second}$ & $\approx \si{5 \second}$ & $\approx \si{5 \second}$ & $\approx \si{5 \second}$ & $\approx \si{5 \second}$ & $\approx \si{5 \second}$ \\
                 \hline
                 Average speed-up through contraction & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ \\
                 \hline
@@ -87,35 +76,33 @@ However, this chapter presents some results to validate, that the distribution o
                 \hline
                 Number of unique edges (in \num{1000}) & $\approx \num{82.1}$ & $\approx \num{81.7}$ & $\approx \num{82.2}$ & $\approx \num{82.8}$ & $\approx \num{84.2}$ & $\approx \num{84.0}$ \\
             \end{tabular}
-            \caption[Overview of performance when balancing Isle of Man]{%
+            \caption[Overview of performance when balancing Isle~of~Man]{%
                 An overview (but no detailled benchmarks) of \gls{balancing}-performance with four threads on Isle~of~Man.
-                Here, $\si{99.8 \percent}$ of all nodes are contracted.
+                Here, $\si{\num{99.8} \percent}$ of all nodes are contracted.
                 The maximum workload is just copied from the plots.
-                The number of unique edges stands for the actual number of eges in $|E|$ with a workload greater than zero.
-                \label{table:isle_of_man:performance}
+                The number of unique edges stands for the actual number of edges in $|E|$ with a workload greater than zero.
+                The set of \glspl{stpair} contains \num{10000}~\glspl{stpair}.
+                \label{table:isle_of_man:balancing:performance}
             }
         \end{table}
 
-        Besides a first impression of the needed runtime, \vref{table:isle_of_man:performance} basically shows some interesting aspects.
-        The needed time for the \gls{balancing}, actual path-searches, is much smaller with \gls{dijkstra} than with \gls{repr}, but the number of found paths is growing with \gls{repr}.
+        Besides a first impression of the needed runtime, \vref{table:isle_of_man:balancing:performance} already shows some interesting aspects.
+        The needed time for the \gls{balancing}, actual path-searches, is much smaller with \gls{dijkstra} than with \gls{repr}, but the number of found paths is increasing with iteration-number when using \gls{repr}.
         Further, the number of covered edges in $|E|$ is higher and improves more with \gls{repr} than with \gls{dijkstra}.
         Probably most obvious is the high maximum workload with \gls{dijkstra} after the first iteration.
         In this iteration, the previous workload-\gls{metric}-update lets \gls{dijkstra} avoid popular routes completely.
         But on such a small map, quite many of these popular routes use the fastest streets in the street-network.
         The same holds for \gls{repr}, but \gls{repr} does still consider the tolerance of $\si{40 \percent}$, thus the found paths tend to stick with previously found routes, as you can see in \vref{fig:both/0/workloads}.
 
-    \subsection{Initial situation}
+    \subsection{Actual results from balancing}
 
-        \todo{%
-            TODO write some intro here
-        }
+        The \gls{balancing} consists of two workload-\gls{metric}-updates, but all together, three workload-plots can be found on the following pages.
+        Every workload leads to a new \gls{metric}-update, so the last workloads show the final spread of paths over the street-network, after the final workload-\gls{metric}-update is adapted.
 
-        \todo{%
-            TODO
+        The workloads in Figure~\ref{fig:dijkstra/0/workloads} and \vref{fig:repr/0/workloads} lead to the first \gls{metric}-update.
+        In fact, due to construction (see \vref{eq:averaging}), the first workloads (after normalization by their mean) are the new workload-\gls{metric} after the update.
 
-            Describe \vref{fig:both/0/workloads}
-        }
-        \begin{figure}[htb]
+        \begin{figure}[hbp]
             \centering%
             %
             \subfloat[%
@@ -125,49 +112,45 @@ However, this chapter presents some results to validate, that the distribution o
             }%
             \hfill%
             \subfloat[%
-                Initial workloads with \gls{repr}
-            ]{%
-                \includegraphics[width=0.49\textwidth]{isle_of_man/balanced_with_repr/0/workloads}\label{fig:repr/0/workloads}
-            }
-            \caption[Initial workloads when balancing]{%
-                TODO caption: quite identical plots, though \gls{repr} is slightly more distributed here and there
-                \label{fig:both/0/workloads}
-            }
-        \end{figure}
-
-        \todo{%
-            TODO
-
-            Describe \vref{fig:both/1/workloads} showing a bad first iteration.
-            Note that the second, globally best iteration is shown in evaluation below
-        }
-        \begin{figure}[htb]
-            \centering%
-            %
-            \subfloat[%
                 Workloads after first update with \gls{dijkstra}
             ]{%
                 \includegraphics[width=0.49\textwidth]{isle_of_man/balanced_with_dijkstra/1/workloads}\label{fig:dijkstra/1/workloads}
             }%
+
+            \subfloat[%
+                Initial workloads with \gls{repr}
+            ]{%
+                \includegraphics[width=0.49\textwidth]{isle_of_man/balanced_with_repr/0/workloads}\label{fig:repr/0/workloads}
+            }
             \hfill%
             \subfloat[%
                 Workloads after first update with \gls{repr}
             ]{%
                 \includegraphics[width=0.49\textwidth]{isle_of_man/balanced_with_repr/1/workloads}\label{fig:repr/1/workloads}
             }%
-            \caption[Workloads when balancing after first update]{%
+            \caption[Initial workloads when balancing]{%
+                TODO caption: quite identical plots, though \gls{repr} is slightly more distributed here and there
+
                 TODO caption: \gls{dijkstra} is so much worse (cropping the color at 800, going up to 1600), BUT still finds some new routes
                 The \gls{repr} even improved maximum workload and is already more distributed than before (probably because the map is very small and ignoring the mainly preferred streets doesn't hurt that much, plus tolerance is 1.4).
+                \label{fig:both/0/workloads}
                 \label{fig:both/1/workloads}
             }
         \end{figure}
 
-        \todo{%
-            TODO
+        The initial plots are quite identical.
+        This is not an issue of \gls{repr}, but of the considered \glspl{metric}.
+        Both, travel-distance and travel-time, don't bring that different paths without any artificial \gls{metric}.
+        Although, some more paths occur on the graph, that is used with \gls{repr}, leading to a minor less maximum workload here.
 
-            Plots \vref{fig:both/2/workloads} are identical with edge-cases from \vref{fig:both/both/workloads}
-        }
-        \begin{figure}[hb]
+        The plots of the first iteration, that is including an artificial \gls{metric}, can be seen in Figure~\ref{fig:dijkstra/1/workloads} and \vref{fig:repr/1/workloads}.
+        As mentioned in \vref{chap:balancing}, the first update isn't perfectly spreaded yet.
+        Especially \gls{dijkstra} results in a maximum workload, that is twice as high as before.
+        The maximum workload of paths from \gls{repr} is slightly better than in the initial iteration.
+        Even some more spread is visible in \vref{fig:repr/1/workloads}.
+        Despite some exceptions, the spread is still quite identical to the initial one, when compared to the globally best spreaded workloads after \gls{balancing}, shown in \vref{fig:both/2/workloads}.
+
+        \begin{figure}[hbp]
             \centering%
             %
             \subfloat[%
@@ -198,19 +181,99 @@ However, this chapter presents some results to validate, that the distribution o
                 The graph is balanced with \gls{dijkstra} and \gls{repr}.
                 The first row shows the \gls{balancing} with \gls{dijkstra}, whereas the second row shows the \gls{balancing} with \gls{repr}.
                 The left side shows the workloads before the first workload-\gls{metric}-update, whereas the right side shows the workloads after two workload-\gls{metric}-updates.
-                Furthermore, the plots on the right side correspond to the evaluation-plots in \vref{fig:both/both/workloads}, but the evaluation uses a different set of \glspl{stpair} (TODO).
+                Furthermore, the plots on the right side correspond to the evaluation-plots in \vref{fig:both/both/1/workloads}, but the evaluation uses a different set of \glspl{stpair} (TODO).
                 The used \glspl{metric} besides the new workload-\gls{metric} is travel-distance and travel-time.
                 When using \gls{repr}, each path's travel-time tolerates a maximum of \si{\num{40} \percent} worse than its optimum.
                 \label{fig:both/2/workloads}
             }
         \end{figure}
 
-    \subsection{Comparison of evaluation of different scenarios}
+        With the final workloads after \gls{balancing} with \gls{repr}, shown in \vref{fig:repr/2/workloads}, it is noticable, how the clear hotspots from the initial plots flew into multiple new paths in between.
+        On the other hand, these hotspots don't vanish at all, so most popular paths are still popular, while the overall situation improved.
+        This is good, because most popular means more optimal with respect to travel-time.
+        In opposite to that, after \gls{balancing} with \gls{dijkstra}, shown in \vref{fig:dijkstra/2/workloads}, the workload looks a little less distributed than in Figure~\ref{fig:repr/2/workloads}.
+        This doesn't necessarily imply, that the graph's balance is that much worse.
+        In fact, when evaluating the \gls{dijkstra}-balanced graph with \gls{repr}, the resulting workloads look more spreaded than the final workloads from \gls{balancing} with \gls{dijkstra}.
+
+    \subsection{Comparison of evaluating different scenarios}
+
+        Evaluation is basically recreating the workloads from last \gls{balancing}-iteration with switching routing-algorithms and another set of \glspl{stpair}.
+        So paths for all \glspl{stpair} are searched and the street-network's workload is counted again.
+        To reduce the evaluation-results' dependence on the \gls{balancing}, a new set of \num{10000}~\glspl{stpair} chosen \gls{uar}\ is determined.
+
+        For completeness, \vref{fig:both/both/0/workloads} shows the workloads of the new set of \glspl{stpair} ignoring the new workload-\gls{metric}.
+        The initial number of unique edges with the new set for \gls{dijkstra} is $\approx \num{82000}$, for \gls{repr} it is $\approx \num{82800}$.
+        Other (meta-) data can be found in \vref{table:isle_of_man:evaluating:performance}.
+
+        \begin{table}[htbp]
+            \centering
+            \begin{tabular}{ M{0.21\textwidth} || M{0.096\textwidth} | M{0.096\textwidth} M{0.096\textwidth} || M{0.096\textwidth} | M{0.096\textwidth} M{0.096\textwidth} }
+                & \multicolumn{3}{c ||}{Balanced with \gls{dijkstra}} & \multicolumn{3}{c}{Balanced with \gls{repr}} \\
+                & Iteration & \multicolumn{2}{c ||}{Evaluated with} & Iteration & \multicolumn{2}{c}{Evaluated with} \\
+                & 2 & \gls{dijkstra} & \gls{repr} & 2 & \gls{dijkstra} & \gls{repr} \\
+                \hline
+                \hline
+                Time for searching all paths & $\approx \si{1 \second}$ & $\approx \si{13 \second}$ & $\approx \si{8 \minute}$ & $\approx \si{30 \second}$ & $\approx \si{12 \second}$ & $\approx \si{14 \minute}$ \\
+                \hline
+                Average number of found paths & 1 & 1 & $\approx 12$ & $\approx 18$ & 1 & $\approx 19$ \\
+                \hline
+                \hline
+                Maximum workload & \num{783} & \num{789} & \num{786} & \num{722} & \num{689} & \num{750} \\
+                \hline
+                Number of unique edges (in \num{1000}) & $\approx \num{82.2}$ & $\approx \num{82.1}$ & $\approx \num{84.0}$ & $\approx \num{84.0}$ & $\approx \num{82.4}$ & $\approx \num{83.9}$ \\
+            \end{tabular}
+            \caption[Comparison of performance between balancing (contracted) and evaluating (not contracted) Isle~of~Man]{%
+                A comparison (but no detailled benchmarks) of \gls{balancing}-performance from \vref{table:isle_of_man:evaluating:performance} with evaluating-performance, using again four threads on Isle~of~Man.
+                This time, when evaluating, the graph isn't contracted (for comparison) and hence the runtime is much longer.
+                The number of unique edges stands for the actual number of edges in $|E|$ with a workload greater than zero.
+                The set of \glspl{stpair} for evaluation contains \num{10000}~\glspl{stpair}.
+                \label{table:isle_of_man:evaluating:performance}
+            }
+        \end{table}
+
+        \begin{figure}[hbp]
+            \centering%
+            %
+            \subfloat[%
+                Initial workloads with \gls{dijkstra}
+            ]{%
+                \includegraphics[width=0.49\textwidth]{isle_of_man/balanced_with_dijkstra/evaluation/with_dijkstra/0/workloads}\label{fig:dijkstra/dijkstra/0/workloads}
+            }%
+            \hfill%
+            \subfloat[%
+                Difference between initial and final workloads from \vref{fig:dijkstra/dijkstra/1/workloads} using \gls{dijkstra} for \gls{balancing} and evaluating
+            ]{%
+                \includegraphics[width=0.49\textwidth]{isle_of_man/balanced_with_dijkstra/evaluation/with_dijkstra/1/delta_workloads}\label{fig:dijkstra/dijkstra/1/delta_workloads}
+            }%
+
+            \subfloat[%
+                Initial workloads with \gls{repr}
+            ]{%
+                \includegraphics[width=0.49\textwidth]{isle_of_man/balanced_with_repr/evaluation/with_repr/0/workloads}\label{fig:repr/repr/0/workloads}
+            }%
+            \hfill%
+            \subfloat[%
+                Difference between initial and final workloads from \vref{fig:repr/repr/1/workloads} using \gls{repr} for \gls{balancing} and evaluating
+            ]{%
+                \includegraphics[width=0.49\textwidth]{isle_of_man/balanced_with_repr/evaluation/with_repr/1/delta_workloads}\label{fig:repr/repr/1/delta_workloads}
+            }%
+            \caption[Initial workloads and workload-changes when evaluating]{%
+                These plots show the balanced graph evaluated with \gls{dijkstra} and \gls{repr}.
+                The first row shows the evaluation with \gls{dijkstra} after \gls{balancing} with \gls{dijkstra}, whereas the second row shows the evaluation with \gls{repr} after \gls{balancing} with \gls{repr}.
+                The left side shows the evaluation without the new workload-\gls{metric}.
+                This looks quite identical to \vref{fig:both/0/workloads}, but since the evaluation uses a different set of \glspl{stpair}, it is needed for completeness.
+                The right side shows the workload-changes to the respective plots in Figure~\ref{fig:dijkstra/dijkstra/0/workloads} and \vref{fig:repr/repr/0/workloads}.
+                The used \glspl{metric} besides the new workload-\gls{metric} are travel-distance and travel-time.
+                When using \gls{repr}, each path's travel-time tolerates a maximum of \si{\num{40} \percent} worse than its optimum.
+                \label{fig:both/both/0/workloads}
+                \label{fig:both/both/1/delta_workloads}
+            }
+        \end{figure}
 
         \todo{%
-            TODO @Florian
+            TODO
 
-            Bringen Delta-Plots zusätzliche Aussagen oder sehen sie einfach nur gut aus?
+            Plots \vref{fig:both/2/workloads} are identical with edge-cases from \vref{fig:both/both/1/workloads}
         }
 
         \todo{%
@@ -227,42 +290,7 @@ However, this chapter presents some results to validate, that the distribution o
 
             - Show balanced with explorator and eval with explorator (nice: guarantee + distribution, but worst performance)
         }
-        \begin{figure}[hb]
-            \centering%
-            %
-            \subfloat[%
-                Balanced and evaluated with \gls{dijkstra}
-            ]{%
-                \includegraphics[width=0.49\textwidth]{isle_of_man/balanced_with_dijkstra/evaluation/with_dijkstra/1/delta_workloads}\label{fig:dijkstra/dijkstra/1/delta_workloads}
-            }%
-            \hfill%
-            \subfloat[%
-                Balanced with \gls{dijkstra} and evaluated with \gls{repr}
-            ]{%
-                \includegraphics[width=0.49\textwidth]{isle_of_man/balanced_with_dijkstra/evaluation/with_repr/1/delta_workloads}\label{fig:dijkstra/repr/1/delta_workloads}
-            }%
-
-            \subfloat[%
-                Balanced with \gls{repr} and evaluated with \gls{dijkstra}
-            ]{%
-                \includegraphics[width=0.49\textwidth]{isle_of_man/balanced_with_repr/evaluation/with_dijkstra/1/delta_workloads}\label{fig:repr/dijkstra/1/delta_workloads}
-            }%
-            \hfill%
-            \subfloat[%
-                Balanced and evaluated with \gls{repr}
-            ]{%
-                \includegraphics[width=0.49\textwidth]{isle_of_man/balanced_with_repr/evaluation/with_repr/1/delta_workloads}\label{fig:repr/repr/1/delta_workloads}
-            }%
-            \caption[Workloads' changes from unbalanced to balanced graph]{%
-                These plots show the balanced graph evaluated with \gls{dijkstra} and \gls{repr}.
-                The first row shows the evaluation after \gls{balancing} with \gls{dijkstra}, whereas the second row shows the evaluation after \gls{balancing} with \gls{repr}.
-                The left side shows the evaluation with \gls{dijkstra}, whereas the right side shows the evaluation with \gls{repr}.
-                The used \glspl{metric} besides the new workload-\gls{metric} is travel-distance and travel-time.
-                When using \gls{repr}, each path's travel-time tolerates a maximum of \si{\num{40} \percent} worse than its optimum.
-                \label{fig:both/both/delta_workloads}
-            }
-        \end{figure}
-        \begin{figure}[hb]
+        \begin{figure}[hbp]
             \centering%
             %
             \subfloat[%
@@ -294,7 +322,7 @@ However, this chapter presents some results to validate, that the distribution o
                 The left side shows the evaluation with \gls{dijkstra}, whereas the right side shows the evaluation with \gls{repr}.
                 The used \glspl{metric} besides the new workload-\gls{metric} is travel-distance and travel-time.
                 When using \gls{repr}, each path's travel-time tolerates a maximum of \si{\num{40} \percent} worse than its optimum.
-                \label{fig:both/both/workloads}
+                \label{fig:both/both/1/workloads}
             }
         \end{figure}
 

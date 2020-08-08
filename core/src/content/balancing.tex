@@ -91,7 +91,8 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
             \alpha^{(d+1)} &= \left( \frac{1}{d} \right)_{i = 1,\dots, d}
         \end{aligned}
         \end{equation}
-        This suggestion doesn't work well for the \gls{balancing}.
+        This suggestion is nice to get a tolerance, because every \gls{metric}'s optimal path is computed.
+        However, this suggestion doesn't work well for the \gls{balancing} and needs some adjustment.
         When the new workload-\gls{metric} is added (hence let the graph's \glspl{metric}' dimension be $d+1$), $\alpha^{(d+1)}$ becomes $\alpha^{(d+2)}$, which is a different direction in the $(d+1)$-cost-space than the previous $\alpha^{(d+1)}$ points to in the $(d+1)$-cost-space.
         Because of this, less paths have been found on Saarland in the experiments.
         Especially when talking in general, the first iteration may find paths, that can't be found by latter iterations.

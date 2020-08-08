@@ -1,0 +1,103 @@
+\begin{tikzpicture}[auto, rounded corners=0, x = 1cm, y = 1cm] {%
+    % style
+
+    % draw
+    % Draw borders
+
+    % text badly centered
+    % better use 'align=flush center'
+
+    \tikzstyle{decision} = [%
+        diamond,
+        draw,
+        fill = blue!20,
+        text width = 4.5em,
+        align = flush center,
+        node distance = 1,
+        inner sep = 0pt
+    ]
+    \tikzstyle{action} = [%
+        rectangle,
+        draw,
+        fill = blue!20,
+        text width = 10em,
+        text centered,
+        rounded corners,
+        node distance = 0.8,
+        minimum height = 4em
+    ]
+    \tikzstyle{data} = [%
+        draw,
+        ellipse,
+        fill = red!20,
+        node distance = 0.5,
+        minimum height = 2em
+    ]
+
+    % arrow-styles
+    % https://tex.stackexchange.com/questions/5461/is-it-possible-to-change-the-size-of-an-arrowhead-in-tikz-pgf
+    \tikzstyle{line} = [draw, -latex, line width = 1.5pt]
+
+    % Place nodes
+
+    \coordinate (src) at (0, 0);
+    \node [action, right = of src] (reading-in) {%
+        Read-in graph and initialize the new \gls{metric}
+    };
+    \node [action, right = of reading-in] (normalizing) {%
+        Normalize every \gls{metric} by the mean of its dimension's \glspl{metric}
+    };
+    \node [data, below = of normalizing] (graph) {%
+        $G=(V,E)$
+    };
+    \node [action, below = of graph] (contracting) {%
+        Contract graph $G$ with \textit{contraction-hierarchies}
+    };
+
+    \node [action, right = of graph] (evaluating) {%
+        Evaluate balanced graph
+    };
+    \coordinate [right = of evaluating] (dst);
+
+    \node [data, below = of contracting] (ch-graph) {%
+        $G_{CH}=(V,E_{CH})$
+    };
+    \node [action, below = of ch-graph] (explorating) {%
+        Explore given \glspl{stpair} with \gls{repr} and choose one path u.a.r.
+    };
+    \node [data, below = of explorating] (paths) {%
+        Set of found paths
+    };
+
+    \node [action, left = of paths] (analyzing) {%
+        $\forall e \in E_{CH}:$ count paths using $e$
+    };
+    \node [action, above = of analyzing] (updating) {%
+        Update\\new \gls{metric} in graph $G_{CH}$
+    };
+    \node [data, above = of updating] (new_metric) {%
+        Updated $G_{CH}$
+    };
+    \node [action, above = of new_metric] (writing) {%
+        Export $G_{CH}$ without shortcuts, but with updated new \gls{metric}
+    };
+
+    % Draw lines
+
+    \path [line] (src) -- (reading-in);
+    \path [line] (reading-in) -- (normalizing);
+    \path [line] (normalizing) -- (graph);
+    \path [line] (graph) -- (contracting);
+    \path [line] (contracting) -- (ch-graph);
+    \path [line] (ch-graph) -- (explorating);
+    \path [line] (explorating) -- (paths);
+    \path [line] (paths) -- (analyzing);
+    \path [line] (analyzing) -- (updating);
+    \path [line] (updating) -- (new_metric);
+    \path [line] (new_metric) -- (writing);
+    \path [line] (writing) |- (graph);
+
+    \path [line] (graph) -- (evaluating);
+    \path [line] (evaluating) -- (dst);
+
+} \end{tikzpicture}

@@ -1,47 +1,20 @@
 \chapter{Preliminaries}
 \label{chap:preliminaries}
 
-\todo{TODO Writing in a style like each subsection is independent of the whole thesis? Like a dictionary, if someone doesn't know some technique?}
+\todo{TODO Writing in a style like each subsection is independent of the whole thesis? Like a dictionary, if someone doesn't know some technique? -> Florian says no $:)$}
 \todo{TODO add some text here}
 
 \section{Graphs and paths}
 
-    \todo{TODO write}
+    A graph $G = (V, E)$ with vertices $V$ and edges $E$ has $d$ \glspl{weight} per edge.
+    \Glspl{weight} are also called \glspl{cost} or \glspl{metric}, depending on the context.
 
-\section{Dijkstra's algorithm (bidirectional)}
-
-    \todo{TODO write}
-
-    \subsection{Correctness-proof of bidirectional Dijkstra}
-
-        \todo{
-            The termination of the bidirectional Astar is based on the first node v, that is marked by both, the forward- and the backward-subroutine.
-            However, this common node v is part of the shortest path s->t wrt to this particular hop-distance H, but doesn't have to be part of the shortest path s->t wrt to edge-weights.
-
-            Every node, that is not settled in any of the both subroutines, has a longer distance to both s and t than the already found common node v and hence can not be part of the shortest path (wrt to edge-weights).
-            Otherwise, it would have been settled before v since the priority-queues sort by weights.
-            In other words, only already settled nodes and their neighbors (which are already enqueued) can be part of the shortest path.
-
-            In conclusion, emptying the remaining nodes in the queues and picking the shortest path of the resulting common nodes leads to the shortest path wrt to edge-weights from s to t.
-        }
-
-        \todo{%
-            TODO extend proof onto A* with contraction-hierarchies: Here, the proof for bidirectional Dijkstra doesn't hold, because each sub-graph doesn't visit every node of the total graph, due to the level-filter when pushing edges to the queue.
-            Hence, the forward- and the backward-query are not balanced wrt weights.
-            Thus, after finding the first meeting-node, the hop-distance of the shortest-path could be arbitrary.
-            This leads to wrong paths with normal bidirectional Dijkstra.
-            To correct this issue, stop the query after polling a node of a sub-distance, which is higher than the currently best meeting-node's total distance.
-        }
-
-\section{A* and why it is not used (TODO how to write A*)}
+\section{Dijkstra's algorithm (bidirectional) with personalized routing}
 
     \todo{TODO write}
+    \Gls{personalized_routing} reduces the multidimensional \glspl{metric} via dot-product with a preference-vector to one dimension.
 
-\section{Personalized Routing}
-
-    \todo{TODO write}
-
-\section{Contraction-Hierarchies}
+\section{Contraction-hierarchies}
 
     \todo{TODO write}
 
@@ -49,18 +22,43 @@
 
     \todo{TODO write}
 
-    \subsection{Computing shortcuts of multiple metrics with LP/ILP (TODO title)}
+    \subsection{Computing shortcuts of multiple \glspl{metric} with LP/ILP (TODO title)}
 
     \todo{TODO write}
 
-\section{Cyclops}
+\section{Dijkstra's algorithm (bidirectional) in contracted graphs}
 
     \todo{TODO write}
+
+    \subsection{Correctness-proof of bidirectional Dijkstra}
+
+        \todo{TODO Remove proof if not needed in the thesis (probably not needed).}
+
+        \todo{
+            TODO The termination of the bidirectional Astar is based on the first node v, that is marked by both, the forward- and the backward-subroutine.
+            However, this common node v is part of the shortest path s->t wrt to this particular hop-distance H, but doesn't have to be part of the shortest path s->t wrt to \glspl{weight}.
+
+            Every node, that is not settled in any of the both subroutines, has a longer distance to both s and t than the already found common node v and hence can not be part of the shortest path (wrt to \glspl{weight}).
+            Otherwise, it would have been settled before v since the priority-queues sort by \glspl{weight}.
+            In other words, only already settled nodes and their neighbors (which are already enqueued) can be part of the shortest path.
+
+            In conclusion, emptying the remaining nodes in the queues and picking the shortest path of the resulting common nodes leads to the shortest path wrt to \glspl{weight} from s to t.
+        }
+
+        \todo{%
+            TODO extend proof onto A* with \gls{contraction-hierarchies}: Here, the proof for bidirectional \gls{dijkstra} doesn't hold, because each sub-graph doesn't visit every node of the total graph, due to the level-filter when pushing edges to the queue.
+            Hence, the forward- and the backward-query are not balanced wrt \glspl{weight}.
+            Thus, after finding the first meeting-node, the hop-distance of the shortest-path could be arbitrary.
+            This leads to wrong paths with normal bidirectional \gls{dijkstra}.
+            To correct this issue, stop the query after polling a node of a sub-distance, which is higher than the currently best meeting-node's total distance.
+        }
+
+\section{(Restricted) Enumerating personalized routing}
+
+    \todo{TODO acronym (R)EPR and link to Barth's paper(s)}
+    \todo{TODO \gls{repr} is just a runtime-optimization of \gls{epr}}
+    \todo{TODO Routes within a certain tolerance of the best possible \gls{cost} (per \gls{metric}, \eg\ duration must be not worse than $25~\%$ \todo{tolerance should match the resulting plots}) are randomly chosen from cyclops.}
 
     \subsection{Idea}
 
         \todo{TODO write; Here could be talked about the approach of removing the nd-triangulation and how cyclops takes this idea/context and makes it correct by building convex-hull explicitly (because new facets could destroy old facets).}
-
-    \subsection{TODO Proof of correctness + completeness}
-
-    \todo{TODO write}

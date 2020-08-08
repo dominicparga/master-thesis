@@ -86,6 +86,7 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
         When using \gls{repr}, the quality of the balanced graph highly depends on the choice of initial paths for \gls{repr}.
         The basic approach in~\cite{barth:alternative_multicriteria_routes} suggests to use $(d+1)$ initial alphas to define the initial convex-hull for a graph of $d$-dimensional \glspl{metric}.
         \begin{equation}
+        \label{eq:init_alphas}
         \begin{aligned}
             \left( \alpha^{(1)}, \alpha^{(2)}, \dots, \alpha^{(d)} \right) &= \mathbb{I}^d\\
             \alpha^{(d+1)} &= \left( \frac{1}{d} \right)_{i = 1,\dots, d}
@@ -97,7 +98,7 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
         Because of this, less paths have been found on Saarland in the experiments.
         Especially when talking in general, the first iteration may find paths, that can't be found by latter iterations.
         Therefore, the \gls{balancing} extends the original suggestion by~\cite{barth:alternative_multicriteria_routes} and takes the initial $\alpha^{(j)}$ from the $(d+1)$-dimensional power-set of $(1, \dots, 1)^T$ without $(0, \dots, 0)^T$.
-        Only the direction of $\alpha$ is relevant, so the previous notation can be simplified.
+        Only the direction of $\alpha$ is relevant, so the previous notation in \cref{eq:init_alphas} can be simplified.
         \begin{equation}
             \label{eq:new_init_alphas}
             \alpha \in \left\{ 0, 1 \right\}^{(d+1)} \setminus \left\{ \left( 0, \dots, 0 \right)^T \right\} \Rightarrow \alpha \text{ is an initial } \alpha^{(j)}

@@ -115,6 +115,7 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
         \end{equation}
 
     \subsection{Updating the new metric with the collected workload}
+    \label{chap:balancing:update}
 
         Updating the old workload-\gls{metric} is a very small step in the \gls{balancing} with a large impact on the ongoing \gls{balancing}'s performance and the quality of the balanced graph.
         Two approaches have been tested and are depicted in the following.
@@ -141,8 +142,8 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
         \begin{equation}
         \label{eq:metric_cleanup}
         \begin{aligned}
-            \mathit{old}_{e,i+1} &= \mathit{max} \left( \epsilon \text{,\ } \mathit{old}_{e,i+1} \right)\\
-            \mathit{old}_{e,i+1} &= \frac{\mathit{old}_{e,i+1}}{\mathit{mean}(\mathit{old}_{i+1})}
+            \mathit{old}_{e,i+1} &\leftarrow \mathit{max} \left( \epsilon \text{,\ } \mathit{old}_{e,i+1} \right)\\
+            \mathit{old}_{e,i+1} &\leftarrow \frac{\mathit{old}_{e,i+1}}{\mathit{mean}(\mathit{old}_{i+1})}
         \end{aligned}
         \end{equation}
 
@@ -194,5 +195,7 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
     \subsection{Configs}
 
         \todo{TODO add some text here}
+
+        \todo{TODO normalize after shortcuts destroy them}
 % - indices -> boost for performance while staying dynamic
 % - Dijkstra, no A* because multiple metrics vs heuristic

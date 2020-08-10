@@ -191,24 +191,173 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
         This allows the graph to be static, meaning its allocated memory doesn't change during runtime after the graph is built and shrinked to fit its needs.
         However, its values can be changed, which is necessary, since the \gls{balancing} updates a \gls{metric}.
 
-    \subsection{Graphs and paths with shortcuts}
+    \subsection{Storing and accessing graphs}
+    \label{chap:balancing:implementation:graphs}
 
-        The underlying graph-structure is implemented as adjacency-array with some adjustments.
+        The underlying graph-structure is implemented as adjacency-array with several extensions.
         The adjacency-array is explained in \cref{chap:preliminaries:graphs}.
+        This data-structure fits well, because it allows the reduction of redundancy by optimizing the graph's memory-consumption while accessing the graph can be done in constant or logarithmic time (depending on access via indices or via ids) through indexing-logic.
         The indexing-logic from adjacency-arrays has been extended by a mapping to support forward-, backward- and shortcut-edges in the graph, which is necessary for the bidirectional-\gls{dijkstra}.
 
-        \todo{TODO Write about backward-edges with the mapping \rightarrow helps with maintenance, because central access-point is edge-index}
+        First, the graph from preliminaries is extended by \glspl{metric}.
+        Shortcuts $L$ are added later.
+        For every edge in $E$, a vector of floats is stored.
+        To formalize this, the cost-function is slightly redefined (and duplicated edges are being removed) to have edge-costs being associated as \glspl{metric}.
+        Let $C \subset E \times \mathbb{R}_+^d$ be the set of \glspl{metric} and $c$ be the bijective function $c: E \to C$.
+        With this definition, $C[i_E]$ can be associated as the cost-vector of the edge $E$ at edge-index $i_E$, where $C$ is stored as two-dimensional array of floats.
 
-        \todo{TODO Write about shortcuts with their offset-arrays}
+        The vertices $V$ are an array of vertex-ids sorted in ascending order.
+        This is required by the adjacency-array, but also allows the search for nodes by their ids in logarithmic time.
+        However, this is only needed for users outside the graph, because the graph uses only vertex-indices inside.
+
+        A backward-graph is a graph, whose edges are reversed according to the original graph.
+        So a backward-graph maps edges $(s, d)$ to the reversed edge $(d, s)$.
+        Since this graph is used for bidirectional routing-queries, it has to support the access to backward-edges.
+        The backward-edges could be stored accordingly to the forward-edges, meaning storing the source-indices $S$ in addition to the destination-indices $D$.
+        The occuring issue with this is the sort-order of vertices $V$.
+        All vertices are sorted by their source-id to match the offset-array $O_D$ for the forward-edges and for $D$.
+        Respectively, all vertices should be sorted by their destination-id to match the offset-array $O_S$ for the backward-edges and for $S$.
+        This would need a copy of all vertices and the edge-index $i_E$ wouldn't point to the same edge in $S$ and $D$, leading to two access-implementations doing basically the same offset-mapping.
+        The \gls{metric}-array $C$ could be accessed via $i_E$ only by \gls{dijkstra}'s forward-search, not the backward-search, unless a mapping from backward-edge-indices to forward-edge-indices is built (or $C$ is also stored twice).
+        Therefore, this issue is solved by using this very mapping, such that an edge-index $i_E$ belongs to $S[i_E]$, $D[i_E]$, $C[i_E]$ independent of the edge's orientation and the graph can be stored without data-redundancy.
+        The decision towards no data-redundancy implies consistency, which is important for the \gls{metric}-update.
+        Further, it improves maintainability and usage, because accessing the forward-edges and backward-edges can be done with the same accessor simply using different arrays.
+        The indices-mappings are illustrated in \cref{table:balancing:indices_mapping} and explained afterwards with two example-queries.
+        The graph from \cref{chap:preliminaries:graphs} contains only bidirectional edges, thus the edge $(s, d)$ with $(V[s], V[d])=(1, 2)$ is removed to make the graph containing unidirectional edges.
+
+        \begin{table}[htbp]
+            \centering
+            \begin{tabular}{ l || c | c c | c c c | c c c | c c | c }
+                $i_E = i_\mathit{fwd}$ & \multicolumn{12}{c}{Storing data with respect to forward-edges} \\
+                \hline
+                \hline
+                $V$ & $\mathit{id}_0$ & \multicolumn{2}{c |}{$\mathit{id}_1$} & \multicolumn{3}{c |}{$\mathit{id}_2$} & \multicolumn{3}{c |}{$\mathit{id}_3$} & \multicolumn{2}{c |}{\cellcolor[gray]{0.8} $\mathit{id}_4$} & - \\
+                \hline
+                $S$ & \cellcolor[gray]{0.8} 0 & 1 & 1 & \cellcolor[gray]{0.8} 2 & 2 & 2 & \cellcolor[gray]{0.8} 3 & 3 & 3 & 4 & 4 & - \\
+                $D$ & 1 & 0 & 3 & 1 & 3 & 4 & 1 & 2 & 4 & \cellcolor[gray]{0.8} 2 & \cellcolor[gray]{0.8} 3 & - \\
+                $C$ & a & b & c & d & e & f & g & h & i & j & k & - \\
+                & & & & & & & & & & & & \\
+                $i_\mathit{fwd}$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & \cellcolor[gray]{0.8} 9 & \cellcolor[gray]{0.8} 10 & - \\
+                $\mathit{map}_\mathit{bwd}: i_\mathit{fwd} \mapsto i_\mathit{bwd}$ & 1 & 0 & 6 & 2 & 7 & 9 & 3 & 4 & 10 & 5 & 8 & - \\
+                & & & & & & & & & & & & \\
+                $O_D: i_V \mapsto i_\mathit{fwd}$ & 0 & \multicolumn{2}{c |}{1} & \multicolumn{3}{c |}{3} & \multicolumn{3}{c |}{6} & \multicolumn{2}{c |}{\cellcolor[gray]{0.8} 9} & \cellcolor[gray]{0.8} 11 \\
+                \multicolumn{13}{c}{} \\
+            \end{tabular}
+            \begin{tabular}{ l || c | c c c | c c | c c c | c c | c }
+                $i_E = i_\mathit{bwd}$ & \multicolumn{12}{c}{Storing data with respect to backward-edges} \\
+                \hline
+                \hline
+                $V$ & $\mathit{id}_0$ & \multicolumn{3}{c |}{\cellcolor[gray]{0.8} $\mathit{id}_1$} & \multicolumn{2}{c |}{$\mathit{id}_2$} & \multicolumn{3}{c |}{$\mathit{id}_3$} & \multicolumn{2}{c |}{$\mathit{id}_4$} & - \\
+                \hline
+                $D_\mathit{bwd}$ & 0 & 1 & 1 & 1 & 2 & 2 & 3 & 3 & 3 & 4 & 4 & - \\
+                $S_\mathit{bwd}$ & 1 & 0 & 2 & 3 & 3 & 4 & 1 & 2 & 4 & 2 & 3 & - \\
+                $C_\mathit{bwd}$ & b & a & d & g & h & j & c & e & k & f & i & - \\
+                & & & & & & & & & & & & \\
+                $\mathit{map}_\mathit{fwd}: i_\mathit{bwd} \mapsto i_\mathit{fwd}$ & 1 & \cellcolor[gray]{0.8} 0 & \cellcolor[gray]{0.8} 3 & \cellcolor[gray]{0.8} 6 & 7 & 9 & 2 & 4 & 10 & 5 & 8 & - \\
+                $i_\mathit{bwd}$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & - \\
+                & & & & & & & & & & & & \\
+                $O_S: i_V \mapsto i_\mathit{bwd}$ & 0 & \multicolumn{3}{c |}{\cellcolor[gray]{0.8} 1} & \multicolumn{2}{c |}{\cellcolor[gray]{0.8} 4} & \multicolumn{3}{c |}{6} & \multicolumn{2}{c |}{9} & 11 \\
+            \end{tabular}
+            \caption[Example-graph stored as offset-array]{%
+                This table shows one graph stored with respect to forward-edges above and with respect to backward-edges below.
+                Note that a backward-graph of a graph has just the edges being reversed, so $(s, d) \mapsto (d, s)$.
+                The more intuitive way is storing the graph and necessary indices forwardly.
+                That's why the forward graph's notation is used as default (\eg\ $S$ is used instead of $S_\mathit{fwd}$ according to $S_\mathit{bwd}$).
+                However, both offset-arrays $O_D$ and $O_S$ and $\mathit{map}_\mathit{fwd}$ are needed and hence each table is needed.
+
+                The tables highlight important values of the two example-queries from the text.
+                \label{table:balancing:indices_mapping}
+            }
+        \end{table}
+
+        Two example-queries are explained in the following, assuming the graph being stored with respect to forward edges.
+        In general, leaving edges of vertex $V[s]$ or incoming edges of a vertex $V[d]$ can be determined by following mappings (referring to \cref{table:balancing:indices_mapping}):
+        \begin{equation}
+        \label{eq:balancing:indices_mapping}
+        \begin{aligned}
+            \mathit{offset} &\in \left\{ O_D \left[ s \right], O_D \left[ s \right] + 1, \dots, O_D \left[ s+1 \right] - 1 \right\} \\
+            d_\mathit{offset} &= D \left[ \mathit{identity}_\mathit{fwd} \left[ \mathit{offset} \right] \right] \\
+            s &\mapsto \left\{ \left( s, d_\mathit{offset} \right) \right\} \\
+            \\
+            \mathit{offset} &\in \left\{ O_S \left[ d \right], O_S \left[ d \right] + 1, \dots, O_S \left[ d+1 \right] - 1 \right\} \\
+            s_\mathit{offset} &= S \left[ \mathit{map}_\mathit{fwd} \left[ \mathit{offset} \right] \right] \\
+            d &\mapsto \left\{ \left( s_\mathit{offset}, d \right) \right\} \\
+        \end{aligned}
+        \end{equation}
+        The mapping $\mathit{map}_\mathit{fwd}$ can be computed by sorting all edges according to the forward-graph (first source-id, than destination-id) before sorting all edges again according to the backward-graph (first destination-id, than source-id).
+        In between, the edge-positions from the first sorted edges are linked to the edges, such that they get reordered by sorting a second time.
+        After sorting the second time, the remembered positions become the mapping $\mathit{map}_\mathit{fwd}$.
+
+        In the examples, one query is asking for all leaving edges starting in $V[s=4]=\mathit{id}_4$ and one is asking for all incoming edges ending in $V[d=1]=\mathit{id}_1$.
+        The choice of $d=1$ is handy, because $(2, 1) \in E \wedge (1, 2) \notin E$ holds, which might help with understanding the examples.
+        Important values in these examples are highlighted in the tables.
+
+        To get all leaving edges starting in $V[s=4]=\mathit{id}_4$, the offset-array $O_D$ is used.
+        All forward-indices within $\left\{ O_D[s], O_D[s] + 1, \dots, O_D[s+1] - 1 \right\}$ refer to the leaving edges.
+        Since $O_D[4]=9$ and $O_D[5]=11$, all leaving-edges are at positions $\left\{ 9, 10 \right\}$ with respect to forward-edges.
+        Because the graph is stored with respect to forward-edges, these resulting positions are already the edge-indices $i_E$ of the leaving-edges.
+        The \cref{table:balancing:indices_mapping} still marks the respective values \num{9} and \num{10} in the forward-table.
+        Thus, all leaving-edges are $\left\{ (4, D[9]=2), (4, D[10]=3) \right\} = \left\{ (4,2), (4,3) \right\}$.
+
+        Getting all incoming edges ending in $V[d=1]=\mathit{id}_1$ works similar and uses the offset-array $O_S$ respectively.
+        All backward-indices within $\left\{ O_S[d], O_S[d] + 1, \dots, O_S[d+1] - 1 \right\}$ refer to the incoming edges.
+        The difference here is the outcome from $O_S$.
+        Due to $O_S[1]=1$ and $O_S[2]=4$, all incoming-edges are at positions $\left\{ 1, 2, 3 \right\}$ with respect to backward-edges, but the graph is stored with respect to forward-edges.
+        Therefore, the indices are not matching and the resulting positions $\left\{ 1, 2, 3 \right\}$ need to be mapped to the respective (forward-) edge-indices $i_E$.
+        For this, $\mathit{map}_\mathit{fwd}$ is used.
+        \begin{equation}
+        \begin{aligned}
+            \mathit{map}_\mathit{fwd}[1] &= 0 \Rightarrow S[0] = 0 \\
+            \mathit{map}_\mathit{fwd}[2] &= 3 \Rightarrow S[3] = 2 \\
+            \mathit{map}_\mathit{fwd}[3] &= 6 \Rightarrow S[6] = 3 \\
+        \end{aligned}
+        \end{equation}
+        Thus, all incoming-edges are $\left\{ (0, 1), (2, 1), (3, 1) \right\}$.
+
+    \subsection{Storing and accessing shortcuts in graphs}
+
+        Shortcuts have a \glspl{metric} and source-/destination-vertices as well, so they are full edges and can be added to the current data-structure.
+        However, due to construction of a contracted graph, a shortcut replaces two edges, that may be shortcuts.
+        This functionality is missing in the graph's data-structure yet.
+        A first intuition may be extending edges by a tuple of two edge-indices.
+        Implementing this causes much redundancy, because normal edges would need a placeholder for their tuple.
+        The street-networks from the experiments in \cref{chap:experiments} have less than $|E|$ shortcuts added.
+        So after adding all shortcuts, more than half of all edges will have unused allocated memory of two indices.
+        For example, Saarland from the experiments contains over $\num{1000000}$~edges.
+        If these placeholders would be used, each of these million edges would have two unused indices.
+        Assuming one index needs $\si{\num{64} \bit}$, this sums up to $\si{\num{16} \mega\byte}$ of unused memory.
+        This number scales with the graph's size, so Germany with over $\num{100000000}$~edges would have already $\si{\num{1.6} \giga\byte}$ of completely unused, but allocated memory.
+
+        Therefore, since edge-indices $i_E$ can be used for all edge-data ($S$, $D$, $C$), this whole indexing-procedure from \cref{chap:balancing:implementation:graphs} can be and is used in this thesis for storing and accessing shortcuts without such placeholders.
+        Like the offsets $O_D$ and $O_S$, another offset-array is created.
+        Let this new offset-array be called $O_L$ ($L$ for link, since $S$ is already used).
+        The significant difference between $O_D$ and $O_S$ on one side and $O_L$ on the other side is, that $O_L$ contains an offset-value per edge, whereas $O_D$ and $O_S$ contain offset-values per vertex.
+        Lining all shortcut-tuples of edge-indices up according to the forward-edges' order in the graph, this results in the data-array $L$.
+        This array $L$ behaves exactly similar as the array $S$ or $D$.
+        So, despite the indexing-mapping, the shortcut-indices of an edge-index $i_E$ can be found in $L$ between $O_L \left[ i_E \right]$ (including) and $O_L \left[ i_E + 1 \right]$ (excluding).
+        A shortcut can be determined by comparing neighbouring values in $O_L$.
+        If $O_L \left[ i_E \right] = O_L \left[ i_E + 1 \right]$ holds, the edge at $i_E$ is no shortcut.
+
+        \todo{%
+            TODO @Florian
+
+            Bezüglich dem nachfolgenden: Gibts ne maximale Menge an Shortcuts garantiert?
+        }
+        When analyzing the memory-usage, this method has improved the other approach of storing tuples.
+        Let $m$ be the number of edges without shortcuts and $m_L$ the number of shortcuts in the graph.
+        Previously, the number of needed indices was $2 \cdot (m + m_L)$.
+        The offset-procedure stores $2 \cdot m_L$ replaced edge-indices and $(m + m_L)$ offset-indices, resulting in $m + m_L + 2 \cdot m_L$.
+        As long as $m_L < m$ holds, the offset-procedure saves memory, which was the case in all experimental graphs.
 
     \subsection{Multithreading}
 
-        \todo{%
-            TODO
+        The implementation of searching for paths in parallel has brought a huge performance-boost.
+        Optimal paths of different \glspl{stpair} may have different costs and thus need a different amount of runtime.
+        This holds especially for \gls{repr}, where longer paths lead to more alternative paths.
+        Therefore, the number of \glspl{stpair} is not distributed evenly over all threads.
+        In fact, there is one single master-thread pulling some \glspl{stpair} from the user-provided set of \glspl{stpair} and sends this work-package to one of several worker-threads.
+        Every worker-thread has its own instance of the routing-algorithm, searches for the optimum paths, and returns a simple list of all occurred edge-indices $i_E$ to the master-thread.
+        The master-thread counts the workloads for each edge and pulls the next work-package until all \glspl{stpair} are processed.
 
-            Write about approach to distribute work: n workers to 1 consumer
-            Könnte recht kurz werden, weil ich einfach die Routenpaare verteile und die gezählten Workloads zurücknehme.
-            Da gibts eigentlich nicht viel mehr zu sagen.
-        }
-
-        \todo{TODO Paths are flattened in threads, but all workloads could be flattened at once \rightarrow effort has been put into multithreading and dijkstra-repr-comparison, for which reason this flattening-optimization isn't used}
+        With this procedure, the workload and not the number of \glspl{stpair} is distributed evenly.
+        The communication-overhead when using smaller work-package-sizes is negligible compared to idle worker-threads, that wait for the last few worker-threads to finish their larger work-package.

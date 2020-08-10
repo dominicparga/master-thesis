@@ -22,38 +22,34 @@
     Let a street-network be given as a graph $G = (V, E)$ with vertices $V$, edges $E$ and a cost-function $c: E \to \mathbb{R}_+^d$, that returns a cost-vector for each edge $e \in E$, also called multidimensional \glspl{metric} in this thesis.
     Note, that $\mathbb{R}_+^d$ doesn't contain zero, which would, depending on the \gls{metric}, result in bad alternative routes otherwise.
     \Glspl{metric} are also called \glspl{cost} depending on the context.
-    The underlying graph-structure is implemented as adjacency-array from~\cite{mehlhorn:algorithms} with some adjustments.
-    This data-structure fits well, because it reduces redundancy by optimizes the graph's memory-consumption while accessing the graph can be done in constant or logarithmic time (depending on access via indices or via ids) through indexing-logic.
 
     For the theory of this thesis, above definitions are sufficient.
-    Before the adjacency-array can be explained, the graph has to be slightly redefined, so it can be referred with arrays and indices.
-    This makes the explanation easier and is needed for \cref{chap:balancing:implementation}.
+    However, the implementation-details in \cref{chap:balancing:implementation} concretize the graph to store it efficiently.
+    The underlying graph's data-structure is based on the idea of adjacency-arrays, which is mentioned in~\cite{mehlhorn:algorithms}.
+    For this reason, this brief idea is extended both in the following to demonstrate the brief idea and in \cref{chap:balancing:implementation}.
+
+    Before the adjacency-array can be concretized, the graph has to be slightly redefined, so it can be referred with arrays and indices.
+    Again, this is not needed for the theory in this thesis, but makes the explanation of adjacency-arrays easier and is needed in the implementation-details in \cref{chap:balancing:implementation}.
 
     As already mentioned, a graph is defined as $G = (V, E)$ with a cost-function $c: E \to \mathbb{R}_+^d$ mapping every edge to a cost-vector.
-    Since $V$ and $E$ are final, let $n := \left| V \right|$ be the number of vertices and $m := \left| E \right|$ be the number of edges.
-    Then, the graph's components are redefined and stored as follows.
+    Since $V$ and $E$ are finite, let $n := \left| V \right|$ be the number of vertices and $m := \left| E \right|$ be the number of edges.
+    Then, the graph's components are interpreted and stored as follows.
     \begin{itemize}
         \item[Vertices:]
             For implementation, vertices in $V$ are just ids, which are stored in an array in ascending order.
-            The order is needed, because the graph is stored as adjacency-array.
-            Besides, the order allows to find the index in logarithmic time.
-            However, inside, the graph-implementation works with indices and just users from outside may need to search a node by id.
+            The order is needed for accessing the graph's data later.
             So let $V$ be an array of node-ids and $V[i_V]$ be the node-id at node-index $0 \le i_V < n$.
         \item[Edges:]
-            Edges are considered to be directed and $E$ is defined as an array of tuples of two vertices, so $E \subseteq V \times V$ is a tuple of node-indices (not node-ids).
-            However, the sources and destinations in $E$ are stored in separate arrays, so $E := (S, D)$ and $E[i_E] = (S[i_E], D[i_E])$ is the edge from source in $S$ at edge-index $i_E$ to destination in $D$ at edge-index $i_E$.
-            Since the graph is stored as adjacency-array, $E$ is considered to be sorted by source-, then by destination-id, in ascending order.
-            Let the respective offset-array for remaining $D$ be $D_{\mathit{offset}}$.
-            The creation and use of $D_{\mathit{offset}}$ is explained below.
-        \item[\Glspl{metric}:]
-            For every edge in $E$, a vector of floats is stored.
-            To formalize this, the cost-function is slightly redefined (and duplicated edges are being removed) to have edge-costs being associated as \glspl{metric}.
-            Let $C \subset E \times \mathbb{R}_+^d$ be the set of \glspl{metric} and $c$ be the bijective function $c: E \to C$.
-            With this definition, $C[i_E]$ can be associated as the cost-vector of the edge $E$ at edge-index $i_E$, where $C$ is stored as two-dimensional array of floats.
+            Edges are considered to be directed and $E$ is defined as an array of tuples of two vertex-indices, so $E \subseteq \left\{ 0, 1, \dots, n-1 \right\}^2$.
+            However, the sources and destinations in $E$ are stored in separate arrays, so $E := (S, D)$ and $E[i_E] = (S[i_E], D[i_E])$ is the edge from source-index in $S$ at edge-index $i_E$ to destination-index in $D$ at edge-index $i_E$.
+            Since the graph is stored as adjacency-array, $E$ is considered to be sorted by source-, then by destination-id (although node-indices are stored in $S$ and $D$), in ascending order.
+            Let the respective offset-array for remaining $D$ be $O_D$.
+            The creation and use of $O_D$ is explained below.$S$
+            With the interpretation of the offset-array, storing $S$ will not be necessary, because $S$ (without duplicates) will be $[0, 1, \dots, n-1]$ and thus match $V$.
     \end{itemize}
 
-    After these definitions, the core of the adjacency-array is basically the creation of the offset-array $D_{\mathit{offset}}$, which then helps accessing the graph's components in constant time.
-    For every vertex $v \in V$, the offset-array $D_{\mathit{offset}}$ stores the edge-index $i_E$, where the destinations of $v$ start.
+    After these definitions, the core of the adjacency-array is basically the creation of the offset-array $O_D$, which then helps accessing the graph's components in constant time.
+    For every vertex $v \in V$, the offset-array $O_D$ stores the edge-index $i_E$, where the leaving edge starting in $v$ occurs.
     Here, the sorted $E$ is needed.
     This is demonstrated in \cref{table:preliminaries:offset-array} and explained below.
 
@@ -63,21 +59,20 @@
             Vertices $V$ or sources $S$ & 0 & \multicolumn{3}{c |}{1} & \multicolumn{3}{c |}{2} & \multicolumn{3}{c |}{3} & \multicolumn{2}{c |}{4} & - \\
             \hline
             Destinations $D$ & 1 & 0 & 2 & 3 & 1 & 3 & 4 & 1 & 2 & 4 & 2 & 3 & - \\
-            \hline
-            Offsets $D_{\mathit{offset}}$ & 0 & \multicolumn{3}{c |}{1} & \multicolumn{3}{c |}{4} & \multicolumn{3}{c |}{7} & \multicolumn{2}{c |}{10} & 12 \\
+            Offsets $O_D$ & 0 & \multicolumn{3}{c |}{1} & \multicolumn{3}{c |}{4} & \multicolumn{3}{c |}{7} & \multicolumn{2}{c |}{10} & 12 \\
         \end{tabular}
         \caption[Example-graph stored as offset-array]{%
             A graph with $|V| = 5$ and $|E| = 12$ stored as adjacency-array, shown with the respective offset-array.
-            Every edge is directed and represents a tuple of source- and destination-vertex.
-            All destinations of source $V[s=3] = 3$ are in $D$ between positions $D_{\mathit{offset}}[s] = 7$ (including) and $D_{\mathit{offset}}[s+1] = 10$ (excluding).
+            Every edge in the graph is bidirectional, but stored directed and represents as a tuple of source- and destination-vertex.
+            All destinations of leaving edges starting in $V[s=3] = 3$ are in $D$ between positions $O_D[s] = 7$ (including) and $O_D[s+1] = 10$ (excluding).
             \label{table:preliminaries:offset-array}
         }
     \end{table}
 
     Let $e = E[i_E] = (S[i_E], D[i_E]) = (s, d)$ be an edge at position $i_E$ and $s$ be the position of the edge's source in $V$.
-    Because the edges are sorted by source, than by destination, all edges starting in $V[s]$ are in $D$ between positions $D_{\mathit{offset}}[s]$ (including) and $D_{\mathit{offset}}[s+1]$ (excluding).
-    Since every edge-data can be stored according to the edges' destinations $D$ (like \glspl{metric} from $C$), this allows quick access to all relevant edge-components by simply providing the edge-index while keeping the memory-usage low.
-    Besides that, it can be extended quite easily, as it is done in \cref{chap:balancing:implementation}.
+    Because the edges are sorted by source, than by destination, all edges starting in $V[s]$ are in $D$ between positions $O_D[s]$ (including) and $O_D[s+1]$ (excluding).
+    Since every edge-data can be stored according to the edges' destinations $D$ (like \glspl{metric}), this allows quick access to all relevant edge-components by simply providing the edge-index while keeping the memory-usage low.
+    Besides that, it can be extended quite easily and complex, as it is done in \cref{chap:balancing:implementation}.
 
 \section{Contraction-hierarchies}
 

@@ -14,7 +14,7 @@ However, this chapter presents some results to validate, that the spread of foun
     The latter is basically a Rust-wrapper for CGAL (C++).
 
     Graphs for street-networks are downloaded from \cite{osm}.
-    Experiments run on the graph for Isle~of~Man (from March~2020) and on the graph for the German state Saarland (from July~2020).
+    Experiments run on the graph for Isle~of~Man (from March~2020) and on the graph for the German county Saarland (from July~2020).
     Considered \glspl{metric} are travel-distance (all paths tolerated) and travel-time (\si{40 \percent} tolerance on Isle~of~Man, \si{25 \percent} on Saarland).
     A tolerance of \si{25 \percent} refers to a worst-case-scenario of \si{15 \minute} more travel-time for originally \si{60 \minute}, which seems to be a good tradeoff.
     However, a tolerance of \si{40 \percent}, which is used for Isle~of~Man, refers to a worst-case of additional \si{24 \minute} for originally \si{60 \minute}.
@@ -30,7 +30,7 @@ However, this chapter presents some results to validate, that the spread of foun
     \begin{itemize}
         \item Both, \gls{balancing} and evaluating are done with \gls{dijkstra}.
             This scenario has the best performance of all scenarios, because \gls{repr} calls \gls{dijkstra} internally multiple times.
-            On the other hand, \gls{repr} is already constructed to find pareto-optimal paths for same \glspl{stpair} and leads to a better spread.
+            On the other hand, \gls{repr} is already constructed to find a subset of pareto-optimal paths for same \glspl{stpair} and leads to a better spread.
             Most important, this case with using only \gls{dijkstra} doesn't guarantee a user-provided tolerance for found alternative paths.
             In general, \gls{dijkstra} finds the optimum path, but here, \gls{personalized_routing} is used.
             Hence, paths, that are optimal for some $\alpha$, can be arbitrary bad for a certain \gls{metric}, when compared to an optimal path of an $\alpha$ favoring only this \gls{metric} (\eg\ $(0, 1, 0, 0)^T$).
@@ -43,6 +43,14 @@ However, this chapter presents some results to validate, that the spread of foun
             Hence, using \gls{dijkstra} with \gls{personalized_routing} for \gls{balancing} and \gls{repr} for evaluation keeps the guarantee for user-provided tolerances while keeping the \gls{balancing}-runtime reduced.
             As shown in the experiments, the results are not better than using only \gls{repr}, but still satisfactory.
     \end{itemize}
+
+\todo{%
+    TODO @Florian
+
+    Verification: Does the product what it is specified for?
+
+    Validation: Does the product solve the problem?
+}
 
 \section{Validating the simulation-results with Isle~of~Man}
 
@@ -85,7 +93,7 @@ However, this chapter presents some results to validate, that the spread of foun
                 In \cref{table:isle_of_man:evaluating:performance} describing the performance during evaluation, the graph isn't contracted to show the contraction's impact on performance.
                 The query-times before contraction refer to \gls{dijkstra}-queries from the contraction-tool, so are independent of the \gls{balancing}'s routing-algorithm.
                 The maximum workloads are just copied from the plots.
-                The number of found paths ($\ge 1$) is provided with a standard-deviation to show, that the mean is not caused by some outliers.
+                The number of found paths ($\ge 1$) is provided with a standard-deviation to indicate, that the mean is not caused by some outliers.
                 The number of unique edges stands for the actual number of edges in $|E|$ with a workload greater than zero.
                 The set of \glspl{stpair} contains \num{10000}~\glspl{stpair}.
                 \label{table:isle_of_man:balancing:performance}
@@ -100,8 +108,8 @@ However, this chapter presents some results to validate, that the spread of foun
         Besides a first impression of the needed runtime, \vref{table:isle_of_man:balancing:performance} already explains the differences in performance.
         The needed time for the \gls{balancing}, basically just path-searches, is much smaller with \gls{dijkstra} than with \gls{repr}, because \gls{repr} calls \gls{dijkstra} multiple times.
         The number of found paths increases with iteration-number when using \gls{repr}, which is desirable.
-        Because the standard-deviations are provided and greater than the respective means (and the number of found paths is at least one for every \gls{stpair} due to selection of \glspl{stpair}), any small number of found paths needs a high number (or several respective high numbers) on the other side of the mean.
-        So the means are not caused just by some outliers.
+        Because the standard-deviations are greater than the respective means (and the number of found paths is at least one for every \gls{stpair} due to selection of \glspl{stpair}), any small number of found paths requires a high number (or several respective high numbers) on the other side of the mean.
+        This indicates, that the means are probably not caused just by some outliers.
         Further, the number of covered edges in $|E|$ is higher after \gls{balancing} and improves more with \gls{repr} than with \gls{dijkstra}.
 
     \subsection{Actual results from balancing}
@@ -155,10 +163,10 @@ However, this chapter presents some results to validate, that the spread of foun
         The initial plots \cref{fig:isle_of_man/dijkstra/0/workloads} and \cref{fig:isle_of_man/repr/0/workloads} are quite identical.
         This is not an issue of \gls{repr}, but of the considered \glspl{metric}.
         Both, travel-distance and travel-time, don't bring that different paths without any artificial \gls{metric}.
-        Although, some more paths occur on the graph showing workloads from \gls{repr}, leading to a minor less maximum workload here.
+        Although, some more paths occur on the graph showing workloads from \gls{repr}, leading to an insignificantly smaller maximum workload here.
 
         The plots of the second iteration, which is the first iteration including an artificial \gls{metric}, can be seen in \cref{fig:isle_of_man/dijkstra/1/workloads} and \vref{fig:isle_of_man/repr/1/workloads}.
-        As mentioned in \cref{chap:balancing:update}, the first update doesn't lead to a perfect spread yet.
+        As mentioned in \cref{chap:balancing:update}, the first update doesn't lead to a spreaded workload yet.
         Especially \gls{dijkstra} results in a maximum workload, that is twice as high as before.
         Nonetheless, in \cref{fig:isle_of_man/dijkstra/1/workloads} (after first update \gls{balancing} with \gls{dijkstra}), there are still some new found routes in between (\eg\ in the north of the map).
         In this second iteration, the previously updated workload-\gls{metric} makes \gls{dijkstra} avoid popular routes more or less completely.
@@ -215,8 +223,8 @@ However, this chapter presents some results to validate, that the spread of foun
         In fact, when evaluating the \gls{dijkstra}-balanced graph with \gls{repr} (see \vref{fig:isle_of_man/dijkstra/repr/1/workloads}), the resulting workloads actually look more spreaded than the final workloads from \gls{balancing} with \gls{dijkstra} (see \cref{fig:isle_of_man/dijkstra/2/workloads}), noticable by the different colors in the middle of the respective plots.
         A comparison of the number of found paths confirms on that in \vref{table:isle_of_man:evaluating:performance} (evaluating-performance).
 
-        Lastly, \cref{chap:balancing} claims and explains, that two iterations are the perfect number of iterations, because popular and alternative routes are balanced here.
-        Running Isle~of~Man for more than two iterations behaves accordingly.
+        Lastly, \cref{chap:balancing} claims and explains, that two iterations are intuitively a good choice, because popular and alternative routes are balanced here.
+        Running Isle~of~Man for more than two iterations supports this statement.
         The relevant information about the iterations are provided in \vref{table:isle_of_man/repr/10/workloads}.
         After the second \gls{metric}-update, the maximum-workloads are worse or equal (slightly better here and there) and number of unique edges are quite similar.
         But most important, the number of found paths is much worse than before, so indeed less paths are found with more iterations.
@@ -271,9 +279,9 @@ However, this chapter presents some results to validate, that the spread of foun
             \end{tabular}
             \caption[Comparison of two and ten metric-updates when balancing Isle~of~Man]{%
                 Isle~of~Man.
-                A comparison of iterations to show, that two \gls{metric}-updates are indeed perfect.
+                A comparison of iterations to show, that two \gls{metric}-updates are indeed a good choice.
                 Here, iteration 2 refers to the respective iteration 2 in \cref{table:isle_of_man:balancing:performance}.
-                The number of found paths ($\ge 1$) is provided with a standard-deviation to show, that the mean is not caused by some outliers.
+                The number of found paths ($\ge 1$) is provided with a standard-deviation to indicate, that the mean is not caused by some outliers.
                 The number of unique edges stands for the actual number of edges in $|E|$ with a workload greater than zero.
                 \label{table:isle_of_man/repr/10/workloads}
             }
@@ -316,7 +324,7 @@ However, this chapter presents some results to validate, that the spread of foun
                 A comparison (but no detailled benchmarks) of evaluating-performance with the \gls{balancing}-performance (from \vref{table:isle_of_man:balancing:performance}), using again four threads on Isle~of~Man.
                 Here, iteration 2 refers to the respective iteration 2 in \cref{table:isle_of_man:balancing:performance}.
                 This time, when evaluating, the graph isn't contracted (for comparison) and hence the runtime is much longer.
-                The number of found paths ($\ge 1$) is provided with a standard-deviation to show, that the mean is not caused by some outliers.
+                The number of found paths ($\ge 1$) is provided with a standard-deviation to indicate, that the mean is not caused by some outliers.
                 The number of unique edges stands for the actual number of edges in $|E|$ with a workload greater than zero.
                 The initial number of unique edges with the new evaluation-set (also \num{10000}~\glspl{stpair}) for \gls{dijkstra} is $\approx \num{82000}$, for \gls{repr} it is $\approx \num{82800}$.
                 \label{table:isle_of_man:evaluating:performance}
@@ -470,7 +478,7 @@ However, this chapter presents some results to validate, that the spread of foun
                 Here, also $\si{\num{99.8} \percent}$ of all nodes are contracted.
                 The query-times before contraction refer to \gls{dijkstra}-queries from the contraction-tool, so independent of the \gls{balancing}'s routing-algorithm.
                 The maximum workloads are just copied from the plots.
-                The number of found paths ($\ge 1$) is provided with a standard-deviation to show, that the mean is not caused by some outliers.
+                The number of found paths ($\ge 1$) is provided with a standard-deviation to indicate, that the mean is not caused by some outliers.
                 The number of unique edges stands for the actual number of edges in $|E|$ with a workload greater than zero.
                 The set of \glspl{stpair} contains \num{10000}~\glspl{stpair}.
                 \label{table:saarland:balancing:performance}
@@ -498,7 +506,7 @@ However, this chapter presents some results to validate, that the spread of foun
                 A comparison (but no detailled benchmarks) of evaluating-performance with the \gls{balancing}-performance (from \vref{table:saarland:balancing:performance}), using again 15 threads on Saarland.
                 Here, iteration 2 refers to the respective iteration 2 in \cref{table:saarland:balancing:performance}.
                 This time, when evaluating, the graph is contracted (in opposite to previously with Isle~of~Man).
-                The number of found paths ($\ge 1$) is provided with a standard-deviation to show, that the mean is not caused by some outliers.
+                The number of found paths ($\ge 1$) is provided with a standard-deviation to indicate, that the mean is not caused by some outliers.
                 The number of unique edges stands for the actual number of edges in $|E|$ with a workload greater than zero.
                 The initial number of unique edges with the new evaluation-set (also \num{10000}~\glspl{stpair}) for \gls{dijkstra} is $\approx \num{471000}$, for \gls{repr} it is $\approx \num{487000}$.
                 \label{table:saarland:evaluating:performance}

@@ -8,7 +8,9 @@ After the theory is explained, implementation-details are discussed.
 When talking about performance, it is referred to the used testing-machine, which is an ordinary, but good home-computer.
 Further details about the testing-machine and experimental results can be found in \vref{chap:experiments}.
 
-For a given \gls{stpair} and a graph $G = (V, E)$ with vertices $V$ and edges $E$ of multidimensional \glspl{weight}, a path should be found through an algorithm, that implicitly tends to distribute found paths over the network, while keeping the paths' \glspl{cost} sufficiently near every \gls{cost}-dimension's optimum.
+For a given \gls{stpair} and a street-network given as a graph $G = (V, E)$ with vertices $V$, edges $E$ and a cost-function $c: E \to \mathbb{R}_+^d$, that returns a cost-vector for each edge $e \in E$, a path should be found through an algorithm, that implicitly tends to distribute found paths over the network, while keeping the paths' \glspl{cost} sufficiently near every \gls{cost}-dimension's optimum.
+Note, that $\mathbb{R}_+^d$ doesn't contain zero, which would, depending on the \gls{metric}, result in bad alternative routes otherwise.
+
 To achieve this, a computation-phase called \gls{balancing} analyzes the graph $G$ and computes a new \gls{metric}, called workload-\gls{metric}.
 With this workload-\gls{metric}, routing-algorithms like \gls{repr} and \gls{dijkstra} (with \gls{personalized_routing}) can compute paths as usual.
 For comparison, multiple scenarios using different combinations of these two routing-algorithms will be used.
@@ -53,7 +55,7 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
         Here, different strategies can be applied.
         For simplicity, the set of \glspl{stpair}, which are used for balancing $G$, might consist of $s$ and $t$ chosen \gls{uar}\ from $V$.
         This has the disadvantage, that a sufficiently large set of \glspl{stpair} is needed to overload $G$.
-        This clearly becomes a bottleneck for performance on larger graphs (beginning with small German states like Saarland with almost $|V| \approx \num{580000}$ and $|E| \approx \num{1160000}$ after parsing), especially when using \gls{repr}, that computes multiple \gls{dijkstra}-queries per run.
+        This clearly becomes a bottleneck for performance on larger graphs (beginning with small German counties like Saarland with almost $|V| \approx \num{580000}$ and $|E| \approx \num{1160000}$ after parsing), especially when using \gls{repr}, that computes multiple \gls{dijkstra}-queries per run.
         To alleviate the computational burden of a large number of \glspl{stpair}, knowledge of the typical workloads in this graph could be used.
         Instead of picking \gls{uar}\ from $|V|$, other distributions could be chosen by weighting $v \in |V|$ differently or by using some \glspl{stpair} multiple times (on purpose, not only by random).
         For example, real, daily, critical \glspl{stpair} are not distributed \gls{uar}\ over $V$.
@@ -98,7 +100,23 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
         When the new workload-\gls{metric} is added (hence let the graph's \glspl{metric}' dimension be $d+1$), $\alpha^{(d+1)}$ becomes $\alpha^{(d+2)}$, which is a different direction in the $(d+1)$-cost-space than the previous $\alpha^{(d+1)}$ points to in the $(d+1)$-cost-space.
         For example (considering only \alpha's direction, not its length), let $d=2$ become $d=3$, hence $\alpha^3=(1, 1) \in \mathbb{R}_+^2$ becomes $\alpha^4=(1, 1, 1) \in \mathbb{R}_+^3$ and respectively $(1, 1, 0) \in \mathbb{R}_+^3$ from the previous case $d=2$ is missing now.
         Because of this, less paths have been found on Saarland in the experiments.
-        Especially when talking in general, the first iteration may find paths, that can't be found by latter iterations.
+        \todo{%
+            TODO @Florian
+
+            Ich mache den Satz hier raus:
+
+            \quotes{Especially when talking in general, the first iteration may find paths, that can't be found by latter iterations.}
+
+            Deine Kritik:
+
+            Das ist praktisch wahr und theoretisch falsch! Der Grund warum die Routen von zuvor nicht gefunden wurden ist, dass die d+1 initialen Alphas für d=3 keine d+1 unterschiedliche Routen geliefert haben.
+            Wenn du d+1 unterschiedliche Routen hast kriegst du auch alle Routen wieder raus.
+
+            Fürs Verständnis meine Frage:
+
+            Die konvexe Hülle, die gefunden wird, ist abhängig von der initialen konvexen Hülle.
+            Wieso kann die neue, künstliche, dritte Metrik die vorherige 2D-convex-hull nicht so verzerren, dass die alten d+1 Routen zu Pfaden führt, die die neue 3D-convex-hull nicht finden kann?
+        }
         Therefore, the \gls{balancing} extends the original suggestion by~\cite{barth:alternative_multicriteria_routes} and takes the initial $\alpha^{(j)}$ from $\left\{ 0, 1 \right\}^{(d+1)}$ excluding $(0, \dots, 0)^T$.
         Only the direction of $\alpha$ is relevant, so the previous notation in \cref{eq:init_alphas} can be simplified.
         \begin{equation}
@@ -151,7 +169,7 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
 
         In fact, this approach works okay in smaller, overloaded networks like Isle~of~Man ($|V| \approx \num{50000}$ and $|E| \approx \num{100000}$ after parsing), but lacks in convergence.
         In the first update-iteration, popular paths are ignored as much as possible, before they are highly preferred in the second iteration, ignored in the third iteration and so on.
-        This behaviour could be reduced by adding the $\mathit{correction}$, but larger networks (like the small German state Saarland, $|V| \approx \num{580000}$ and $|E| \approx \num{1160000}$ after parsing) worsen the convergence.
+        This behaviour could be reduced by adding the $\mathit{correction}$, but larger networks (like the small German county Saarland, $|V| \approx \num{580000}$ and $|E| \approx \num{1160000}$ after parsing) worsen the convergence.
         Further, adding $\mathit{correction}$ leads to the need of tuning it, for which reason only the second approach is shown in the experiments in \vref{chap:experiments}.
 
         Therefore, another approach, replacing the \gls{explicit_euler} from \vref{eq:euler}, is presented in \vref{eq:averaging}, that does spread the workload well and within only two iterations.
@@ -168,19 +186,11 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
         This second iteration favors alternative routes and the outcoming workload completes the previously generated workload-\gls{metric}.
         A third iteration has already a workload-\gls{metric} with a balance between popular and alternative routes, so further iterations appear disruptive.
 
-\section{Some theoretical implementation-details}
+\section{Details on implementation}
 \label{chap:balancing:implementation}
-
-    \todo{%
-        TODO @Florian
-
-        Passen die TODOs hier in \cref{chap:balancing:implementation}, sprich bist du daccord mit dem geplanten Inhalt?
-    }
 
     The implementation has the goal to be efficient, easy to use and maintainable.
     For this reason, some important decisions were made and the most important ones are explained (from a theoretical point of view) in the following.
-
-    \todo{TODO normalize after shortcut-creation destroys correctness of ch-graph}
 
     \subsection{Configuration-files}
 
@@ -196,7 +206,8 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
 
         The underlying graph-structure is implemented as adjacency-array with several extensions.
         The adjacency-array is explained in \cref{chap:preliminaries:graphs}.
-        This data-structure fits well, because it allows the reduction of redundancy by optimizing the graph's memory-consumption while accessing the graph can be done in constant or logarithmic time (depending on access via indices or via ids) through indexing-logic.
+        This data-structure fits well, because it reduces redundancy by optimizing the graph's memory-consumption.
+        At the same time, accessing the graph can be done in constant or logarithmic time (depending on access via indices or via ids) through indexing-logic.
         The indexing-logic from adjacency-arrays has been extended by a mapping to support forward-, backward- and shortcut-edges in the graph, which is necessary for the bidirectional-\gls{dijkstra}.
 
         First, the graph from preliminaries is extended by \glspl{metric}.

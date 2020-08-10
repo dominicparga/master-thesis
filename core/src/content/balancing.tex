@@ -13,7 +13,7 @@ To achieve this, a computation-phase called \gls{balancing} analyzes the graph $
 With this workload-\gls{metric}, routing-algorithms like \gls{repr} and \gls{dijkstra} (with \gls{personalized_routing}) can compute paths as usual.
 For comparison, multiple scenarios using different combinations of these two routing-algorithms will be used.
 Please note, that \gls{dijkstra} doesn't guarantee a tolerance when used with \gls{personalized_routing} and hence, some combinations don't provide an upper bound for path-costs.
-This will also be pointed out in the respective experiments in \vref{chap:experiments}.
+This will also be pointed out in the respective experiments in \cref{chap:experiments}.
 
 This thesis focusses only on distance and travel-time, where travel-time is the only \gls{metric} with a provided tolerance.
 
@@ -24,13 +24,15 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
 
 \section{Balancing to create a new metric}
 
-    \todo{both approaches: multiple runs (explicit euler because workload is toggling) vs multiple workload-\glspl{metric}}
-
-    This \gls{balancing} is depicted in \vref{fig:balancing} and explained briefly in the caption or detailled in the following.
+    This \gls{balancing} is depicted in \vref{fig:balancing:algorithm} and explained briefly in the caption or detailled in the following.
+    It basically runs routing-queries, counts the resulting workload and adjusts a third \gls{metric} to influence future query-executions.
+    After the new workload-\gls{metric} will have been settled, routing-algorithms for multidimensional \glspl{metric} can run queries on the balanced graph $G$ as before, now considering the new workload-\gls{metric}.
+    Therefore, queries will be run in the experiments (\cref{chap:experiments}) to evaluate the new spread of the street-network.
+    The set of \glspl{stpair} will be chosen differently than the set used in \gls{balancing}, to reduce the dependence on it.
 
     \begin{figure}
         \centering
-        \input{resources/graphics/balancing}
+        \input{resources/graphics/balancing/algorithm}
         \caption[Overview of balancing a graph]{%
             This flow shows the \gls{balancing}, that analyzes a given graph $G$.
             Here, an evaluation-phase is included afterwards.
@@ -39,16 +41,14 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
             In the end, this new \gls{metric} allows a routing-algorithm to distribute upcoming workload (like during rush-hour) more evenly over the underlying street-network in $G$.
             This more spreaded workload can be seen in the evaluation-step, where paths for a set of \glspl{stpair} are searched, once using and once ignoring the new metric.
 
-            Note, that the path-search ignores the new \gls{metric} in the first iteration.
-            \label{fig:balancing}
+            Note, that the action doing the path-searches ignores the new \gls{metric} in the first \gls{balancing}-iteration.
+            \label{fig:balancing:algorithm}
         }
     \end{figure}
 
     \subsection{Selection of route-pairs}
 
-        \todo{TODO @Florian: Opinion about how following Absatz is written?}
-        Let a street-network be given as a graph $G = (V, E)$ with a cost-function $c(e) \rightarrow \mathbb{R}_+^d$, that returns a cost-vector for each edge $e \in E$, also called multidimensional \glspl{metric} in the following.
-        Note, that $\mathbb{R}_+^d$ doesn't contain zero, which would, depending on the \gls{metric}, result in bad alternative routes otherwise.
+        Let a street-network be given as a graph $G = (V, E)$ as defined in \cref{chap:preliminaries:graphs}.
         Before such a graph can be balanced, a set of \glspl{stpair} has to be chosen.
         Here, different strategies can be applied.
         For simplicity, the set of \glspl{stpair}, which are used for balancing $G$, might consist of $s$ and $t$ chosen \gls{uar}\ from $V$.
@@ -56,12 +56,12 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
         This clearly becomes a bottleneck for performance on larger graphs (beginning with small German states like Saarland with almost $|V| \approx \num{580000}$ and $|E| \approx \num{1160000}$ after parsing), especially when using \gls{repr}, that computes multiple \gls{dijkstra}-queries per run.
         To alleviate the computational burden of a large number of \glspl{stpair}, knowledge of the typical workloads in this graph could be used.
         Instead of picking \gls{uar}\ from $|V|$, other distributions could be chosen by weighting $v \in |V|$ differently or by using some \glspl{stpair} multiple times (on purpose, not only by random).
-        Real, daily, critical \glspl{stpair} are not distributed \gls{uar}\ over $V$.
+        For example, real, daily, critical \glspl{stpair} are not distributed \gls{uar}\ over $V$.
         The rush-hour in the morning, when everybody travels from their home to work, is a good counterexample here.
         The set of chosen $t$ might be much smaller than the set of chosen $s$, and less people live near industry or motorways.
         Heuristics as described in~\cite{bakillah:population_from_osm} can return \glspl{stpair} based on approximating population-data from street-networks.
         So considering more specific sets of \glspl{stpair} might be interesting and helpful to boost the \gls{balancing} up, but is not covered in this thesis.
-        The reason for keeping the choice \gls{uar}\ is the easy implementation, while results are sufficiently good enough, as long as $G$ shows overloaded streets.
+        The reason for keeping the choice \gls{uar}\ is the easy implementation, while results are sufficiently good enough, as long as $G$ shows differently (over-) loaded streets.
 
     \subsection{First steps of the balancing-process}
 
@@ -69,12 +69,13 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
         Before continuing, every \gls{metric} is divided by the respective \gls{metric}-mean resulting in $G = (V, E)$ of normalized \glspl{metric}.
         Non-normalized \glspl{metric} of different scales would cause \gls{repr} to find $\alpha$-values of different scale, making some \glspl{metric} more important than others just based on their different scales.
         With \glspl{metric} of different importance, the chosen paths tend to the respective \glspl{metric} and distort the spread.
-        So normalization doesn't just allow to compare different graphs, but also improves the spread in \gls{repr}.
+        So normalization doesn't just allow to compare different graphs (of different \glspl{metric}), but also improves the spread in \gls{repr}.
 
         This graph $G$ is contracted via \gls{contraction-hierarchies} to $G_{CH}$.
         The step of contracting is not needed for correctness, but reduces the needed runtime (even if $G$ is not being fully contracted).
+        For this reason, $G$ instead of $G_{CH}$ is used in the following, to emphasize, that contraction is not necessary from a theoretical point of view.
 
-        Given the \glspl{stpair} and $G_{CH}$, a path in $G_{CH}$ is searched for every \gls{stpair}.
+        Given the \glspl{stpair} and a graph $G$, a path in $G$ is searched for every \gls{stpair}.
         The search may use either \gls{dijkstra} or \gls{repr}.
         Multiple paths are found by \gls{repr}, so one of them is chosen \gls{uar}\ after filtering all found paths by a given tolerance.
         Note, that \gls{dijkstra} with \gls{personalized_routing} doesn't consider any tolerance.
@@ -84,7 +85,7 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
         Both methods are compared in the experiments in \vref{chap:experiments}.
 
         When using \gls{repr}, the quality of the balanced graph highly depends on the choice of initial paths for \gls{repr}.
-        The basic approach in~\cite{barth:alternative_multicriteria_routes} suggests to use $(d+1)$ initial alphas to define the initial convex-hull for a graph of $d$-dimensional \glspl{metric}.
+        The basic approach in~\cite{barth:alternative_multicriteria_routes} suggests to use $(d+1)$ initial alphas to define one initial convex-hull for a graph of $d$-dimensional \glspl{metric}.
         \begin{equation}
         \label{eq:init_alphas}
         \begin{aligned}
@@ -95,6 +96,7 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
         This suggestion is nice to get a tolerance, because every \gls{metric}'s optimal path is computed.
         However, this suggestion doesn't work well for the \gls{balancing} and needs some adjustment.
         When the new workload-\gls{metric} is added (hence let the graph's \glspl{metric}' dimension be $d+1$), $\alpha^{(d+1)}$ becomes $\alpha^{(d+2)}$, which is a different direction in the $(d+1)$-cost-space than the previous $\alpha^{(d+1)}$ points to in the $(d+1)$-cost-space.
+        For example (considering only \alpha's direction, not its length), let $d=2$ become $d=3$, hence $\alpha^3=(1, 1) \in \mathbb{R}_+^2$ becomes $\alpha^4=(1, 1, 1) \in \mathbb{R}_+^3$ and respectively $(1, 1, 0) \in \mathbb{R}_+^3$ from the previous case $d=2$ is missing now.
         Because of this, less paths have been found on Saarland in the experiments.
         Especially when talking in general, the first iteration may find paths, that can't be found by latter iterations.
         Therefore, the \gls{balancing} extends the original suggestion by~\cite{barth:alternative_multicriteria_routes} and takes the initial $\alpha^{(j)}$ from $\left\{ 0, 1 \right\}^{(d+1)}$ excluding $(0, \dots, 0)^T$.
@@ -118,20 +120,20 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
     \label{chap:balancing:update}
 
         Updating the old workload-\gls{metric} is a very small step in the \gls{balancing} with a large impact on the ongoing \gls{balancing}'s performance and the quality of the balanced graph.
-        Two approaches have been tested and are depicted in the following.
+        Two approaches have been tested and are depicted in the following, after talking about the interpretation of the new artificial workload-\gls{metric}.
 
         The workload-\gls{metric} can be associated with popularity, because it refers to high usage.
         A path of high popularity should be chosen less often than without the workload-\gls{metric}.
         So, hopefully, updating the workload-\gls{metric} dependent on the current workload-\gls{metric} reveals the final, balanced state of the network eventually.
-        You could argue, that a street's capacity should be considered as well, because large streets like motorways can support more vehicles than a street in a city.
+        You could suggest, that a street's capacity should be considered as well, because large streets like motorways can support more vehicles than a street in a city and thus should tolerate a higher popularity than smaller streets.
         A street-capacity could be approximated using a street's number of lanes or the respective street-type (\eg\ motorways) and its length.
         Herewith, the workload-\gls{metric}, penalizing popularity, would be corrected in favor of larger streets with (usually) higher speed-limit.
         That is exactly contraproductive, because the travel-time does already consider the capacity of streets with the speed-limit.
-        In other words, the popularity-penalization should compensate the popularity of larger streets with better travel-time.
+        In other words, the popularity-penalization should compensate the popularity of larger streets, that have a better travel-time.
         This wished effect would be disturbed by the consideration of capacity.
 
         The first approach is inspired by a simpler numerical method for solving initial-value-problems called \gls{explicit_euler}.
-        Let $\mathit{old}_i$ be the workload-\gls{metric} (already normalized after $G$ has been initialized) already stored in the graph and $\mathit{new}_i$ the new workload-\gls{metric} (normalized by new mean, see \vref{eq:workloads}).
+        Let $\mathit{old}_i$ be the workload-\gls{metric} (already normalized after $G$ has been initialized) already stored in the graph and $\mathit{new}_i$ be the new workload-\gls{metric} (normalized by their mean, see \vref{eq:workloads}).
         \begin{equation}
         \label{eq:euler}
             \mathit{old}_{e,i+1} = \mathit{old}_{e,i} + (\mathit{new}_{e,i} - \mathit{old}_{e,i}) \cdot \mathit{correction}
@@ -166,36 +168,47 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
         This second iteration favors alternative routes and the outcoming workload completes the previously generated workload-\gls{metric}.
         A third iteration has already a workload-\gls{metric} with a balance between popular and alternative routes, so further iterations appear disruptive.
 
-\section{Evaluating the balanced graph by executing queries}
-
-    \todo{%
-        TODO
-
-        Queries can be done via \gls{dijkstra} or \gls{repr}.
-    }
-
-    \todo{%
-        TODO
-
-        Evaluation with \glspl{stpair}, that differ from those, that are used for optimization!\\
-        $\Rightarrow$ training-\glspl{stpair} vs evaluation-\glspl{stpair}
-    }
-
 \section{Some theoretical implementation-details}
 \label{chap:balancing:implementation}
 
-    \todo{highlights, what was difficult/much work? -> repo-link}
+    \todo{%
+        TODO @Florian
 
-    \subsection{Graphs and paths}
+        Passen die TODOs hier in \cref{chap:balancing:implementation}, sprich bist du daccord mit dem geplanten Inhalt?
+    }
 
-        \todo{TODO Write: Street-network as offset-graph (TODO: wrong name)}
+    The implementation has the goal to be efficient, easy to use and maintainable.
+    For this reason, some important decisions were made and the most important ones are explained (from a theoretical point of view) in the following.
 
-        \todo{TODO Accessing the graph-structure}
+    \todo{TODO normalize after shortcut-creation destroys correctness of ch-graph}
 
-    \subsection{Configs}
+    \subsection{Configuration-files}
 
-        \todo{TODO add some text here}
+        Main concept of the implementation is the use of configuration-files.
+        The whole parser, simulation and computation can be adjusted with these files.
+        One big advantage are the parser-related settings to define the graphs nodes and edges.
+        Both meta-data and \gls{metric}-data is defined in the configuration-file.
+        This allows the graph to be static, meaning its allocated memory doesn't change during runtime after the graph is built and shrinked to fit its needs.
+        However, its values can be changed, which is necessary, since the \gls{balancing} updates a \gls{metric}.
 
-        \todo{TODO normalize after shortcuts destroy them}
-% - indices -> boost for performance while staying dynamic
-% - Dijkstra, no A* because multiple metrics vs heuristic
+    \subsection{Graphs and paths with shortcuts}
+
+        The underlying graph-structure is implemented as adjacency-array with some adjustments.
+        The adjacency-array is explained in \cref{chap:preliminaries:graphs}.
+        The indexing-logic from adjacency-arrays has been extended by a mapping to support forward-, backward- and shortcut-edges in the graph, which is necessary for the bidirectional-\gls{dijkstra}.
+
+        \todo{TODO Write about backward-edges with the mapping \rightarrow helps with maintenance, because central access-point is edge-index}
+
+        \todo{TODO Write about shortcuts with their offset-arrays}
+
+    \subsection{Multithreading}
+
+        \todo{%
+            TODO
+
+            Write about approach to distribute work: n workers to 1 consumer
+            Könnte recht kurz werden, weil ich einfach die Routenpaare verteile und die gezählten Workloads zurücknehme.
+            Da gibts eigentlich nicht viel mehr zu sagen.
+        }
+
+        \todo{TODO Paths are flattened in threads, but all workloads could be flattened at once \rightarrow effort has been put into multithreading and dijkstra-repr-comparison, for which reason this flattening-optimization isn't used}

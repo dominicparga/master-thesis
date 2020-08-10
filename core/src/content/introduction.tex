@@ -71,16 +71,13 @@ Here, data-packages are transmitted much faster than drivers are driving through
         As stated in~\cite{delling:pareto-paths}, computing all pareto-optimal paths is too expensive to be practical at all.
         \todo{%
             TODO @Florian
-            Now: personalized routing is explained
+
+            Now: personalized routing is explained (in the following 2 sentences)
         }
         That's why~\cite{barth:alternative_multicriteria_routes} develops an algorithm, that enumerates paths with extending the search for shortest paths by a geometric interpretation in the \glspl{metric}' underlying \gls{cost}-space.
         To handle multidimensional \glspl{metric}, the algorithm uses \gls{personalized_routing}, which takes predefined preferences to compute one scalar out of multiple \glspl{metric}.
         To speed the queries up, a preprocessing-technique called \gls{contraction-hierarchies} is applied in their paper.
         In addition, while the original approach of contraction-hierarchies is developed in~\cite{geisberger:contraction_hierarchies}, an adjusted version~\cite{funke:personal-routes} using linear programming is used for this thesis.
-        \todo{%
-            TODO @Florian
-            \quotes{improved} replaced by following.
-        }
         The adjustment enables more efficient \gls{contraction-hierarchies} when using \gls{personalized_routing}.
         Further, to reduce the search-space, the enumeration is restricted by a clever check from~\cite{barth:alternative_routes} without influencing its correctness or completeness.
 

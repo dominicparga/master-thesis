@@ -10,7 +10,7 @@ However, this chapter presents some results to validate, that the spread of foun
     The operation-system is Arch Linux [x86\_64] with the kernel 5.7.9-arch1-1 installed.
     The used code for this thesis can be found in \cite{github:dominicparga/osmgraphing} and is implemented in Rust.
     Python is used for the visualization.
-    Internally, this repository uses \cite{github:lesstat/multi-ch-constructor} (written in C++) as git-submodule for the \gls{contraction-hierarchies} and \cite{github:lesstat/nd-triangulation} for memory-management of the convex-hull.
+    Internally, this repository uses \cite{github:lesstat/multi-ch-constructor} (written in C++) as git-submodule for the \gls{contraction-hierarchies} and \cite{github:lesstat/nd-triangulation} for memory-management of the convex hull.
     The latter is basically a Rust-wrapper for CGAL (C++).
 
     Graphs for street-networks are downloaded from \cite{osm}.
@@ -539,7 +539,7 @@ However, this chapter presents some results to validate, that the spread of foun
             ]{%
                 \includegraphics[width=0.49\textwidth]{saarland/balanced_with_repr/2/workloads}\label{fig:saarland/repr/2/workloads}
             }%
-            \caption[Workloads on the balanced graph of Saarland]{%
+            \caption[Workloads during balancing Saarland in comparison]{%
                 Saarland.
                 These plots show the workloads during \gls{balancing}.
                 The graph is balanced with \gls{dijkstra} and \gls{repr}.

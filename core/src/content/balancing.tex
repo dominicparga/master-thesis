@@ -66,6 +66,7 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
         The reason for keeping the choice \gls{uar}\ is the easy implementation, while results are sufficiently good enough, as long as $G$ shows differently (over-) loaded streets.
 
     \subsection{First steps of the balancing-process}
+    \label{chap:balancing:balancing}
 
         At first, the graph $G$, that should be balanced, has to be read in.
         Before continuing, every \gls{metric} is divided by the respective \gls{metric}-mean resulting in $G = (V, E)$ of normalized \glspl{metric}.
@@ -83,11 +84,11 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
         Note, that \gls{dijkstra} with \gls{personalized_routing} doesn't consider any tolerance.
         But since \gls{repr} calls \gls{dijkstra} multiple times, just \gls{dijkstra} is faster.
         On the other hand, when using \gls{repr} with choosing a path \gls{uar}, the resulting paths are more spreaded over the network.
-        This results in a better coverage of $E$ when updating the workload-\gls{metric}, which allows the \gls{repr} to find more pareto-optimal \glspl{personalized_route} in the convex-hull.
+        This results in a better coverage of $E$ when updating the workload-\gls{metric}, which allows the \gls{repr} to find more pareto-optimal \glspl{personalized_route} in the convex hull.
         Both methods are compared in the experiments in \vref{chap:experiments}.
 
         When using \gls{repr}, the quality of the balanced graph highly depends on the choice of initial paths for \gls{repr}.
-        The basic approach in~\cite{barth:alternative_multicriteria_routes} suggests to use $(d+1)$ initial alphas to define one initial convex-hull for a graph of $d$-dimensional \glspl{metric}.
+        The basic approach in~\cite{barth:alternative_multicriteria_routes} suggests to use $(d+1)$ initial alphas to define one initial convex hull for a graph of $d$-dimensional \glspl{metric}.
         \begin{equation}
         \label{eq:init_alphas}
         \begin{aligned}
@@ -115,7 +116,7 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
             Fürs Verständnis meine Frage:
 
             Die konvexe Hülle, die gefunden wird, ist abhängig von der initialen konvexen Hülle.
-            Wieso kann die neue, künstliche, dritte Metrik die vorherige 2D-convex-hull nicht so verzerren, dass die alten d+1 Routen zu Pfaden führt, die die neue 3D-convex-hull nicht finden kann?
+            Wieso kann die neue, künstliche, dritte Metrik die vorherige 2D convex hull nicht so verzerren, dass die alten d+1 Routen zu Pfaden führt, die die neue 3D convex hull nicht finden kann?
         }
         Therefore, the \gls{balancing} extends the original suggestion by~\cite{barth:alternative_multicriteria_routes} and takes the initial $\alpha^{(j)}$ from $\left\{ 0, 1 \right\}^{(d+1)}$ excluding $(0, \dots, 0)^T$.
         Only the direction of $\alpha$ is relevant, so the previous notation in \cref{eq:init_alphas} can be simplified.
@@ -269,7 +270,7 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
                 & & & & & & & & & & & & \\
                 $O_S: i_V \mapsto i_\mathit{bwd}$ & 0 & \multicolumn{3}{c |}{\cellcolor[gray]{0.8} 1} & \multicolumn{2}{c |}{\cellcolor[gray]{0.8} 4} & \multicolumn{3}{c |}{6} & \multicolumn{2}{c |}{9} & 11 \\
             \end{tabular}
-            \caption[Example-graph stored as offset-array]{%
+            \caption[Indices-mapping for accessing graph-data via offset-arrays]{%
                 This table shows one graph stored with respect to forward-edges above and with respect to backward-edges below.
                 Note that a backward-graph of a graph has just the edges being reversed, so $(s, d) \mapsto (d, s)$.
                 The more intuitive way is storing the graph and necessary indices forwardly.

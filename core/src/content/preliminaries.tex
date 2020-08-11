@@ -6,7 +6,7 @@
 \section{Graphs stored as adjacency-array}
 \label{chap:preliminaries:graphs}
 
-    Let a street-network be given as a graph $G = (V, E)$ with vertices $V$, edges $E$ and a cost-function $c: E \to \mathbb{R}_+^d$, that returns a cost-vector for each edge $e \in E$, also called multidimensional \glspl{metric} in this thesis.
+    Let a street-network be given as a graph $G = (V, E)$ with vertices $V$ (also called nodes), edges $E$ and a cost-function $c: E \to \mathbb{R}_+^d$, that returns a cost-vector for each edge $e \in E$, also called multidimensional \glspl{metric} in this thesis.
     \Glspl{metric} are also called \glspl{cost} depending on the context.
 
     For the theory of this thesis, above definitions are sufficient.
@@ -47,7 +47,7 @@
             Destinations $D$ & 1 & 0 & 2 & 3 & 1 & 3 & 4 & 1 & 2 & 4 & 2 & 3 & - \\
             Offsets $O_D$ & 0 & \multicolumn{3}{c |}{1} & \multicolumn{3}{c |}{4} & \multicolumn{3}{c |}{7} & \multicolumn{2}{c |}{10} & 12 \\
         \end{tabular}
-        \caption[Example-graph stored as offset-array]{%
+        \caption[Small example-graph stored as adjacency-array]{%
             A graph with $|V| = 5$ and $|E| = 12$ stored as adjacency-array, shown with the respective offset-array.
             Every edge in the graph is bidirectional, but stored directed and represents as a tuple of source- and destination-vertex.
             All destinations of leaving edges starting in $V[s=3] = 3$ are in $D$ between positions $O_D[s] = 7$ (including) and $O_D[s+1] = 10$ (excluding).
@@ -62,49 +62,107 @@
 
 \section{Contraction-hierarchies}
 
-    \todo{TODO Write}
+    \todo{%
+        TODO @Florian
 
-    \subsection{Overview}
+        So gut?
+        Kleiner Pseudocode von ca 5 Zeilen für contraction dazuschreiben?
+    }
 
-        \todo{TODO Write}
+    This thesis uses sets of many \glspl{stpair} to search for optimum paths.
+    These paths are used to optimize routing-algorithms for the underlying street-network.
+    In fact, the largest bottleneck of the whole thesis is the search for optimum paths.
+    This also offers the opportunity to improve the performance.
+    One approach to do this is the reduction of the search-space and a method called \gls{contraction-hierarchies} is used for this purpose.
+    The algorithm is divided into a preprocessing and the actual user-provided query.
+    The first is explained here, the latter in \cref{chap:preliminaries:ch-dijkstra}.
 
-    \subsection{Computing shortcuts of multiple \glspl{metric} with LP/ILP (TODO title)}
+    \todo{%
+        TODO @Florian
 
-        \todo{TODO Write}
+        Are shortcuts considered in future contractions?
+    }
+    The preprocessing phase iterates over all vertices in a graph and contracts them.
+    The contraction basically removes each vertex $v \in V$ from the graph.
+    Every shortest path from a neighbouring vertex of $v$ to a neighbouring vertex of $v$, that is the only shortest path between these respective neighbours and that needs $v$ to exist, is replaced by a new edge between the respective neighbours.
+    This new edge is called shortcut and represents the shortest path by adapting its \gls{weight}.
+    Additionally, levels ($\in \mathbb{N}$) are assigned to every vertex, and the levels increase with the iteration-progress.
+    These levels are considered in the query to reduce the search-space.
+
+    The quality of the contracted graph (and the query-time with it) highly depends on the contraction-order.
+    If too many shortcuts have to be added with a vertex-contraction, the graph gets more verbose.
+    For this reason, different criteria for good vertices are applied, \eg\ considering the number of created shortcuts and the removed edges or whether a neighbour of a vertex has just been contracted.
+
+    This thesis deals with multidimensional \glspl{metric}.
+    Because of this, the insertion of a new shortcut needs to be redefined.
+    If any \alpha exists, such that the only optimum path with respect to minimum $\sum_{i=1}^{d} \alpha_i \cdot c_i(\mathit{path})$ needs the contracted vertex $v$, then a shortcut is added for this very \alpha.
+    The challenge here is to explorate the set of possible \alpha efficiently.
+    \cite{funke:personal-routes} provides an approach using linear programming using \gls{dijkstra} as separation-oracle.
+    A linear program solves an optimization-problem in finite many variables, where a linear objective function is optimized under finite number of linear equality or inequality constraints.
+    A separation-oracle helps in discarding non-optimal solutions more efficiently.
 
 \section{Dijkstra's algorithm (bidirectional) in contracted graphs}
+\label{chap:preliminaries:ch-dijkstra}
 
-    \todo{TODO Write}
+    An unidirectional \gls{dijkstra} (introduced in \cite{dijkstra:dijkstra}) computes an optimum path for a provided \gls{stpair} in the graph.
+    It assigns the weight of zero to $s \in V$, marks $s$ as visited and goes through all neighbours $v \in V$ of $s$ to update their path-cost, that belongs to the path of minimum cost from $s$ to $v$ so far.
+    Then, every neighbour $s$ is pushed to a priority-queue, except for those, that have already been visited.
+    In the next step, the vertex of minimum cost in the priority-queue is pulled from the queue and marked as visited.
+    It updates its neighbours' optimum paths' cost and all neighbours, that improve their cost by using $v$, are pushed into the priority-queue.
+    Note, that a node can be enqueued multiple times with different costs.
+    This procedure stops as soon as $t \in V$ is pulled from the priority-queue.
+    The optimum path can be constructed by remembering predecessors during the visit-phase.
 
-    \subsection{Correctness-proof of bidirectional Dijkstra}
+    To reduce the search-space of \gls{dijkstra}, it can be modified to search from both $s$ and from $t$ towards each other, which is called bidirectional \gls{dijkstra}.
+    Pushing vertices to a common priority-queue, while vertices remember their search-direction (forwards from $s$ or backwards from $t$), can be used to balance both sub-queries.
+    As soon as a vertex is visited by both sub-queries, no more neighbours need to be enqueued.
+    This vertex, that is visited by both sub-queries, is called meeting-vertex.
+    If the best meeting-vertex has better total costs than all vertices $v$ remaining in the queue, the query stops.
+    The optimum path can be constructed from the meeting-vertex, similar to unidirectional \gls{dijkstra}, by remembering predecessors and successors during the visit-phase.
 
-        \todo{TODO Remove proof if not needed in the thesis (probably not needed).}
+    When doing bidirectional \gls{dijkstra} with contracted graphs, some adjustments are required.
+    To reduce the search-space, only neighbours of dequeued vertices are considered, that have at least the assigned level of $v$.
+    Typically, neighbouring vertices don't have common levels, but the contraction may be stopped before contracting all vertices.
+    This speeds the query up significantly.
+    However, it also causes the sub-queries to search in different sub-graphs.
+    The sub-queries in bidirectional \gls{dijkstra} search in the same sub-graphs.
+    That leads to the issue, that found optimum paths of a sub-query are not necessary optimal for the whole query.
+    To fix this, just keep on enqueuing neighbours even when a meeting-vertex is already found.
+    As soon, as the best meeting-vertex has better total costs than all vertices remaining in the queue, the query stops.
 
-        \todo{
-            TODO The termination of the bidirectional Astar is based on the first node v, that is marked by both, the forward- and the backward-subroutine.
-            However, this common node v is part of the shortest path s->t wrt to this particular hop-distance H, but doesn't have to be part of the shortest path s->t wrt to \glspl{weight}.
-
-            Every node, that is not settled in any of the both subroutines, has a longer distance to both s and t than the already found common node v and hence can not be part of the shortest path (wrt to \glspl{weight}).
-            Otherwise, it would have been settled before v since the priority-queues sort by \glspl{weight}.
-            In other words, only already settled nodes and their neighbors (which are already enqueued) can be part of the shortest path.
-
-            In conclusion, emptying the remaining nodes in the queues and picking the shortest path of the resulting common nodes leads to the shortest path wrt to \glspl{weight} from s to t.
-        }
-
-        \todo{%
-            TODO extend proof onto A* with \gls{contraction-hierarchies}: Here, the proof for bidirectional \gls{dijkstra} doesn't hold, because each sub-graph doesn't visit every node of the total graph, due to the level-filter when pushing edges to the queue.
-            Hence, the forward- and the backward-query are not balanced wrt \glspl{weight}.
-            Thus, after finding the first meeting-node, the hop-distance of the shortest-path could be arbitrary.
-            This leads to wrong paths with normal bidirectional \gls{dijkstra}.
-            To correct this issue, stop the query after polling a node of a sub-distance, which is higher than the currently best meeting-node's total distance.
-        }
+    The optimum path can be constructed as in the case of bidirectional \gls{dijkstra}.
+    Of course, this optimum path might contain shortcut-edges, but these can be replaced by the original edges recursively.
 
 \section{(Restricted) Enumerating personalized routing}
 
-    \todo{TODO acronym (R)EPR and link to Barth's paper(s)}
-    \todo{TODO \gls{repr} is just a runtime-optimization of \gls{epr}}
-    \todo{TODO Routes within a certain tolerance of the best possible \gls{cost} (per \gls{metric}, \eg\ duration must be not worse than $25~\%$ \todo{tolerance should match the resulting plots}) are randomly chosen from cyclops.}
+    \Gls{personalized_routing} is basically applying a preference-vector \alpha to reduce the multidimensional costs to one scalar by computing the dot-product of \alpha and the respective cost-vector.
+    \Gls{dijkstra} can be adjusted to compute the optimum path considering a user-provided \alpha.
+    Instead of computing paths' costs for one \gls{metric}, they are computed for the \alpha-dependent dot-product.
 
-    \subsection{Idea}
+    Interpreting a path's cost as point in the $d$-dimensional cost-space, the dot-product with a vector \alpha can be seen as the projection of the path's cost-vector onto the chosen vector \alpha.
+    In other words, \gls{dijkstra} is searching for the minimum dot-product, hence the minimum projection onto \alpha.
+    Thus, \gls{dijkstra} finds extremums of the convex hull of all existing paths for a given \gls{stpair} in the underlying $d$-dimensional cost-space.
 
-        \todo{TODO write; Here could be talked about the approach of removing the nd-triangulation and how cyclops takes this idea/context and makes it correct by building convex-hull explicitly (because new facets could destroy old facets).}
+    This is used in~\cite{barth:alternative_multicriteria_routes} to develop an algorithm enumerating this convex hull's extremums.
+    An initial convex hull in the $d$-dimensional cost-space contains several $(d-1)$-dimensional simplexes (\eg\ triangles in 3D).
+    In \cref{chap:balancing:balancing}, it is explained and adjusted, how such an initial convex hull can be found.
+    Each simplex has a normal-vector, which can be computed by a $d$-dimensional linear-equation-system.
+    \todo{%
+        TODO @Florian
+
+        LGS needed here?
+    }
+    Since simplexes are only $(d-1)$-dimensional, the length of the resulting normal-vector is arbitrary.
+    To fix this, the last equation in the system forces the sum of all entries in the normal-vector to be $1$.
+    It occurs, that this normal-vector can be interpreted as \alpha-vector, which leads to identical costs for all paths being involved in the simplex.
+    Now, if \gls{dijkstra} finds a path with this \alpha, that is not part of the simplex, this path must be better than every path of the simplex (with respect to this particular \alpha) and thus must be another extremum of the convex hull.
+    Adding the new found path to the convex hull brings new simplexes up, that can be treated as already described, possibly resulting in new paths for the found convex hull.
+
+    This method stops as soon as no new paths has been found and is called \gls{epr}.
+
+    When using initial \alpha-vectors preferring only one \gls{metric}, the resulting path is the optimum path over all \alpha with respect to this very \gls{metric}.
+    With this, a tolerance can be defined, that describes the accepted maximum relative difference between this optimum path and any other path, that is found.
+    \cite{barth:alternative_routes} improves this enumeration in its runtime by discarding simplexes, where all paths have at least one \gls{metric}, where no path can beat the tolerance.
+    This allows to discard the simplex and reduces the search-space, thus runtime.
+    The resulting method is a slightly changed version of \gls{epr} and is called \gls{repr}.
+    It is used in this thesis to find multiple alternative paths.

@@ -1,8 +1,11 @@
 \section*{Abstract}
 
-<Short summary of the thesis>
-
-% TODO good?
-% \begin{abstract}
-%    <Short summary of the thesis>
-% \end{abstract}
+It can be unsatisfactory to compute a set of routes, where the underlying network isn't fully occupied.
+This is especially the case, when certain parts of the network are overloaded, as in daily rush-hour-scenarios.
+To improve the variety of routes, such that the overload spreads more over the network, alternative routes in multicriteria settings are computed.
+Many previous approaches need too much parameter-tuning or simply lack in their computational complexity, their needed runtime or the diversity of found routes.
+This thesis presents a combination of existing approaches to create a new penalizing metric, such that popular metrics are compensated.
+The approach to use a new metric allows every routing-algorithm, that is capable of dealing with multicriteria-routes, to process this new metric without further changes.
+This metric is used in an existing method for computing alternative multicriteria-routes, which is enumerating personalized routes, to distribute found routes successfully over the network under holding user-provided tolerances for preferred metrics.
+The results using the new metric are compared between Dijkstra and the used method for enumerating personalized routes, both on street-networks from OpenStreetMap.
+To speed the route-queries significantly up, the underlying graphs of the networks are contracted via an existing realization of contraction-hierarchies, where the contraction is supported by a linear program.

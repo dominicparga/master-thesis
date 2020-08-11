@@ -8,42 +8,42 @@ After the theory is explained, implementation-details are discussed.
 When talking about performance, it is referred to the used testing-machine, which is an ordinary, but good home-computer.
 Further details about the testing-machine and experimental results can be found in \vref{chap:experiments}.
 
-For a given \gls{stpair} and a street-network given as a graph $G = (V, E)$ with vertices $V$, edges $E$ and a cost-function $c: E \to \mathbb{R}_+^d$, that returns a cost-vector for each edge $e \in E$, a path should be found through an algorithm, that implicitly tends to distribute found paths over the network, while keeping the paths' \glspl{cost} sufficiently near every \gls{cost}-dimension's optimum.
-Note, that $\mathbb{R}_+^d$ doesn't contain zero, which would, depending on the \gls{metric}, result in bad alternative routes otherwise.
+For a given \gls{stpair} and a street-network given as a graph $G = (V, E)$ with vertices $V$, edges $E$ and a cost-function $c: E \to \mathbb{R}_+^d$, that returns a cost-vector for each edge $e \in E$, a path should be found through an algorithm, that implicitly tends to distribute found paths over the network, while keeping the paths' costs sufficiently near every cost-dimension's optimum.
+Note, that $\mathbb{R}_+^d$ doesn't contain zero, which would, depending on the metric, result in bad alternative routes otherwise.
 
-To achieve this, a computation-phase called \gls{balancing} analyzes the graph $G$ and computes a new \gls{metric}, called workload-\gls{metric}.
-With this workload-\gls{metric}, routing-algorithms like \gls{repr} and \gls{dijkstra} (with \gls{personalized_routing}) can compute paths as usual.
+To achieve this, a computation-phase called balancing analyzes the graph $G$ and computes a new metric, called workload-metric.
+With this workload-metric, routing-algorithms like \gls{repr} and Dijkstra (with personalized routing) can compute paths as usual.
 For comparison, multiple scenarios using different combinations of these two routing-algorithms will be used.
-Please note, that \gls{dijkstra} doesn't guarantee a tolerance when used with \gls{personalized_routing} and hence, some combinations don't provide an upper bound for path-costs.
+Please note, that Dijkstra doesn't guarantee a tolerance when used with personalized routing and hence, some combinations don't provide an upper bound for path-costs.
 This will also be pointed out in the respective experiments in \cref{chap:experiments}.
 
-This thesis focusses only on distance and travel-time, where travel-time is the only \gls{metric} with a provided tolerance.
+This thesis focusses only on distance and travel-time, where travel-time is the only metric with a provided tolerance.
 
-It should be noted, that \gls{dijkstra} (bidirectional) instead of \gls{astar} is used for every occuring routing-query, may it be in \gls{repr} or anywhere else.
-The reason is, that \gls{astar} works with heuristics, which are difficult to generalize over custom, artificial \glspl{metric}.
-The only benefit from using \gls{astar} is the reduction of the search-space, which can be reduced much more using bidirectional \gls{dijkstra} on graphs contracted via \gls{contraction-hierarchies}.
-Besides that, the graph has multidimensional \glspl{metric}, for which reason \gls{dijkstra} is used with \gls{personalized_routing}.
+It should be noted, that Dijkstra (bidirectional) instead of A* is used for every occuring routing-query, may it be in \gls{repr} or anywhere else.
+The reason is, that A* works with heuristics, which are difficult to generalize over custom, artificial metrics.
+The only benefit from using A* is the reduction of the search-space, which can be reduced much more using bidirectional Dijkstra on graphs contracted via contraction-hierarchies.
+Besides that, the graph has multidimensional metrics, for which reason Dijkstra is used with personalized routing.
 
 \section{Balancing to create a new metric}
 
-    This \gls{balancing} is depicted in \vref{fig:balancing:algorithm} and explained briefly in the caption or detailled in the following.
-    It basically runs routing-queries, counts the resulting workload and adjusts a third \gls{metric} to influence future query-executions.
-    After the new workload-\gls{metric} will have been settled, routing-algorithms for multidimensional \glspl{metric} can run queries on the balanced graph $G$ as before, now considering the new workload-\gls{metric}.
+    This balancing is depicted in \vref{fig:balancing:algorithm} and explained briefly in the caption or detailled in the following.
+    It basically runs routing-queries, counts the resulting workload and adjusts a third metric (in addition to travel-distance and travel-time) to influence future query-executions.
+    After the new workload-metric will have been settled, routing-algorithms for multidimensional metrics can run queries on the balanced graph $G$ as before, now considering the new workload-metric.
     Therefore, queries will be run in the experiments (\cref{chap:experiments}) to evaluate the new spread of the street-network.
-    The set of \glspl{stpair} will be chosen differently than the set used in \gls{balancing}, to reduce the dependence on it.
+    The set of \glspl{stpair} will be chosen differently than the set used in balancing, to reduce the dependence on it.
 
     \begin{figure}
         \centering
         \input{resources/graphics/balancing/algorithm}
         \caption[Overview of balancing a graph]{%
-            This flow shows the \gls{balancing}, that analyzes a given graph $G$.
+            This flow shows the balancing, that analyzes a given graph $G$.
             Here, an evaluation-phase is included afterwards.
             Shapes for actions are rectangular and blue, shapes for data are elliptical and red.
-            A new, artificial \gls{metric} is created for $G$ and gets updated iteratively.
-            In the end, this new \gls{metric} allows a routing-algorithm to distribute upcoming workload (like during rush-hour) more evenly over the underlying street-network in $G$.
+            A new, artificial metric is created for $G$ and gets updated iteratively.
+            In the end, this new metric allows a routing-algorithm to distribute upcoming workload (like during rush-hour) more evenly over the underlying street-network in $G$.
             This more spreaded workload can be seen in the evaluation-step, where paths for a set of \glspl{stpair} are searched, once using and once ignoring the new metric.
 
-            Note, that the action doing the path-searches ignores the new \gls{metric} in the first \gls{balancing}-iteration.
+            Note, that the action doing the path-searches ignores the new metric in the first balancing-iteration.
             \label{fig:balancing:algorithm}
         }
     \end{figure}
@@ -55,40 +55,40 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
         Here, different strategies can be applied.
         For simplicity, the set of \glspl{stpair}, which are used for balancing $G$, might consist of $s$ and $t$ chosen \gls{uar}\ from $V$.
         This has the disadvantage, that a sufficiently large set of \glspl{stpair} is needed to overload $G$.
-        This clearly becomes a bottleneck for performance on larger graphs (beginning with small German counties like Saarland with almost $|V| \approx \num{580000}$ and $|E| \approx \num{1160000}$ after parsing), especially when using \gls{repr}, that computes multiple \gls{dijkstra}-queries per run.
+        This clearly becomes a bottleneck for performance on larger graphs (beginning with small German counties like Saarland with almost $|V| \approx \num{580000}$ and $|E| \approx \num{1160000}$ after parsing), especially when using \gls{repr}, that computes multiple Dijkstra-queries per run.
         To alleviate the computational burden of a large number of \glspl{stpair}, knowledge of the typical workloads in this graph could be used.
-        Instead of picking \gls{uar}\ from $|V|$, other distributions could be chosen by weighting $v \in |V|$ differently or by using some \glspl{stpair} multiple times (on purpose, not only by random).
+        Instead of picking \gls{uar}\ from $|V|$, other distributions could be chosen by weighting $v \in V$ differently or by using some \glspl{stpair} multiple times (on purpose, not only by random).
         For example, real, daily, critical \glspl{stpair} are not distributed \gls{uar}\ over $V$.
         The rush-hour in the morning, when everybody travels from their home to work, is a good counterexample here.
         The set of chosen $t$ might be much smaller than the set of chosen $s$, and less people live near industry or motorways.
         Heuristics as described in~\cite{bakillah:population_from_osm} can return \glspl{stpair} based on approximating population-data from street-networks.
-        So considering more specific sets of \glspl{stpair} might be interesting and helpful to boost the \gls{balancing} up, but is not covered in this thesis.
+        So considering more specific sets of \glspl{stpair} might be interesting and helpful to boost the balancing up, but is not covered in this thesis.
         The reason for keeping the choice \gls{uar}\ is the easy implementation, while results are sufficiently good enough, as long as $G$ shows differently (over-) loaded streets.
 
     \subsection{First steps of the balancing-process}
     \label{chap:balancing:balancing}
 
         At first, the graph $G$, that should be balanced, has to be read in.
-        Before continuing, every \gls{metric} is divided by the respective \gls{metric}-mean resulting in $G = (V, E)$ of normalized \glspl{metric}.
-        Non-normalized \glspl{metric} of different scales would cause \gls{repr} to find $\alpha$-values of different scale, making some \glspl{metric} more important than others just based on their different scales.
-        With \glspl{metric} of different importance, the chosen paths tend to the respective \glspl{metric} and distort the spread.
-        So normalization doesn't just allow to compare different graphs (of different \glspl{metric}), but also improves the spread in \gls{repr}.
+        Before continuing, every metric is divided by the respective metric-mean resulting in $G = (V, E)$ of normalized metrics.
+        Non-normalized metrics of different scales would cause \gls{repr} to find $\alpha$-values of different scale, making some metrics more important than others just based on their different scales.
+        With metrics of different importance, the chosen paths tend to the respective metrics and distort the spread.
+        So normalization doesn't just allow to compare different graphs (of different metrics), but also improves the spread in \gls{repr}.
 
-        This graph $G$ is contracted via \gls{contraction-hierarchies} to $G_{CH}$.
+        This graph $G$ is contracted via contraction-hierarchies to $G_{CH}$.
         The step of contracting is not needed for correctness, but reduces the needed runtime (even if $G$ is not being fully contracted).
         For this reason, $G$ instead of $G_{CH}$ is used in the following, to emphasize, that contraction is not necessary from a theoretical point of view.
 
         Given the \glspl{stpair} and a graph $G$, a path in $G$ is searched for every \gls{stpair}.
-        The search may use either \gls{dijkstra} or \gls{repr}.
+        The search may use either Dijkstra or \gls{repr}.
         Multiple paths are found by \gls{repr}, so one of them is chosen \gls{uar}\ after filtering all found paths by a given tolerance.
-        Note, that \gls{dijkstra} with \gls{personalized_routing} doesn't consider any tolerance.
-        But since \gls{repr} calls \gls{dijkstra} multiple times, just \gls{dijkstra} is faster.
+        Note, that Dijkstra with personalized routing doesn't consider any tolerance.
+        But since \gls{repr} calls Dijkstra multiple times, just Dijkstra is faster.
         On the other hand, when using \gls{repr} with choosing a path \gls{uar}, the resulting paths are more spreaded over the network.
-        This results in a better coverage of $E$ when updating the workload-\gls{metric}, which allows the \gls{repr} to find more pareto-optimal \glspl{personalized_route} in the convex hull.
+        This results in a better coverage of $E$ when updating the workload-metric, which allows the \gls{repr} to find more pareto-optimal personalized routes in the convex hull.
         Both methods are compared in the experiments in \vref{chap:experiments}.
 
         When using \gls{repr}, the quality of the balanced graph highly depends on the choice of initial paths for \gls{repr}.
-        The basic approach in~\cite{barth:alternative_multicriteria_routes} suggests to use $(d+1)$ initial alphas to define one initial convex hull for a graph of $d$-dimensional \glspl{metric}.
+        The basic approach in~\cite{barth:alternative_multicriteria_routes} suggests to use $(d+1)$ initial alphas to define one initial convex hull for a graph of $d$-dimensional metrics.
         \begin{equation}
         \label{eq:init_alphas}
         \begin{aligned}
@@ -96,41 +96,25 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
             \alpha^{(d+1)} &= \left( \frac{1}{d}, \dots, \frac{1}{d} \right)^T
         \end{aligned}
         \end{equation}
-        This suggestion is nice to get a tolerance, because every \gls{metric}'s optimal path is computed.
-        However, this suggestion doesn't work well for the \gls{balancing} and needs some adjustment.
-        When the new workload-\gls{metric} is added (hence let the graph's \glspl{metric}' dimension be $d+1$), $\alpha^{(d+1)}$ becomes $\alpha^{(d+2)}$, which is a different direction in the $(d+1)$-cost-space than the previous $\alpha^{(d+1)}$ points to in the $(d+1)$-cost-space.
+        This suggestion is nice to get a tolerance, because every metric's optimal path is computed.
+        However, in the balancing, this suggestion needs some adjustment.
+        When the new workload-metric is added (hence let the graph's metrics' dimension be $d+1$), $\alpha^{(d+1)}$ becomes $\alpha^{(d+2)}$, which is a different direction in the $(d+1)$-cost-space than the previous $\alpha^{(d+1)}$ points to in the $(d+1)$-cost-space.
         For example (considering only \alpha's direction, not its length), let $d=2$ become $d=3$, hence $\alpha^3=(1, 1) \in \mathbb{R}_+^2$ becomes $\alpha^4=(1, 1, 1) \in \mathbb{R}_+^3$ and respectively $(1, 1, 0) \in \mathbb{R}_+^3$ from the previous case $d=2$ is missing now.
+        In the case of Saarland in the experiments, this lead to the issue, that the initially found paths (as suggested in~\cite{barth:alternative_multicriteria_routes}) weren't enough to get an initial convex hull.
         Because of this, less paths have been found on Saarland in the experiments.
-        \todo{%
-            TODO @Florian
-
-            Ich mache den Satz hier raus:
-
-            \quotes{Especially when talking in general, the first iteration may find paths, that can't be found by latter iterations.}
-
-            Deine Kritik:
-
-            Das ist praktisch wahr und theoretisch falsch! Der Grund warum die Routen von zuvor nicht gefunden wurden ist, dass die d+1 initialen Alphas für d=3 keine d+1 unterschiedliche Routen geliefert haben.
-            Wenn du d+1 unterschiedliche Routen hast kriegst du auch alle Routen wieder raus.
-
-            Fürs Verständnis meine Frage:
-
-            Die konvexe Hülle, die gefunden wird, ist abhängig von der initialen konvexen Hülle.
-            Wieso kann die neue, künstliche, dritte Metrik die vorherige 2D convex hull nicht so verzerren, dass die alten d+1 Routen zu Pfaden führt, die die neue 3D convex hull nicht finden kann?
-        }
-        Therefore, the \gls{balancing} extends the original suggestion by~\cite{barth:alternative_multicriteria_routes} and takes the initial $\alpha^{(j)}$ from $\left\{ 0, 1 \right\}^{(d+1)}$ excluding $(0, \dots, 0)^T$.
+        Therefore, the balancing extends the original suggestion by~\cite{barth:alternative_multicriteria_routes} and takes the initial $\alpha^{(j)}$ from $\left\{ 0, 1 \right\}^{(d+1)}$ excluding $(0, \dots, 0)^T$.
         Only the direction of $\alpha$ is relevant, so the previous notation in \cref{eq:init_alphas} can be simplified.
         \begin{equation}
             \label{eq:new_init_alphas}
             \alpha \in \left\{ 0, 1 \right\}^{(d+1)} \setminus \left\{ \left( 0, \dots, 0 \right)^T \right\} \Rightarrow \alpha \text{ is an initial } \alpha^{(j)}
         \end{equation}
 
-        After finding a set of paths for the given \glspl{stpair}, every edge counts the number of found paths using the counting edge.
-        This workload of \gls{balancing}-iteration $i$ is normalized by all workloads' mean and the result is used to update the graph's workload-\gls{metric}.
+        After finding a set of paths for the given \glspl{stpair}, every edge $e \in E$ counts the number of found paths, that contain this edge $e$.
+        This workload of balancing-iteration $i$ is normalized by all workloads' mean and the result is used to update the graph's workload-metric.
         \begin{equation}
         \label{eq:workloads}
         \begin{aligned}
-            &\mathit{workloads}_{e,i} = \left| \left\{ (s, t) \in \text{\glspl{stpair}} : \text{found path from $s$ to $t$ uses } e \in E_{CH} \right\} \right|\\
+            &\mathit{workloads}_{e,i} = \left| \left\{ (s, t) \in \text{\glspl{stpair}} : \text{found path from $s$ to $t$ uses } e \in E \right\} \right|\\
             \Rightarrow\ &\mathit{new}_{e,i} = \frac{\mathit{workloads}_{e,i}}{\mathit{mean}(\mathit{workloads}_i)}
         \end{aligned}
         \end{equation}
@@ -138,27 +122,27 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
     \subsection{Updating the new metric with the collected workload}
     \label{chap:balancing:update}
 
-        Updating the old workload-\gls{metric} is a very small step in the \gls{balancing} with a large impact on the ongoing \gls{balancing}'s performance and the quality of the balanced graph.
-        Two approaches have been tested and are depicted in the following, after talking about the interpretation of the new artificial workload-\gls{metric}.
+        Updating the old workload-metric is a very small step in the balancing with a large impact on the ongoing balancing's performance and the quality of the balanced graph.
+        Two approaches have been tested and are depicted in the following, after talking about the interpretation of the new artificial workload-metric.
 
-        The workload-\gls{metric} can be associated with popularity, because it refers to high usage.
-        A path of high popularity should be chosen less often than without the workload-\gls{metric}.
-        So, hopefully, updating the workload-\gls{metric} dependent on the current workload-\gls{metric} reveals the final, balanced state of the network eventually.
+        The workload-metric can be associated with popularity, because it refers to high usage.
+        A path of high popularity should be chosen less often than without the workload-metric.
+        So, hopefully, updating the workload-metric dependent on the current workload-metric reveals the final, balanced state of the network eventually.
         You could suggest, that a street's capacity should be considered as well, because large streets like motorways can support more vehicles than a street in a city and thus should tolerate a higher popularity than smaller streets.
         A street-capacity could be approximated using a street's number of lanes or the respective street-type (\eg\ motorways) and its length.
-        Herewith, the workload-\gls{metric}, penalizing popularity, would be corrected in favor of larger streets with (usually) higher speed-limit.
+        Herewith, the workload-metric, penalizing popularity, would be corrected in favor of larger streets with (usually) higher speed-limit.
         That is exactly contraproductive, because the travel-time does already consider the capacity of streets with the speed-limit.
         In other words, the popularity-penalization should compensate the popularity of larger streets, that have a better travel-time.
         This wished effect would be disturbed by the consideration of capacity.
 
-        The first approach is inspired by a simpler numerical method for solving initial-value-problems called \gls{explicit_euler}.
-        Let $\mathit{old}_i$ be the workload-\gls{metric} (already normalized after $G$ has been initialized) already stored in the graph and $\mathit{new}_i$ be the new workload-\gls{metric} (normalized by their mean, see \vref{eq:workloads}).
+        The first approach is inspired by a simpler numerical method for solving initial-value-problems called explicit Euler.
+        Let $\mathit{old}_i$ be the workload-metric (already normalized after $G$ has been initialized) already stored in the graph and $\mathit{new}_i$ be the new workload-metric (normalized by their mean, see \vref{eq:workloads}).
         \begin{equation}
         \label{eq:euler}
             \mathit{old}_{e,i+1} = \mathit{old}_{e,i} + (\mathit{new}_{e,i} - \mathit{old}_{e,i}) \cdot \mathit{correction}
         \end{equation}
-        In each \gls{balancing}-iteration, after the workload-\gls{metric} is updated (as in \vref{eq:euler}), every value of the workload-\gls{metric} smaller than a predefined minimum value $\epsilon$ (\eg\ \num{0.1}) is set to $\epsilon$.
-        This removes the \glspl{metric} of value \num{0.0}, which improves the set of computed shortcuts when applying \gls{contraction-hierarchies} and thus performance.
+        In each balancing-iteration, after the workload-metric is updated (as in \cref{eq:euler}), every value of the workload-metric smaller than a predefined minimum value $\epsilon$ (\eg\ \num{0.1}) is set to $\epsilon$.
+        This removes the metrics of value \num{0.0}, which improves the set of computed shortcuts when applying contraction-hierarchies and thus performance.
         In addition, the result isn't normalized by its mean in general, for which reason it is finally normalized.
         \begin{equation}
         \label{eq:metric_cleanup}
@@ -173,7 +157,7 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
         This behaviour could be reduced by adding the $\mathit{correction}$, but larger networks (like the small German county Saarland, $|V| \approx \num{580000}$ and $|E| \approx \num{1160000}$ after parsing) worsen the convergence.
         Further, adding $\mathit{correction}$ leads to the need of tuning it, for which reason only the second approach is shown in the experiments in \vref{chap:experiments}.
 
-        Therefore, another approach, replacing the \gls{explicit_euler} from \vref{eq:euler}, is presented in \vref{eq:averaging}, that does spread the workload well and within only two iterations.
+        Therefore, another approach, replacing the explicit Euler from \vref{eq:euler}, is presented in \vref{eq:averaging}, that does spread the workload well and within only two iterations.
         \begin{equation}
         \label{eq:averaging}
             \mathit{old}_{e,i+1} = \frac{i \cdot \mathit{old}_{e,i} + \mathit{new}_{e,i}}{i+1}
@@ -182,10 +166,10 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
         From \vref{eq:averaging}, both $\mathit{old}_{e,1}=\mathit{new}_{e,0}$ and $\mathit{old}_{e,2}=\frac{\mathit{old}_{e,1} + \mathit{new}_{e,1}}{2}$ hold before normalization.
         The interpretation of these is quite intuitive.
         The first iteration favors popular routes.
-        After the first update, the workload-\gls{metric} is just the normalized workload from the original, unbalanced graph.
+        After the first update, the workload-metric is just the normalized workload from the original, unbalanced graph.
         Hence the following iteration has an aversion to popular routes and tends to avoid them.
-        This second iteration favors alternative routes and the outcoming workload completes the previously generated workload-\gls{metric}.
-        A third iteration has already a workload-\gls{metric} with a balance between popular and alternative routes, so further iterations appear disruptive.
+        This second iteration favors alternative routes and the outcoming workload completes the previously generated workload-metric.
+        A third iteration has already a workload-metric with a balance between popular and alternative routes, so further iterations appear disruptive.
 
 \section{Details on implementation}
 \label{chap:balancing:implementation}
@@ -198,9 +182,9 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
         Main concept of the implementation is the use of configuration-files.
         The whole parser, simulation and computation can be adjusted with these files.
         One big advantage are the parser-related settings to define the graphs nodes and edges.
-        Both meta-data and \gls{metric}-data is defined in the configuration-file.
+        Both meta-data and metric-data is defined in the configuration-file.
         This allows the graph to be static, meaning its allocated memory doesn't change during runtime after the graph is built and shrinked to fit its needs.
-        However, its values can be changed, which is necessary, since the \gls{balancing} updates a \gls{metric}.
+        However, its values can be changed, which is necessary, since the balancing updates a metric.
 
     \subsection{Storing and accessing graphs}
     \label{chap:balancing:implementation:graphs}
@@ -209,30 +193,29 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
         The adjacency-array is explained in \cref{chap:preliminaries:graphs}.
         This data-structure fits well, because it reduces redundancy by optimizing the graph's memory-consumption.
         At the same time, accessing the graph can be done in constant or logarithmic time (depending on access via indices or via ids) through indexing-logic.
-        The indexing-logic from adjacency-arrays has been extended by a mapping to support forward-, backward- and shortcut-edges in the graph, which is necessary for the bidirectional-\gls{dijkstra}.
+        The indexing-logic from adjacency-arrays has been extended by a mapping to support forward-, backward- and shortcut-edges in the graph, which is necessary for the bidirectional-Dijkstra.
 
-        First, the graph from preliminaries is extended by \glspl{metric}.
-        Shortcuts $L$ are added later.
+        First, the graph from preliminaries is extended by metrics.
         For every edge in $E$, a vector of floats is stored.
-        To formalize this, the cost-function is slightly redefined (and duplicated edges are being removed) to have edge-costs being associated as \glspl{metric}.
-        Let $C \subset E \times \mathbb{R}_+^d$ be the set of \glspl{metric} and $c$ be the bijective function $c: E \to C$.
+        To formalize this, the cost-function is slightly redefined (and duplicated edges are being removed) to have edge-costs being associated as metrics.
+        Let $C \subset E \times \mathbb{R}_+^d$ be the set of metrics and $c$ be the bijective function $c: E \to C$.
         With this definition, $C[i_E]$ can be associated as the cost-vector of the edge $E$ at edge-index $i_E$, where $C$ is stored as two-dimensional array of floats.
 
         The vertices $V$ are an array of vertex-ids sorted in ascending order.
         This is required by the adjacency-array, but also allows the search for nodes by their ids in logarithmic time.
-        However, this is only needed for users outside the graph, because the graph uses only vertex-indices inside.
+        However, this is only needed for users outside the graph, because inside, the graph uses only vertex-indices.
 
         A backward-graph is a graph, whose edges are reversed according to the original graph.
         So a backward-graph maps edges $(s, d)$ to the reversed edge $(d, s)$.
-        Since this graph is used for bidirectional routing-queries, it has to support the access to backward-edges.
+        Since this graph is used for bidirectional routing-queries, it has to support the access to both forward-edges and backward-edges.
         The backward-edges could be stored accordingly to the forward-edges, meaning storing the source-indices $S$ in addition to the destination-indices $D$.
         The occuring issue with this is the sort-order of vertices $V$.
         All vertices are sorted by their source-id to match the offset-array $O_D$ for the forward-edges and for $D$.
         Respectively, all vertices should be sorted by their destination-id to match the offset-array $O_S$ for the backward-edges and for $S$.
-        This would need a copy of all vertices and the edge-index $i_E$ wouldn't point to the same edge in $S$ and $D$, leading to two access-implementations doing basically the same offset-mapping.
-        The \gls{metric}-array $C$ could be accessed via $i_E$ only by \gls{dijkstra}'s forward-search, not the backward-search, unless a mapping from backward-edge-indices to forward-edge-indices is built (or $C$ is also stored twice).
+        This would need a copy of all vertices and an edge-index $i_E$ wouldn't point to the same edge in $S$ and $D$, leading to two access-implementations doing basically the same offset-mapping.
+        The metric-array $C$ could be accessed via $i_E$ only by Dijkstra's forward-search, not the backward-search, unless a mapping from backward-edge-indices to forward-edge-indices is built (or $C$ is also stored twice).
         Therefore, this issue is solved by using this very mapping, such that an edge-index $i_E$ belongs to $S[i_E]$, $D[i_E]$, $C[i_E]$ independent of the edge's orientation and the graph can be stored without data-redundancy.
-        The decision towards no data-redundancy implies consistency, which is important for the \gls{metric}-update.
+        The decision towards no data-redundancy implies consistency, which is important for the metric-update.
         Further, it improves maintainability and usage, because accessing the forward-edges and backward-edges can be done with the same accessor simply using different arrays.
         The indices-mappings are illustrated in \cref{table:balancing:indices_mapping} and explained afterwards with two example-queries.
         The graph from \cref{chap:preliminaries:graphs} contains only bidirectional edges, thus the edge $(s, d)$ with $(V[s], V[d])=(1, 2)$ is removed to make the graph containing unidirectional edges.
@@ -328,8 +311,8 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
 
     \subsection{Storing and accessing shortcuts in graphs}
 
-        Shortcuts have a \glspl{metric} and source-/destination-vertices as well, so they are full edges and can be added to the current data-structure.
-        However, due to construction of a contracted graph, a shortcut replaces two edges, that may be shortcuts.
+        Shortcuts have metrics and source-/destination-vertices as well, so they are full edges and can be added to the current data-structure.
+        However, due to construction of a contracted graph, a shortcut replaces two edges, which may be shortcuts.
         This functionality is missing in the graph's data-structure yet.
         A first intuition may be extending edges by a tuple of two edge-indices.
         Implementing this causes much redundancy, because normal edges would need a placeholder for their tuple.
@@ -350,12 +333,7 @@ Besides that, the graph has multidimensional \glspl{metric}, for which reason \g
         A shortcut can be determined by comparing neighbouring values in $O_L$.
         If $O_L \left[ i_E \right] = O_L \left[ i_E + 1 \right]$ holds, the edge at $i_E$ is no shortcut.
 
-        \todo{%
-            TODO @Florian
-
-            Bezüglich dem nachfolgenden: Gibts ne maximale Menge an Shortcuts garantiert?
-        }
-        When analyzing the memory-usage, this method has improved the other approach of storing tuples.
+        When analyzing the memory-usage, this method has improved the other approach of storing tuples in the experiments.
         Let $m$ be the number of edges without shortcuts and $m_L$ the number of shortcuts in the graph.
         Previously, the number of needed indices was $2 \cdot (m + m_L)$.
         The offset-procedure stores $2 \cdot m_L$ replaced edge-indices and $(m + m_L)$ offset-indices, resulting in $m + m_L + 2 \cdot m_L$.

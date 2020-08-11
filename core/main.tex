@@ -116,11 +116,11 @@
 % Wird nur bei Verwendung von der lstlisting-Umgebung mit dem "caption"-Parameter benoetigt
 %\lstlistoflistings
 % ansonsten:
-\listof{Listing}{List of Listings}
+%\listof{Listing}{List of Listings}
 
 % mittels \newfloat wurde die Algorithmus-Gleitumgebung definiert.
 % Mit folgendem Befehl werden alle floats dieses Typs ausgegeben
-\listof{Algorithmus}{List of Algorithms}
+%\listof{Algorithmus}{List of Algorithms}
 %\listofalgorithms % Ist nur für Algorithmen, die mittels \begin{algorithm} umschlossen werden, nötig
 
 \iftex4ht
@@ -132,7 +132,7 @@
 %------------------------------------------------------------------------------%
 % acronym
 
-\printglossary[type=\acronymtype]
+%\printglossary[type=\acronymtype]
 
 %------------------------------------------------------------------------------%
 % Headline and footline
@@ -156,46 +156,17 @@
 \input{src/content/experiments}
 \input{src/content/conclusion_and_outlook}
 
-\chapter{TODOs for cleanup and final checks}
-
-\todo{TODO Template okay like this? \Eg line-spacing etc}
-\todo{TODO Are legends of figures good enough to understand figure without reading text?}
-\todo{TODO Remove pages from paper-cites}
-\todo{TODO Cleanup bibliography to be uniform, remove unnecessary links, add DOIs etc}
-\todo{TODO Remove glossary, because preliminaries are good enough?}
-\todo{TODO Check use of \textit{which} (non-restrictive) vs \textit{that} (restrictive)}
-\todo{TODO Check glossary-entries (\eg u.a.r. vs u.\,a.\,r.)}
-\todo{TODO Check glossary-entries for usage (if only used once, no need for acronym)}
-\todo{TODO Check headings-style (e.g. Updating vs Update)}
-\todo{TODO Replace 'paper' by 'thesis'}
-\todo{TODO Replace indices in plots by better names (in evaluation)}
-\todo{TODO Check each number (num)}
-\todo{%
-    TODO
-
-    Check \\vref\{...\}
-
-    Page 33 very last line: \quotes{[...] as you can see in Figure 4.1d on}
-
-    Page 34: \quotes{Shows only plots, also 4.1d}
-
-    Page 35 the very first line: \quotes{the facing page [...]}
-}
-\todo{TODO Check workloads in tables to match workloads in plots}
-\todo{TODO Use $\mu \pm \sigma$ in text with explanation, that result can't be negative}
-\todo{TODO keywords}
-
 %------------------------------------------------------------------------------%
 % glossary
 
-\printglossary[type=main]
+%\printglossary[type=main]
 
 %------------------------------------------------------------------------------%
 % bibliography
 
 \printbibliography
 
-All links were last followed on August 10, 2020.
+All links were last followed on August 11, 2020.
 
 \appendix
 

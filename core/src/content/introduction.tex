@@ -15,7 +15,7 @@ At the latest, this will be interesting with many self-driving cars, where many 
 It would be inefficient to send all vehicles over the same streets.
 So distributing this amount of traffic over the network is and will be important to save both, time and money.
 
-This thesis explains, how a given street-network of multidimensional \glspl{metric} (travel-distance, travel-time) can be augmented, such that diverse alternative paths can be found and used to spread the load (of a typical workload) while limiting the detours of individual \glspl{stpair}.
+This thesis explains, how a given street-network of multidimensional metrics (travel-distance, travel-time) can be augmented, such that diverse alternative paths can be found and used to spread the load (of a typical workload) while limiting the detours of individual \glspl{stpair}.
 Although the presented methods can be transferred to different kinds of networks, this thesis focusses on street-networks.
 A different kind of network can be wireless-networks or the Internet, where the focus lays more on nodes than edges.
 Here, data-packages are transmitted much faster than drivers are driving through street-networks and traffic-jams occur in nodes, not in the edges.
@@ -44,7 +44,7 @@ Here, data-packages are transmitted much faster than drivers are driving through
 
     \subsection{Static routing}
 
-        There are several static computation-methods to compute a selection of several routes with respect to only one \gls{metric}, that are sufficiently distinct.
+        There are several static computation-methods to compute a selection of several routes with respect to only one metric, that are sufficiently distinct.
         One idea is the computation of the $k$ shortest paths for a given \gls{stpair}.
         According to~\cite{eppstein:finding_k_shortest_paths}, the computation is complex while resulting paths don't differ much.
         Another quite intuitive idea is the penalization of popular routes to reduce their usage before computing the shortest path again.
@@ -52,28 +52,28 @@ Here, data-packages are transmitted much faster than drivers are driving through
         In \cite{chondrogiannis:k_shortest_paths}, the problem is addressed, that paths of a set of found $k$ shortest paths for a given \gls{stpair} should differ from eachother, not only from the shortest path itself.
         Hence they build the set iteratively and discard unwished paths with a user-provided threshold.
         To this end, a similarity between paths is defined.
-        However, both approaches suffer from the sensitivity of tuning the parameters and graphs are considered to have only one \gls{metric}.
+        However, both approaches suffer from the sensitivity of tuning the parameters and graphs are considered to have only one metric.
 
-        For multiple \glspl{metric}, another approach could be to distribute the found paths by using alternative routes.
+        For multiple metrics, another approach could be to distribute the found paths by using alternative routes.
         Here, the drivers would not necessarily get only the option of the fastest route, but also some other reasonable ones.
-        When it comes to graphs of multidimensional \glspl{metric}, pareto-optimal solutions occur implicitly.
+        When it comes to graphs of multidimensional metrics, pareto-optimal solutions occur implicitly.
         Thus, a first idea is computing all pareto-optimal paths.
         As stated in~\cite{delling:pareto-paths}, computing all pareto-optimal paths is too expensive to be practical at all.
-        That's why~\cite{barth:alternative_multicriteria_routes} develops an algorithm, that enumerates paths with extending the search for shortest paths by a geometric interpretation in the \glspl{metric}' underlying \gls{cost}-space.
-        To handle multidimensional \glspl{metric}, the algorithm uses \gls{personalized_routing} (introduced in~\cite{geisberger:route_planning}), which takes predefined preferences to compute one scalar out of multiple \glspl{metric}.
-        To speed the queries up, a preprocessing-technique called \gls{contraction-hierarchies} is applied in their paper.
+        That's why~\cite{barth:alternative_multicriteria_routes} develops an algorithm, that enumerates paths with extending the search for shortest paths by a geometric interpretation in the metrics' underlying cost-space.
+        To handle multidimensional metrics, the algorithm uses personalized routing (introduced in~\cite{geisberger:route_planning}), which takes predefined preferences to compute one scalar out of multiple metrics.
+        To speed the queries up, a preprocessing-technique called contraction-hierarchies is applied in their paper.
         In addition, while the original approach of contraction-hierarchies is developed in~\cite{geisberger:contraction_hierarchies}, an adjusted version~\cite{funke:personal-routes} using linear programming is used for this thesis.
-        The adjustment enables more efficient \gls{contraction-hierarchies} when using \gls{personalized_routing}.
+        The adjustment enables more efficient contraction-hierarchies when using personalized routing.
         Further, to reduce the search-space, the enumeration is restricted by a clever check from~\cite{barth:alternative_routes} without influencing its correctness or completeness.
 
 \section{Main contribution}
 
-    The contribution of this paper is the combination of penalization and \gls{personalized_routing}.
-    A computation-phase called \gls{balancing} is added, that analyzes the street-network with the help of the \gls{repr}.
-    This preprocessing leads to a new \gls{metric}, penalizing edges of high popularity.
-    Applying \gls{personalized_routing} with all \glspl{metric}, including the new one(s), leads to a more distributed set of routes.
+    The contribution of this thesis is the combination of penalization and personalized routing.
+    A computation-phase called balancing is added, that analyzes the street-network with the help of the \glsreset{repr}\gls{repr} from~\cite{barth:alternative_routes}.
+    This preprocessing leads to a new metric, penalizing edges of high popularity.
+    Applying personalized routing with all metrics, including the new one(s), leads to a more distributed set of routes.
     Thus, the street-network is used in a broader manner.
-    At the same time, due to \gls{personalized_routing}, routing-queries can be processed as quickly as before.
+    At the same time, due to personalized routing, routing-queries can be processed as quickly as before.
     To guarantee a certain tolerance towards the shortest path, a filter is added to the \gls{repr}.
 
 \section{Outline}
@@ -81,11 +81,13 @@ Here, data-packages are transmitted much faster than drivers are driving through
     This thesis is structured as following.
     \begin{description}
         \item[\cref{chap:preliminaries} -- \nameref{chap:preliminaries}:]
-            \todo{TODO}
+            This chapter explains the methods, that are combined in this thesis to create the new metric, that balances the provided graph to spread the found routes.
+            These methods refer to a way of storing the graph in memory, describe the speedup of multicriteria-routing by contraction-hierarchies and a modified Dijkstra, and explain an algorithm to find alternative paths in a multicriteria setting.
         \item[\cref{chap:balancing} -- \nameref{chap:balancing}:]
-            \todo{TODO}
+            After the preliminaries are explained, the balancing is presented.
+            The balancing is the core of this thesis and describes the looped chain of procedures, that creates the new metric.
         \item[\cref{chap:experiments} -- \nameref{chap:experiments}:]
-            \todo{TODO}
+            In this chapter, street-networsk from OpenStreetMap are used to show the balancing in action.
         \item[\cref{chap:conclusion} -- \nameref{chap:conclusion}:]
-            \todo{TODO}
+            Here, a summary is depicted and future work is discussed, such as performance-improvements and variations of balancing.
     \end{description}

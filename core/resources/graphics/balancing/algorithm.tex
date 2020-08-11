@@ -42,16 +42,16 @@
 
     \coordinate (src) at (0, 0);
     \node [action, right = of src] (reading-in) {%
-        Read-in graph and initialize the new \gls{metric}
+        Read-in graph and initialize the new metric
     };
     \node [action, right = of reading-in] (normalizing) {%
-        Normalize every \gls{metric} by the mean of its dimension's \glspl{metric}
+        Normalize every metric by the mean of its dimension's metrics
     };
     \node [data, below = of normalizing] (graph) {%
         $G=(V,E)$
     };
     \node [action, below = of graph] (contracting) {%
-        Contract graph $G$ with \textit{contraction-hierarchies}
+        Contract graph $G$ with contraction-hierarchies
     };
 
     \node [action, right = of graph] (evaluating) {%
@@ -73,13 +73,13 @@
         $\forall e \in E_{CH}:$ count paths using $e$
     };
     \node [action, above = of analyzing] (updating) {%
-        Update\\new \gls{metric} in graph $G_{CH}$
+        Update\\new metric in graph $G_{CH}$
     };
     \node [data, above = of updating] (new_metric) {%
         Updated $G_{CH}$
     };
     \node [action, above = of new_metric] (writing) {%
-        Export $G_{CH}$ without shortcuts, but with updated new \gls{metric}
+        Export $G_{CH}$ without shortcuts, but with updated new metric
     };
 
     % Draw lines

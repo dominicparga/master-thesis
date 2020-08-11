@@ -4,37 +4,45 @@
 \section{Conclusion}
 
     In this thesis, existing procedures have been combined, such that a new penalizing metric is computed for provided graphs.
-    This new metric compensates the popularity of popular routes' edges in the graph, that tend to overload a graph's underlying network.
-    This is achieved with the help of an existing procedure from~\cite{barth:alternative_multicriteria_routes}, that interpretates optimum paths, that are found by Dijkstra, in the underlying cost-space.
+    This new metric compensates the popularity of routes' edges in the graph, because these higher popularities causes to overload a graph's underlying network, when many routes are computed.
+    This is achieved with the help of an existing procedure from~\cite{barth:alternative_multicriteria_routes}, that interpretes optimum paths found by Dijkstra in the underlying cost-space.
     With help of this procedure, several alternative routes for a provided pair of source and destination are enumerated.
     Because of the new metric, the number of found alternative routes is increased significantly while a user-provided tolerance (with respect to travel-time) holds.
 
     Advantages of the presented process to create the new metric is the intuitive idea behind it.
     While other approaches for finding alternative routes lack in performance, parameter-tuning, complexity or diversity of found alternative routes, the method in this thesis can be summarized in two iterations.
     The first iteration updates the graph's new metric by favoring popular routes.
-    The second and last iteration considers this preference negatively and updates the graph's new metric respectively.
-    In the end, the average of both updates results in a penalizing metric, that can be used in existing routing-algorithms for graphs of multidimensional metrics without changing them.
+    The second and last iteration considers this preference negatively and updates the graph's new metric, respectively trying to avoid these popular routes.
+    In the end, the average of both updates results in a penalizing metric, that can be used in existing routing-algorithms for graphs of multidimensional metrics.
     The new metric leads to more spreaded routes, as shown in this thesis with street-networks from OpenStreetMap.
 
 \section{Future work}
 
-    Remaining issues with the procedure are basically performance-related, although preprocessing-methods as contraction-hierarchies are already used to speed the route-queries significantly up.
+    Remaining issues with the procedure are mainly performance-related, although preprocessing-methods as contraction-hierarchies are already used to speed the route-queries significantly up.
 
-    One performance-improvement would be the right choice of sources and destinations for the user-provided set of \glspl{stpair}.
+    One performance-improvement would bring a better choice of sources and destinations for the user-provided set of \glspl{stpair}.
     Yet, sources and destinations are chosen \gls{uar}\ from the graph's vertices.
     This requires a high number of \glspl{stpair} to actually overload the graph.
     Heuristics, as one described in~\cite{bakillah:population_from_osm} to approximate the population based on OpenStreetMap-data, may help to weight the vertices in a more realistic way, which is usually less \gls{uar}\ when thinking of rush-hour-scenarios.
 
     One slighter performance-improvement might be the flattening of shortcuts, that are created by the contraction-hierarchies, right after all found routes are collected, not right after a route is found.
-    Another improvement is the implemented graph-parser, that assumes the drivers to be less picky, leading to more edges in the graph.
-    As the tolerance for travel-time holds, this shouldn't affect the spread a lot, but the routing-algorithms, especially the contraction-hierarchies, are much affected by the number of edges.
+    Another improvement refers the implemented graph-parser, that assumes, that drivers are okay with choosing even dirt tracks for their paths, leading to more edges in the graph.
+    As the tolerance for travel-time holds, this shouldn't affect the spread a lot, but the routing-algorithms (especially the contraction-hierarchies) are much affected by the number of edges.
     Further, the contraction-hierarchies contracts just almost all vertices, which takes much less time than actually creating the new metric.
-    A higher contraction-rate might improve the runtime.
+    A higher contraction-rate to reduce the creation-time might improve the total runtime here.
 
     Although the results from the shown experiments are satisfying, only one metric is created.
-    Maybe, the results would be even better with several artificial penalizaton-metrics being created, since the averaging-approach behaves accordingly to this idea.
+    Maybe, the results would be even better with several artificial penalization-metrics being created, since the averaging-approach behaves accordingly to this idea.
+    In addition, once a graph is balanced, the graph's balancing-progress is more or less fixed.
+    Here, it would be more practical to have the graph being balanced right after each \gls{stpair} is processed.
+    Despite the metric-update, that relies on the mean over all workloads, a remaining issue would be the adaption of contraction-hierarchies.
+    This could be done by a replacement-strategy, where the last contracted graph is used for answering incoming queries and a copy of it is further balanced in the meanwhile.
+    At some point, the contracted graph, that is answering incoming queries, is replaced by the new graph, after this is contracted.
+    This would fit better for use-cases in the real world, especially with large capacities, as Google can provide.
+    Google additionally has enough user-queries to produce valid workloads.
 
-    Another ignored aspect is the influence of crossroads on travel-time.
+    Another aspect is the influence of crossroads on travel-time.
     The tolerance holds for travel-time, which is based solely on speed-limits and distances, not on behaviour or circumstances at crossroads.
+    Here, the hop-distance would be important, too.
     On the other hand, the idea behind all of this is the reduction of occuring traffic-jams.
     Probably, circumstances at crossroads might be the better option than standing in a traffic-jam.

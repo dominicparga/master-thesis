@@ -10,132 +10,70 @@
 % NOTES
 % - Don't use \gls{...} in headings, because the pdf mixes this up.
 
-\newglossaryentry{astar}{%
-    name = {\textit{A*}},
-    description = {TODO},
-    sort = {astar}
-}
 
-\newglossaryentry{balancing}{%
-    name = {\textit{balancing}},
-    description = {TODO},
-    sort = {balancing}
-}
+% \newcommand{\glsepr}{EPR}
+% \newcommand{\glsrepr}{REPR}
+% \newcommand{\glsstpair}{$s$-$t$-pair}
+% \newcommand{\glsplstpair}{$s$-$t$-pairs}
+% \newcommand{\glsuar}{u.\,a.\,r.}
+% \newcommand{\glsfirstuar}{uniformly at random (\glsuar)}
 
-\newglossaryentry{contraction-hierarchies}{%
-    name = {\textit{contraction-hierarchies}},
-    description = {TODO},
-    sort = {contraction-hierarchies}
-}
-
-\newglossaryentry{cost}{%
-    name = {\textit{cost}},
-    plural = {\textit{costs}},
-    description = {TODO},
-    sort = {cost}
-}
-
-\newglossaryentry{dijkstra}{%
-    name = {\textit{Dijkstra}},
-    description = {TODO Dijkstra (also explain bidirectional here)},
-    sort = {Dijkstra}
-}
 
 \newglossaryentry{epr}{%
     type = \acronymtype,
-    name = {\textit{EPR}},
-    first = {\textit{Enumerating Personalized Routing} (\textit{EPR}) from~\cite{barth:alternative_multicriteria_routes}\glsadd{gls:epr}},
+    name = {EPR},
+    first = {Enumerating Personalized Routing (EPR)},
     description = {TODO},
     see = [Glossary:]{gls:epr},
     sort = {enumerating personalized routing}
 }
 \newglossaryentry{gls:epr}{%
-    name = {\textit{EPR}},
+    name = {EPR},
     description = {TODO},
     see = [Glossary:]{gls:repr},
     sort = {enumerating personalized routing}
 }
 
-\newglossaryentry{explicit_euler}{%
-    name = {\textit{explicit Euler}},
-    description = {},
-    sort = {explicit Euler}
-}
-
-\newglossaryentry{metric}{%
-    name = {\textit{metric}},
-    plural = {\textit{metrics}},
-    description = {TODO},
-    sort = {metric}
-}
-
-\newglossaryentry{personalized_routing}{%
-    name = {\textit{personalized routing}},
-    description = {TODO},
-    sort = {personalized routing}
-}
-
-\newglossaryentry{personalized_route}{%
-    name = {\textit{personalized route}},
-    plural = {\textit{personalized routes}},
-    description = {TODO},
-    sort = {personalized route}
-}
-
 \newglossaryentry{repr}{%
     type = \acronymtype,
-    name = {\textit{REPR}},
-    first = {\textit{Restricted Enumerating Personalized Routing} (\textit{REPR}) from~\cite{barth:alternative_routes}\glsadd{gls:repr}},
+    name = {REPR},
+    first = {Restricted Enumerating Personalized Routing (REPR)},
     description = {TODO},
     see = [Glossary:]{gls:repr},
     sort = {restricted enumerating personalized routing}
 }
 \newglossaryentry{gls:repr}{%
-    name = {\textit{REPR}},
-    description = {TODO blabla \textit{restricted} is a runtime-optimization with approximating the best-possible remaining paths in a facet},
+    name = {REPR},
+    description = {TODO blabla restricted is a runtime-optimization with approximating the best-possible remaining paths in a facet},
     sort = {restricted enumerating personalized routing}
 }
 
 \newglossaryentry{stpair}{%
     type = \acronymtype,
-    name = {\textit{s-t-pair}},
-    plural = {\textit{s-t-pairs}},
-    first = {\textit{source-target-pair} (\textit{s-t-pair})\glsadd{gls:stpair}},
-    firstplural = {\textit{source-target-pairs} (\textit{s-t-pairs})\glsadd{gls:stpair}},
+    name = {$s$-$t$-pair},
+    plural = {$s$-$t$-pairs},
+    first = {source-target-pair ($s$-$t$-pair)\glsadd{gls:stpair}},
+    firstplural = {source-target-pairs ($s$-$t$-pairs)\glsadd{gls:stpair}},
     description = {TODO},
     see = [Glossary:]{gls:stpair},
     sort = {source-target-pair}
 }
 \newglossaryentry{gls:stpair}{%
-    name = {\textit{s-t-pair}},
+    name = {$s$-$t$-pair},
     description = {TODO},
     sort = {source-target-pair}
 }
 
 \newglossaryentry{uar}{%
     type = \acronymtype,
-    name = {\textit{u.\,a.\,r.}},
-    first = {\textit{uniformly at random} (\textit{u.\,a.\,r.})\glsadd{gls:stpair}},
+    name = {u.\,a.\,r.},
+    first = {uniformly at random (u.\,a.\,r.)\glsadd{gls:stpair}},
     description = {TODO},
     see = [Glossary:]{gls:uar},
     sort = {uniformly at random}
 }
 \newglossaryentry{gls:uar}{%
-    name = {\textit{u.\,a.\,r.}},
+    name = {u.\,a.\,r.},
     description = {TODO},
     sort = {uniformly at random}
-}
-
-\newglossaryentry{unique_edge}{%
-    name = {\textit{unique edge}},
-    plural = {\textit{unique edges}},
-    description = {TODO},
-    sort = {unique edge}
-}
-
-\newglossaryentry{weight}{%
-    name = {\textit{weight}},
-    plural = {\textit{weights}},
-    description = {TODO},
-    sort = {weight}
 }

@@ -1,0 +1,17 @@
+Besonders zur täglichen Hauptverkehrszeit benötigt ein Straßennetz genügend Kapazität, um die vielen Fahrer tragen zu können.
+Andererseits darf das Straßennetz nicht zu viel Kapazität haben, da das außerhalb der Hauptverkehrszeit ineffizienter ist.
+Deshalb sollte die Überlast im Netzwerk besser verteilt werden, um dessen Auswirkungen (zum Beispiel Staus) zu reduzieren.
+Zur Verbesserung der Verteilung von Routen werden alternative Routen im Rahmen von mehreren Routen-Kriterien berechnet.
+Um Routen mit mehreren Kriterien zu unterstützen, wird Dijkstra's Algorithmus mit Präferenzen für die Kriterien kombiniert.
+Diese mehrere Kriterien oder auch mehrere Metriken, zum Beispiel die Reisezeit oder die Reisedistanz, können durch die Präferenzen zu Skalaren reduziert werden.
+Hiermit gefundene Routen oder Pfade werden personalisierte Pfade genannt.
+Einige bisherige Ansätze zur Berechnung alternativer Routen benötigen zu viel Parameter-Tuning, sind zu komplex in ihrer Berechnung, brauchen zu viel Rechenzeit oder die gefundenen Routen variieren nicht stark genug.
+Daher präsentiert diese Thesis eine Kombination aus dem geschickten Iterieren personalisierter Pfade und der Konstruktion einer neuen Metrik.
+Ziel dieser Metrik ist es, andere beliebte Metriken zu kompensieren, um dadurch die Streuung vieler Routen im Netzwerk zu verbessern.
+Diese neue Metrik kann von jedem Routing-Algorithmus verarbeitet werden, der in der Lage ist, Routen nach mehreren Kriterien zu finden.
+Durch das Iterieren von personalisierten Pfaden mit dieser neuen Metrik können erfolgreich Pfade gefunden werden, die besser über dem Netzwerk verteilt sind.
+Zusätzlich werden nutzergegebene Toleranzen für bevorzugte Metriken eingehalten.
+Am Ende werden Experimente auf Straßennetzen von OpenStreetMap präsentiert.
+Hier werden die Resultate zwischen Dijkstra (mit personalisiertem Routing) und dem Finden von Pfaden durch Iterieren über die personalisierten Routen verglichen.
+Um Routing-Suchen signifikant zu beschleunigen, wird der zugrunde liegende Graph des Netzwerks mit Contraction-Hierarchies kontrahiert, bevor die Suchen starten.
+Hierbei ist die Kontraktion durch lineare Programmierung realisiert, um die Performanz mit mehreren Kriterien zu verbessern.

@@ -1,5 +1,3 @@
-\section*{Abstract}
-
 Especially in daily rush-hour-scenarios, a street-network requires enough capacity to support the amount of drivers.
 On the other hand, a street-network of too much capacity would be inefficient outside of rush-hour-scenarios.
 Hence, the overload during rush-hour should be spreaded over the network to reduce the impact of the overload (\eg\ traffic-jams).

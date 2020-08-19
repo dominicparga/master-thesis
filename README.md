@@ -30,6 +30,6 @@ This pdf can be downloaded as artifact of the respective workflow in the registe
 [github/last-commit/badge]: https://img.shields.io/github/last-commit/dominicparga/master-thesis?style=for-the-badge
 [github/license]: https://github.com/dominicparga/master-thesis/blob/master/LICENSE
 [github/license/badge]: https://img.shields.io/badge/license-Apache--2.0-green?style=for-the-badge
-[github/tags]: https://github.com/dominicparga/master-thesis/tags
-[github/tags/badge]: https://img.shields.io/github/v/tag/dominicparga/master-thesis?sort=semver&style=for-the-badge
+[github/tags]: https://github.com/dominicparga/master-thesis/releases/tag/submission
+[github/tags/badge]: https://img.shields.io/badge/license-submission-blue?style=for-the-badge
 [github/self/cmp/feedback]: https://github.com/dominicparga/master-thesis/compare/tmp/feedback...nightly
